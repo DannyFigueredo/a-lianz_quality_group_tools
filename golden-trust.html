@@ -1,0 +1,3008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Operativo — Golden Trust Financial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --sw: 220px;
+  --hh: 70px;
+  --bg: #f1f4f8;
+  --white: #ffffff;
+  --blue: #2563eb;
+  --blue-d: #1d4ed8;
+  --blue-l: #dbeafe;
+  --green: #16a34a;
+  --green-l: #dcfce7;
+  --orange: #ea580c;
+  --orange-l: #ffedd5;
+  --yellow: #f59e0b;
+  --red: #dc2626;
+  --red-l: #fee2e2;
+  --purple: #7c3aed;
+  --purple-l: #ede9fe;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --muted: #64748b;
+  --light: #f8fafc;
+  --sidebar: #0f172a;
+  --sidebar-h: #1e293b;
+  --r: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow:hidden}
+a{text-decoration:none;color:inherit}
+button{font-family:'DM Sans',sans-serif}
+textarea,input{font-family:'DM Sans',sans-serif}
+code{font-family:'DM Mono',monospace;font-size:12px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  position:fixed;top:0;left:0;width:var(--sw);height:100vh;
+  background:var(--sidebar);display:flex;flex-direction:column;z-index:300;overflow-y:auto;
+}
+.sb-logo{
+  padding:18px 18px 14px;border-bottom:1px solid #1e293b;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sb-logo-icon{
+  width:34px;height:34px;background:var(--blue);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+}
+.sb-logo span{color:#fff;font-weight:800;font-size:13px;line-height:1.3}
+.sb-nav{padding:10px 0;flex:1}
+.sb-section{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:1.2px;padding:12px 18px 5px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 18px;
+  color:#94a3b8;cursor:pointer;transition:all .15s;
+  border-left:3px solid transparent;font-size:13px;font-weight:500;user-select:none;
+}
+.nav-item:hover{background:var(--sidebar-h);color:#fff}
+.nav-item.active{background:rgba(37,99,235,.2);border-left-color:var(--blue);color:#fff}
+.nav-item .ni{font-size:16px;flex-shrink:0}
+.sb-footer{padding:12px 18px;border-top:1px solid #1e293b;font-size:10px;color:#334155;text-align:center;flex-shrink:0}
+
+/* ── HEADER ── */
+#header{
+  position:fixed;top:0;left:var(--sw);right:0;height:var(--hh);
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;z-index:200;box-shadow:var(--shadow);gap:14px;
+}
+.hdr-left h1{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap}
+.hdr-left p{font-size:11px;color:var(--muted)}
+.hdr-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
+.hfield{display:flex;flex-direction:column;gap:1px}
+.hfield-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.hfield input{
+  padding:6px 10px;border:1.5px solid var(--border);border-radius:7px;
+  font-size:12px;font-weight:600;color:var(--text);background:var(--light);
+  transition:all .15s;
+}
+.hfield input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.hfield input.ci{border-color:#86efac;background:var(--green-l);color:var(--green);width:160px}
+.hfield input.ci:focus{border-color:var(--green);background:#fff;color:var(--text)}
+.hfield input.ai{width:190px}
+.hfield input.pi{width:140px}
+.hdr-divider{width:1px;height:32px;background:var(--border);flex-shrink:0}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+#fl-time{font-size:20px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+#fl-date{font-size:10px;color:var(--muted);margin-top:1px}
+.fl-badge{
+  display:inline-block;background:var(--blue-l);color:var(--blue);
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  padding:1px 6px;border-radius:20px;margin-bottom:1px;
+}
+/* Export menu */
+.export-menu-wrap{position:relative}
+.export-btn{
+  display:flex;align-items:center;gap:6px;padding:7px 13px;
+  background:var(--text);color:#fff;border:none;border-radius:8px;
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;
+}
+.export-btn:hover{background:#1e293b}
+.export-dropdown{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:#fff;border:1.5px solid var(--border);border-radius:10px;
+  box-shadow:var(--shadow-lg);min-width:200px;z-index:9999;
+  display:none;overflow:hidden;
+}
+.export-dropdown.open{display:block}
+.exp-item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  cursor:pointer;transition:background .12s;font-size:13px;font-weight:500;
+}
+.exp-item:hover{background:var(--light)}
+.exp-item .exp-icon{font-size:16px}
+.exp-sep{height:1px;background:var(--border)}
+
+/* ── CONTENT ── */
+#content{
+  position:fixed;top:var(--hh);left:var(--sw);right:0;bottom:0;overflow-y:auto;
+}
+.view{display:none;padding:24px;min-height:100%;animation:fadeIn .18s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE TITLE ── */
+.page-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.page-title-left{display:flex;align-items:center;gap:12px}
+.pt-icon{
+  width:40px;height:40px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.pt-icon.blue{background:var(--blue-l)}.pt-icon.green{background:var(--green-l)}
+.pt-icon.orange{background:var(--orange-l)}.pt-icon.yellow{background:#fef3c7}
+.pt-icon.gray{background:var(--light)}.pt-icon.purple{background:var(--purple-l)}
+.pt-icon.red{background:var(--red-l)}
+.pt-title h2{font-size:20px;font-weight:800;color:var(--text)}
+.pt-title p{font-size:12px;color:var(--muted);margin-top:1px}
+.pt-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.card-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.card-title.orange{color:var(--orange)}.card-title.blue{color:var(--blue-d)}.card-title.green{color:var(--green)}
+
+/* ── TABS ── */
+.tabs-bar{
+  display:flex;gap:4px;margin-bottom:18px;
+  border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap;
+}
+.tab-btn{
+  padding:8px 18px;border:none;background:none;
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  border-radius:8px 8px 0 0;transition:all .15s;font-family:inherit;
+}
+.tab-btn:hover{background:var(--light);color:var(--text)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-l)}
+.tab-wrap{display:inline-flex;align-items:center;margin-bottom:-2px;position:relative}
+.tab-dots-btn{
+  width:22px;height:22px;border:none;background:none;cursor:pointer;
+  font-size:15px;font-weight:900;opacity:0;transition:opacity .15s;padding:0;margin-left:1px;
+  border-radius:5px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);letter-spacing:0;line-height:1;
+}
+.tab-wrap:hover .tab-dots-btn{opacity:1}
+.tab-wrap.active .tab-dots-btn{opacity:.5}
+.tab-wrap.active .tab-dots-btn:hover{opacity:1;background:rgba(37,99,235,.15)}
+.tab-dots-menu{
+  position:absolute;top:calc(100% + 4px);left:0;z-index:500;
+  background:#fff;border:1.5px solid var(--border);border-radius:9px;
+  box-shadow:var(--shadow-lg);min-width:150px;overflow:hidden;display:none;
+}
+.tab-dots-menu.open{display:block}
+.tab-dots-item{
+  display:flex;align-items:center;gap:8px;padding:9px 13px;
+  font-size:13px;font-weight:500;cursor:pointer;transition:background .1s;
+  white-space:nowrap;
+}
+.tab-dots-item:hover{background:var(--light)}
+.tab-dots-item.danger{color:var(--red)}
+.tab-dots-item.danger:hover{background:var(--red-l)}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;font-family:inherit;
+}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-d)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#15803d}
+.btn-orange{background:var(--orange);color:#fff}.btn-orange:hover{background:#c2410c}
+.btn-red{background:var(--red-l);color:var(--red)}.btn-red:hover{background:#fecaca}
+.btn-gray{background:#e2e8f0;color:var(--text)}.btn-gray:hover{background:#cbd5e1}
+.btn-ghost{background:none;color:var(--muted);border:1.5px solid var(--border)}.btn-ghost:hover{background:var(--light);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn.success{background:#10b981!important;color:#fff!important}
+.icon-btn{
+  width:30px;height:30px;border:none;border-radius:7px;cursor:pointer;
+  background:var(--light);color:var(--muted);font-size:14px;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:all .15s;font-family:inherit;
+}
+.icon-btn:hover{background:#e2e8f0;color:var(--text)}
+.icon-btn.danger:hover{background:var(--red-l);color:var(--red)}
+
+/* ── LINKS ── */
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.link-card-wrap{position:relative;cursor:grab}
+.link-card-wrap:active{cursor:grabbing}
+.link-card-wrap.dragging{opacity:.4;transform:scale(.97)}
+.link-card-wrap.drag-over .link-card{border:2.5px dashed var(--blue)!important;background:var(--blue-l)!important}
+.link-card{
+  background:var(--blue-l);border-radius:var(--r);padding:18px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:all .18s;color:var(--blue);font-weight:600;font-size:13px;
+  text-align:center;border:2.5px solid transparent;width:100%;
+}
+.link-card:hover{background:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,99,235,.28)}
+.link-card .lc-icon{font-size:28px}
+.link-card.green{background:var(--green-l);color:var(--green)}
+.link-card.green:hover{background:var(--green);color:#fff}
+.link-card.orange{background:var(--orange-l);color:var(--orange)}
+.link-card.orange:hover{background:var(--orange);color:#fff}
+.link-card.red{background:var(--red-l);color:var(--red)}
+.link-card.red:hover{background:var(--red);color:#fff}
+.link-card.purple{background:var(--purple-l);color:var(--purple)}
+.link-card.purple:hover{background:var(--purple);color:#fff}
+.link-card-controls{
+  position:absolute;top:5px;right:5px;display:flex;gap:3px;
+  opacity:0;transition:opacity .15s;z-index:10;
+}
+.link-card-wrap:hover .link-card-controls{opacity:1}
+.link-ctrl-btn{
+  width:22px;height:22px;border:none;border-radius:5px;cursor:pointer;
+  font-size:11px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(4px);transition:all .12s;
+}
+.link-ctrl-btn:hover{background:#fff;transform:scale(1.1)}
+.link-drag-handle{
+  position:absolute;top:5px;left:5px;opacity:0;transition:opacity .15s;
+  font-size:12px;color:var(--muted);cursor:grab;padding:3px;
+}
+.link-card-wrap:hover .link-drag-handle{opacity:.6}
+
+/* ── GUIONES / WA CARDS ── */
+.msgs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.msg-card{
+  border:1.5px solid var(--border);border-radius:var(--r);
+  background:#fff;position:relative;transition:box-shadow .15s,border-color .15s;
+  overflow:hidden;cursor:pointer;
+}
+.msg-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(37,99,235,.12)}
+.msg-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 0}
+.msg-card-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.msg-card-actions{display:flex;gap:4px}
+.msg-preview{padding:8px 14px 0}
+.msg-preview-text{
+  font-size:13px;color:var(--text);line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  white-space:pre-wrap;word-break:break-word;
+}
+.msg-preview-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px 12px;
+}
+.msg-preview-expand{
+  font-size:11px;font-weight:700;color:var(--blue);cursor:pointer;
+  background:none;border:none;padding:0;display:flex;align-items:center;gap:3px;
+}
+.msg-preview-expand:hover{text-decoration:underline}
+.guion-ta{
+  width:100%;min-height:85px;padding:9px 11px;border:1.5px solid var(--border);
+  border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;
+  background:var(--light);color:var(--text);transition:border-color .15s;margin-top:8px;
+}
+.guion-ta:focus{outline:none;border-color:var(--blue);background:#fff}
+.msg-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+
+/* ── CHECKLIST ── */
+.checklist-wrap{display:flex;flex-direction:column;gap:6px}
+.ck-item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:9px;background:var(--light);border:1.5px solid transparent;
+  transition:all .12s;
+}
+.ck-item:hover{border-color:var(--border);background:#fff}
+.ck-item input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--blue);flex-shrink:0}
+.ck-text{flex:1;font-size:14px;transition:all .15s}
+.ck-item.done .ck-text{text-decoration:line-through;color:var(--muted)}
+.ck-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.ck-item:hover .ck-actions{opacity:1}
+.ck-add-row{display:flex;gap:8px;margin-top:10px}
+.ck-add-row input{
+  flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:inherit;
+}
+.ck-add-row input:focus{outline:none;border-color:var(--blue)}
+
+/* ── COUNTER ── */
+.counters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.counter-card{
+  background:#fff;border-radius:var(--r);box-shadow:var(--shadow);
+  padding:20px;text-align:center;border-top:4px solid var(--blue);
+}
+.counter-card.orange-t{border-top-color:var(--orange)}
+.counter-card.green-t{border-top-color:var(--green)}
+.cc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px}
+.cc-num{font-size:64px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;color:var(--blue);transition:transform .1s}
+.cc-num.orange{color:var(--orange)}.cc-num.green{color:var(--green)}
+.cc-num.bump{transform:scale(1.15)}
+.cc-btns{display:flex;justify-content:center;gap:10px;margin-top:14px}
+.cc-btn{
+  width:46px;height:46px;border:none;border-radius:50%;font-size:22px;font-weight:800;
+  cursor:pointer;transition:all .15s;box-shadow:var(--shadow);font-family:inherit;
+}
+.cc-btn.plus{background:var(--blue);color:#fff}.cc-btn.plus:hover{background:var(--blue-d);transform:scale(1.08)}
+.cc-btn.minus{background:#e2e8f0;color:var(--text)}.cc-btn.minus:hover{background:#cbd5e1;transform:scale(1.08)}
+.cc-btn.reset{background:var(--red-l);color:var(--red);font-size:16px}.cc-btn.reset:hover{background:#fecaca}
+.counter-meta{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-top:16px;max-width:500px}
+.meta-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.meta-row label{font-weight:700;font-size:14px}
+.meta-row input{
+  width:70px;padding:7px 10px;border:1.5px solid var(--border);
+  border-radius:7px;font-size:15px;font-weight:700;text-align:center;font-family:inherit;
+}
+.meta-row input:focus{outline:none;border-color:var(--blue)}
+.progress-bar-wrap{margin-top:4px}
+.progress-info{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:8px}
+.progress-track{height:14px;background:#e2e8f0;border-radius:100px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;border-radius:100px;background:var(--blue);transition:width .35s,background .35s}
+.progress-pct{font-size:12px;color:var(--muted);font-weight:600}
+
+/* ── NOTAS ── */
+.notas-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:800px){.notas-layout{grid-template-columns:1fr}}
+.nota-input-box{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.nota-input-box textarea{
+  width:100%;min-height:120px;padding:12px;
+  border:1.5px solid #fde68a;border-radius:9px;
+  font-size:14px;font-family:inherit;resize:vertical;
+  background:#fefce8;color:var(--text);transition:border-color .15s;
+}
+.nota-input-box textarea:focus{outline:none;border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.nota-input-box textarea::placeholder{color:#a16207;opacity:.5}
+.notas-list-wrap{display:flex;flex-direction:column;gap:10px;max-height:calc(100vh - 200px);overflow-y:auto;padding-right:4px}
+.nota-card{
+  background:#fff;border:1.5px solid #fde68a;border-radius:var(--r);
+  padding:14px;animation:fadeIn .2s ease;
+}
+.nota-card-view{display:block}
+.nota-card-edit{display:none}
+.nota-card.editing .nota-card-view{display:none}
+.nota-card.editing .nota-card-edit{display:block}
+.nota-card-text{font-size:13px;color:var(--text);white-space:pre-wrap;line-height:1.6}
+.nota-card-meta{font-size:10px;color:#a16207;margin-top:6px;font-weight:600}
+.nota-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.nota-edit-ta{
+  width:100%;min-height:80px;padding:9px 11px;
+  border:1.5px solid #fde68a;border-radius:8px;
+  font-size:13px;font-family:inherit;resize:vertical;background:#fefce8;
+}
+.nota-edit-ta:focus{outline:none;border-color:#f59e0b}
+.notas-empty{text-align:center;padding:30px;color:#a16207;opacity:.5;font-size:13px;background:#fff;border-radius:var(--r);border:1.5px dashed #fde68a}
+
+/* ── FAQ ── */
+.faq-search-wrap{position:relative;margin-bottom:16px}
+.faq-search-wrap .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.faq-search{
+  width:100%;padding:10px 12px 10px 40px;border:1.5px solid var(--border);
+  border-radius:9px;font-size:14px;font-family:inherit;transition:border-color .15s;
+}
+.faq-search:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.faq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.faq-item{border-radius:var(--r);padding:14px;background:var(--light);border-left:4px solid var(--muted);position:relative}
+.faq-item.hidden{display:none}
+.faq-item-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.faq-item h4{font-size:13px;font-weight:700}
+.faq-item p{font-size:12px;color:var(--muted);line-height:1.6}
+.faq-item mark{background:#fef08a;border-radius:2px;padding:0 2px}
+.faq-item-actions{display:flex;gap:4px;flex-shrink:0}
+.faq-no-results{display:none;text-align:center;padding:30px;color:var(--muted);font-size:14px}
+
+/* ── AGENTES / ASEGURADORAS ── */
+.split-layout{display:grid;grid-template-columns:260px 1fr;gap:16px;height:calc(100vh - var(--hh) - 80px)}
+.split-left{display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding-right:4px}
+.split-right{overflow-y:auto}
+.agent-list-item{
+  background:#fff;border-radius:var(--r);padding:12px 14px;cursor:pointer;
+  border:1.5px solid var(--border);transition:all .15s;display:flex;align-items:center;gap:10px;
+}
+.agent-list-item:hover{border-color:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.1)}
+.agent-list-item.active{border-color:var(--blue);background:var(--blue-l)}
+.agent-avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--blue-l);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+  color:var(--blue);flex-shrink:0;font-size:15px;
+}
+.agent-list-name{font-size:13px;font-weight:700;color:var(--text)}
+.agent-list-sub{font-size:11px;color:var(--muted)}
+.agent-detail-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.agent-detail-header{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);
+  padding:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.agent-detail-avatar{
+  width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;
+}
+.agent-detail-name{font-size:20px;font-weight:800}
+.agent-detail-npn{font-size:12px;opacity:.8;margin-top:2px;font-family:'DM Mono',monospace}
+.agent-detail-body{padding:20px}
+.agent-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px;margin-top:16px}
+.agent-section-title:first-child{margin-top:0}
+.contact-links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.contact-link{
+  display:flex;align-items:center;gap:6px;padding:7px 12px;
+  background:var(--light);border:1.5px solid var(--border);border-radius:8px;
+  font-size:12px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;
+  text-decoration:none;
+}
+.contact-link:hover{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+.carriers-table{width:100%;border-collapse:collapse;font-size:13px}
+.carriers-table th{
+  background:var(--light);padding:8px 12px;text-align:left;
+  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1px solid var(--border);
+}
+.carriers-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.carriers-table tr:last-child td{border-bottom:none}
+.carriers-table tr:hover td{background:var(--light)}
+.carrier-code{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);background:var(--light);padding:2px 7px;border-radius:5px}
+.no-selection{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:300px;color:var(--muted);font-size:14px;background:#fff;border-radius:var(--r);
+  border:2px dashed var(--border);
+}
+
+/* ── ASEGURADORAS ── */
+.proc-card{
+  background:var(--light);border-radius:var(--r);border:1.5px solid var(--border);
+  margin-bottom:10px;overflow:hidden;
+}
+.proc-card-header{
+  display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+  cursor:pointer;user-select:none;transition:background .12s;
+}
+.proc-card-header:hover{background:#e2e8f0}
+.proc-card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.proc-card-arrow{font-size:16px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.proc-card-arrow.open{transform:rotate(180deg)}
+.proc-card-body{display:none;padding:14px 16px;border-top:1px solid var(--border);background:#fff;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.proc-card-body.open{display:block}
+
+/* ── MODAL PREVIEW GUIÓN ── */
+#guion-preview-overlay{
+  position:fixed;inset:0;z-index:2000;
+  display:none;align-items:center;justify-content:center;padding:24px;
+  background:rgba(15,23,42,.6);backdrop-filter:blur(6px);
+}
+#guion-preview-overlay.open{display:flex}
+.guion-preview-modal{
+  background:#fff;border-radius:20px;width:100%;max-width:580px;
+  box-shadow:0 32px 80px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.1);
+  animation:guionPop .28s cubic-bezier(.34,1.56,.64,1);
+  overflow:hidden;max-height:90vh;display:flex;flex-direction:column;
+}
+@keyframes guionPop{
+  from{opacity:0;transform:scale(.6) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.guion-pm-header{
+  background:linear-gradient(135deg,var(--blue) 0%,#1d4ed8 100%);
+  padding:20px 22px 16px;color:#fff;flex-shrink:0;
+}
+.guion-pm-tag{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;
+  opacity:.7;margin-bottom:6px;
+}
+.guion-pm-title{font-size:19px;font-weight:800;line-height:1.2}
+.guion-pm-close{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.2);color:#fff;cursor:pointer;
+  font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.guion-pm-close:hover{background:rgba(255,255,255,.35)}
+.guion-pm-body{
+  padding:20px 22px;overflow-y:auto;flex:1;
+}
+.guion-pm-text{
+  font-size:14px;line-height:1.75;color:var(--text);
+  white-space:pre-wrap;word-break:break-word;
+  background:var(--light);border-radius:10px;padding:16px;
+  border:1.5px solid var(--border);
+}
+.guion-pm-text mark{
+  background:linear-gradient(120deg,#fde68a,#fcd34d);
+  border-radius:3px;padding:0 2px;
+}
+.guion-pm-footer{
+  padding:14px 22px;border-top:1.5px solid var(--border);
+  display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;
+  background:#fafbfc;
+}
+.guion-pm-nombres{
+  padding:12px 22px 0;display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0;
+}
+#modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(2px);
+}
+#modal-overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:16px;width:100%;max-width:520px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modalIn .2s ease;
+  max-height:90vh;overflow-y:auto;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;border-bottom:1px solid var(--border);
+}
+.modal-title{font-size:16px;font-weight:800}
+.modal-close{
+  width:30px;height:30px;border:none;background:var(--light);border-radius:7px;
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.modal-close:hover{background:#e2e8f0}
+.modal-body{padding:20px}
+.modal-footer{
+  display:flex;justify-content:flex-end;gap:8px;
+  padding:14px 20px;border-top:1px solid var(--border);
+}
+.form-field{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.form-input{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:inherit;transition:border-color .15s;background:#fff;
+}
+.form-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.form-textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:inherit;resize:vertical;min-height:90px;background:#fff;
+}
+.form-textarea:focus{outline:none;border-color:var(--blue)}
+.confirm-modal-icon{font-size:40px;text-align:center;margin-bottom:12px}
+.confirm-modal-msg{font-size:14px;color:var(--muted);text-align:center;line-height:1.6}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;
+  background:#10b981;color:#fff;padding:11px 20px;border-radius:9px;
+  font-weight:700;font-size:13px;box-shadow:var(--shadow-lg);
+  opacity:0;transform:translateY(10px);transition:all .25s;z-index:9999;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.warn{background:#f59e0b}
+#toast.err{background:var(--red)}
+
+/* ── IDB VIEW ── */
+.idb-stat{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:12px 18px;display:flex;align-items:center;gap:10px;min-width:140px}
+.idb-stat-icon{font-size:22px}
+.idb-stat-info .idb-stat-val{font-size:20px;font-weight:800;color:var(--blue)}
+.idb-stat-info .idb-stat-lbl{font-size:11px;color:var(--muted);font-weight:600}
+.idb-table-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.idb-table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1.5px solid var(--border);cursor:pointer;user-select:none}
+.idb-table-header:hover{background:var(--light)}
+.idb-table-title{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
+.idb-table-meta{font-size:11px;color:var(--muted);font-weight:500}
+.idb-table-body{display:none;overflow-x:auto}
+.idb-table-body.open{display:block}
+.idb-table{width:100%;border-collapse:collapse;font-size:12px}
+.idb-table th{background:var(--light);padding:8px 14px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:1.5px solid var(--border);white-space:nowrap}
+.idb-table td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;max-width:380px}
+.idb-table tr:last-child td{border-bottom:none}
+.idb-table tr:hover td{background:#f8fafc}
+.idb-val-str{color:var(--green);font-family:'DM Mono',monospace}
+.idb-val-num{color:var(--blue);font-weight:700;font-family:'DM Mono',monospace}
+.idb-val-bool{color:var(--purple);font-family:'DM Mono',monospace}
+.idb-val-null{color:var(--muted);font-style:italic}
+.idb-val-obj{color:var(--orange);font-family:'DM Mono',monospace;font-size:11px;word-break:break-all;white-space:pre-wrap;max-height:80px;overflow:hidden;cursor:pointer}
+.idb-val-obj.expanded{max-height:none}
+.idb-key-chip{display:inline-block;background:var(--blue-l);color:var(--blue);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:'DM Mono',monospace}
+.idb-ts{font-size:10px;color:var(--muted)}
+.badge{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+}
+.badge.blue{background:var(--blue-l);color:var(--blue)}
+.badge.green{background:var(--green-l);color:var(--green)}
+.empty-state{text-align:center;padding:40px;color:var(--muted);font-size:14px;background:#fff;border-radius:var(--r);border:2px dashed var(--border)}
+
+/* ── DB IMPORT/EXPORT ── */
+.db-preview{background:var(--light);border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-top:12px}
+.db-preview-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px}
+.db-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.db-preview-item{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:8px 12px;border:1.5px solid var(--border)}
+.db-preview-item .dpi-label{font-size:12px;font-weight:600;color:var(--text)}
+.db-preview-item .dpi-count{font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-l);padding:2px 8px;border-radius:20px}
+.db-preview-item .dpi-count.green{color:var(--green);background:var(--green-l)}
+.db-preview-item .dpi-count.orange{color:var(--orange);background:var(--orange-l)}
+.db-merge-notice{background:#fefce8;border:1.5px solid #fde68a;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.6}
+.db-drop-zone{
+  border:2.5px dashed var(--border);border-radius:12px;padding:32px;text-align:center;
+  cursor:pointer;transition:all .2s;background:var(--light);
+}
+.db-drop-zone:hover,.db-drop-zone.dragover{border-color:var(--blue);background:var(--blue-l)}
+.db-drop-zone .dz-icon{font-size:36px;margin-bottom:8px}
+.db-drop-zone .dz-text{font-size:14px;font-weight:600;color:var(--text)}
+.db-drop-zone .dz-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.exp-item.green{color:var(--green)}
+.exp-item.blue-c{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+<nav id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">📋</div>
+    <span>Panel<br>Operativo</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Accesos</div>
+    <div class="nav-item active" data-view="view-links"><span class="ni">🔗</span>Enlaces Rápidos</div>
+    <div class="sb-section">Trabajo</div>
+    <div class="nav-item" data-view="view-guiones"><span class="ni">📝</span>Guiones</div>
+    <div class="nav-item" data-view="view-wa"><span class="ni">💬</span>WhatsApp</div>
+    <div class="nav-item" data-view="view-checklist"><span class="ni">✅</span>Checklist</div>
+    <div class="sb-section">Métricas</div>
+    <div class="nav-item" data-view="view-contador"><span class="ni">📞</span>Contador de Llamadas</div>
+    <div class="sb-section">Equipo</div>
+    <div class="nav-item" data-view="view-agentes"><span class="ni">👥</span>Agentes</div>
+    <div class="nav-item" data-view="view-aseguradoras"><span class="ni">🏢</span>Aseguradoras</div>
+    <div class="sb-section">Sistema</div>
+    <div class="nav-item" data-view="view-idb"><span class="ni">🗄️</span>Base de Datos</div>
+    <div class="nav-item" data-view="view-notas"><span class="ni">🗒️</span>Notas</div>
+    <div class="nav-item" data-view="view-faq"><span class="ni">ℹ️</span>Info / FAQ</div>
+  </div>
+  <div class="sb-footer">Panel v7.0 · Golden Trust<br><span id="sb-ultima-act" style="font-size:9px;color:#475569;margin-top:3px;display:block">Sin actualizaciones aún</span></div>
+</nav>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header id="header">
+  <div class="hdr-left">
+    <h1>Panel Operativo</h1>
+    <p>Centro de Operaciones Diario</p>
+  </div>
+  <div class="hdr-center">
+    <div class="hfield">
+      <span class="hfield-label">👩‍💼 Asistente</span>
+      <input type="text" id="nombre-asistente" class="ai" value="Andreina · Golden Trust Financial" oninput="actualizarNombre()">
+    </div>
+    <div class="hdr-divider"></div>
+    <div class="hfield">
+      <span class="hfield-label">👤 Contacto</span>
+      <input type="text" id="nombre-contacto" class="ci" placeholder="Nombre del cliente..." oninput="actualizarNombre()">
+    </div>
+    <div class="hfield">
+      <span class="hfield-label">📱 WhatsApp</span>
+      <input type="text" id="wa-numero" class="pi" placeholder="17865551234">
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div style="text-align:right">
+      <div class="fl-badge">🌴 Florida Time</div>
+      <div id="fl-time">--:-- --</div>
+      <div id="fl-date">Cargando...</div>
+    </div>
+    <div class="export-menu-wrap">
+      <button class="export-btn" onclick="toggleExportMenu()">⚙️ Opciones ▾</button>
+      <div class="export-dropdown" id="export-dropdown">
+        <div class="exp-item" onclick="exportarHTML()"><span class="exp-icon">⬇️</span> Exportar HTML</div>
+        <div class="exp-sep"></div>
+        <div class="exp-item green" onclick="exportarDB()"><span class="exp-icon">📦</span> Exportar DB (.json)</div>
+        <div class="exp-item blue-c" onclick="abrirImportarDB()"><span class="exp-icon">📥</span> Importar DB (.json)</div>
+        <div class="exp-sep"></div>
+        <div class="exp-item" onclick="resetearTodo()"><span class="exp-icon">🔄</span> Resetear todo</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════ CONTENT ═══════════════════════ -->
+<div id="content">
+
+<!-- ── ENLACES RÁPIDOS ── -->
+<div class="view active" id="view-links">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon blue">🔗</div>
+      <div class="pt-title"><h2>Enlaces Rápidos</h2><p>Accede a tus herramientas con un clic</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-blue" onclick="modalAgregarEnlace()">+ Nuevo enlace</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="links-grid" id="links-grid"></div>
+  </div>
+</div>
+
+<!-- ── GUIONES ── -->
+<div class="view" id="view-guiones">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon orange">📝</div>
+      <div class="pt-title"><h2>Guiones</h2><p>Scripts por categoría</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-blue" onclick="modalAgregarGuion()">+ Nuevo guión</button>
+      <button class="btn btn-ghost" onclick="modalAgregarTabGuiones()">+ Nuevo tab</button>
+    </div>
+  </div>
+  <div class="tabs-bar" id="guiones-tabs"></div>
+  <div class="msgs-grid" id="guiones-grid"></div>
+</div>
+
+<!-- ── WHATSAPP ── -->
+<div class="view" id="view-wa">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon green">💬</div>
+      <div class="pt-title"><h2>Mensajes WhatsApp</h2><p>Mensajes rápidos personalizados</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-green" onclick="modalAgregarMensajeWA()">+ Nuevo mensaje</button>
+      <button class="btn btn-ghost" onclick="modalAgregarTabWA()">+ Nuevo tab</button>
+    </div>
+  </div>
+  <div class="tabs-bar" id="wa-tabs"></div>
+  <div class="msgs-grid" id="wa-msgs-grid"></div>
+</div>
+
+<!-- ── CHECKLIST ── -->
+<div class="view" id="view-checklist">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon blue">✅</div>
+      <div class="pt-title"><h2>Checklist Diario</h2><p>Se resetea automáticamente cada día</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-ghost" onclick="resetChecklist()">🔄 Resetear</button>
+      <button class="btn btn-ghost" onclick="modalAgregarTabCk()">+ Nuevo tab</button>
+    </div>
+  </div>
+  <div class="tabs-bar" id="ck-tabs"></div>
+  <div class="card" style="max-width:640px">
+    <div class="checklist-wrap" id="ck-list"></div>
+    <div class="ck-add-row">
+      <input type="text" id="ck-new-input" placeholder="Nueva tarea... (Enter para agregar)">
+      <button class="btn btn-blue" onclick="agregarCkItem()">+ Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTADOR ── -->
+<div class="view" id="view-contador">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon blue">📞</div>
+      <div class="pt-title"><h2>Contador de Llamadas</h2><p>Se resetea automáticamente cada día</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-ghost" onclick="resetContadores()">🔄 Resetear día</button>
+    </div>
+  </div>
+  <div class="counters-grid">
+    <div class="counter-card">
+      <div class="cc-label">📞 Llamadas</div>
+      <div class="cc-num" id="cc-llamadas">0</div>
+      <div class="cc-btns">
+        <button class="cc-btn plus" onclick="incrementar('llamadas')">+</button>
+        <button class="cc-btn minus" onclick="decrementar('llamadas')">−</button>
+        <button class="cc-btn reset" onclick="resetUno('llamadas')">↺</button>
+      </div>
+    </div>
+    <div class="counter-card orange-t">
+      <div class="cc-label">🤝 Contactabilidad</div>
+      <div class="cc-num orange" id="cc-contactabilidad">0</div>
+      <div class="cc-btns">
+        <button class="cc-btn plus" style="background:var(--orange)" onclick="incrementar('contactabilidad')">+</button>
+        <button class="cc-btn minus" onclick="decrementar('contactabilidad')">−</button>
+        <button class="cc-btn reset" onclick="resetUno('contactabilidad')">↺</button>
+      </div>
+    </div>
+    <div class="counter-card green-t">
+      <div class="cc-label">📅 Citas Agendadas</div>
+      <div class="cc-num green" id="cc-citas">0</div>
+      <div class="cc-btns">
+        <button class="cc-btn plus" style="background:var(--green)" onclick="incrementar('citas')">+</button>
+        <button class="cc-btn minus" onclick="decrementar('citas')">−</button>
+        <button class="cc-btn reset" onclick="resetUno('citas')">↺</button>
+      </div>
+    </div>
+  </div>
+  <div class="counter-meta">
+    <div class="meta-row">
+      <label>🎯 Meta de llamadas:</label>
+      <input type="number" id="meta-llamadas" value="25" min="1" oninput="guardarContadores()">
+      <span>por día</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-info" id="progress-info">0 / 25 llamadas</div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-pct" id="progress-pct">0% completado</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AGENTES ── -->
+<div class="view" id="view-agentes">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon purple">👥</div>
+      <div class="pt-title"><h2>Agentes</h2><p>Directorio del equipo</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-blue" onclick="modalAgregarAgente()">+ Nuevo agente</button>
+    </div>
+  </div>
+  <div class="split-layout">
+    <div class="split-left" id="agentes-list"></div>
+    <div class="split-right" id="agente-detail"></div>
+  </div>
+</div>
+
+<!-- ── ASEGURADORAS ── -->
+<div class="view" id="view-aseguradoras">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon orange">🏢</div>
+      <div class="pt-title"><h2>Aseguradoras</h2><p>Compañías y procedimientos</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-blue" onclick="modalAgregarAseguradora()">+ Nueva aseguradora</button>
+    </div>
+  </div>
+  <!-- Selector de agente de trabajo -->
+  <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span style="font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap">👤 Agente de trabajo:</span>
+    <select id="aseg-agente-select" class="form-input" style="min-width:220px;max-width:320px;margin:0" onchange="seleccionarAgenteAseguradora(this.value)">
+      <option value="">— Seleccionar agente —</option>
+    </select>
+    <div id="aseg-agente-badge" style="display:none"></div>
+  </div>
+  <div class="split-layout">
+    <div class="split-left" id="aseguradoras-list"></div>
+    <div class="split-right" id="aseguradora-detail"></div>
+  </div>
+</div>
+
+<!-- ── NOTAS ── -->
+<div class="view" id="view-notas">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon yellow">🗒️</div>
+      <div class="pt-title"><h2>Notas</h2><p>Registro acumulativo · se guardan automáticamente</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-red btn-sm" onclick="confirmarBorrarTodasNotas()">🗑️ Borrar todas</button>
+    </div>
+  </div>
+  <div class="notas-layout">
+    <div class="nota-input-box">
+      <div class="form-label" style="margin-bottom:8px">✏️ Nueva nota</div>
+      <textarea id="nota-nueva" placeholder="Escribe tu nota aquí..."></textarea>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn btn-blue" onclick="agregarNota()">💾 Guardar nota</button>
+        <span style="font-size:11px;color:var(--muted);align-self:center">Ctrl+Enter</span>
+      </div>
+    </div>
+    <div class="notas-list-wrap" id="notas-list"></div>
+  </div>
+</div>
+
+<!-- ── FAQ ── -->
+<div class="view" id="view-faq">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon gray">ℹ️</div>
+      <div class="pt-title"><h2>Info / FAQ</h2><p>Respuestas rápidas</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-blue" onclick="modalAgregarFAQ()">+ Nueva tarjeta</button>
+    </div>
+  </div>
+  <div class="faq-search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" class="faq-search" id="faq-search" placeholder="Buscar..." oninput="buscarFAQ(this.value)">
+  </div>
+  <div class="faq-no-results" id="faq-no-results">No se encontraron resultados.</div>
+  <div class="faq-grid" id="faq-grid"></div>
+</div>
+
+<!-- ── BASE DE DATOS IDB ── -->
+<div class="view" id="view-idb">
+  <div class="page-title">
+    <div class="page-title-left">
+      <div class="pt-icon blue">🗄️</div>
+      <div class="pt-title"><h2>Base de Datos</h2><p>Contenido actual en IndexedDB</p></div>
+    </div>
+    <div class="pt-actions">
+      <button class="btn btn-ghost" onclick="renderIDBView()">🔄 Actualizar</button>
+    </div>
+  </div>
+  <div id="idb-status-bar" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px"></div>
+  <div id="idb-tables-wrap"></div>
+</div>
+
+</div><!-- fin #content -->
+
+<!-- ═══════════════════════ MODAL ═══════════════════════ -->
+<div id="modal-overlay" onclick="cerrarModalSiOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Modal</span>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="db-import-input" accept=".json" style="display:none" onchange="procesarArchivoDB(this)">
+
+<!-- ═══════════════════════ MODAL PREVIEW GUIÓN ═══════════════════════ -->
+<div id="guion-preview-overlay">
+  <div class="guion-preview-modal" style="position:relative" onclick="event.stopPropagation()">
+    <div class="guion-pm-header">
+      <div class="guion-pm-tag" id="gpm-tag">Guión</div>
+      <div class="guion-pm-title" id="gpm-title">—</div>
+      <button class="guion-pm-close" id="gpm-close-btn">✕</button>
+    </div>
+    <div class="guion-pm-nombres">
+      <input class="form-input" id="gpm-nombre-contacto" placeholder="[NOMBRE]" style="flex:1;min-width:140px;font-size:12px;padding:6px 10px">
+      <input class="form-input" id="gpm-nombre-asistente" placeholder="[TU NOMBRE]" style="flex:1;min-width:140px;font-size:12px;padding:6px 10px">
+    </div>
+    <div class="guion-pm-body">
+      <div class="guion-pm-text" id="gpm-text"></div>
+    </div>
+    <div class="guion-pm-footer">
+      <button class="btn btn-blue" id="gpm-copiar-btn">📋 Copiar</button>
+      <button class="btn btn-green" id="gpm-wa-btn" style="display:none">💬 WhatsApp</button>
+      <button class="btn btn-ghost" id="gpm-cerrar-btn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATOS — LCDOT (Lógica de Carga Dinámica por Objetos y Tabs)
+// ═══════════════════════════════════════════════════════════════
+
+// ── ENLACES RÁPIDOS ──
+const LINKS_DEFAULT = [
+  { id:'lnk1', nombre:'FL License Search', url:'https://www.myfloridalicense.com/wl11.asp', icono:'🏛️', color:'blue' },
+  { id:'lnk2', nombre:'Google Drive',      url:'https://drive.google.com',                  icono:'📁', color:'blue' },
+  { id:'lnk3', nombre:'Doc. Alower',        url:'https://docs.google.com',                   icono:'📄', color:'orange' },
+  { id:'lnk4', nombre:'Hoja Seguimiento',  url:'https://docs.google.com/spreadsheets',      icono:'📊', color:'orange' },
+  { id:'lnk5', nombre:'WhatsApp Web',      url:'https://web.whatsapp.com',                  icono:'💬', color:'green' },
+  { id:'lnk6', nombre:'Gmail',             url:'https://mail.google.com',                   icono:'📧', color:'blue' },
+  { id:'lnk7', nombre:'Calendario',        url:'https://calendar.google.com',               icono:'📅', color:'blue' },
+  { id:'lnk8', nombre:'Calendly',          url:'https://calendly.com',                      icono:'🗓️', color:'blue' },
+];
+
+// ── GUIONES ──
+const TABS_GUIONES_DEFAULT = [
+  {
+    nombre: '🎯 Reclutamiento',
+    mensajes: [
+      { nombre: 'Guión Principal',    template: 'Hola [NOMBRE], mi nombre es [TU NOMBRE] y te llamo porque vi tu perfil. Creo que podrías ser una excelente fit para una oportunidad que tenemos. ¿Tienes unos minutos para hablar?' },
+      { nombre: 'Seguimiento',        template: 'Hola [NOMBRE], soy [TU NOMBRE]. Te contacté hace unos días sobre una oportunidad. ¿Pudiste pensarlo? Me gustaría contarte más detalles, ¿cuándo tienes disponibilidad?' },
+      { nombre: 'Manejo Objeciones',  template: 'Entiendo tu preocupación, [NOMBRE]. Muchas personas pensaban lo mismo antes de conocer el modelo. ¿Qué te parece si te presento la información y después decides con calma? Solo son 30 minutos.' },
+    ]
+  },
+  {
+    nombre: '💰 IUL / IUE',
+    mensajes: [
+      { nombre: 'Script Agendamiento',   template: 'Hola [NOMBRE], te llamo para coordinar una reunión donde te explicaremos cómo funciona el IUL/IUE y cómo puede beneficiar a tu familia. ¿Tienes disponibilidad el [DÍA] a las [HORA]?' },
+      { nombre: 'Script Confirmación',   template: 'Hola [NOMBRE], te confirmo que tu cita es el [DÍA] a las [HORA]. El link para unirte es: [LINK]. ¿Tienes alguna pregunta antes de la reunión?' },
+      { nombre: 'Script Post-Cita',      template: 'Hola [NOMBRE], gracias por tomarte el tiempo hoy. ¿Pudiste ver con claridad cómo funciona el plan? ¿Tienes alguna pregunta o necesitas más información para tomar una decisión?' },
+    ]
+  },
+];
+
+// ── WHATSAPP ──
+const TABS_WA_DEFAULT = [
+  {
+    nombre: '🎯 Reclutamiento',
+    mensajes: [
+      { nombre: '👋 Primer contacto',     template: 'Hola [NOMBRE], vi que puedes estar interesado/a en una oportunidad de negocio. Soy [TU NOMBRE] de Golden Trust Financial y me gustaría contarte más. ¿Tienes un momento?' },
+      { nombre: '📵 No answer',           template: 'Hola [NOMBRE], te llamé hace un momento pero no pude comunicarme. Escríbeme cuando puedas. ¡Tengo algo interesante que contarte! 😊' },
+      { nombre: '🔁 Reactivar contacto',  template: 'Hola [NOMBRE], ¿cómo has estado? Hace un tiempo hablamos sobre una oportunidad. Quería retomar la conversación porque creo que ahora puede ser un buen momento. ¿Hablamos?' },
+      { nombre: '🤝 Cierre',              template: 'Hola [NOMBRE], gracias por tomarte el tiempo hoy. Fue un placer hablar contigo. Si tienes preguntas o quieres retomar la conversación, aquí estaré. ¡Que tengas un excelente día! 😊' },
+    ]
+  },
+  {
+    nombre: '💰 IUL',
+    mensajes: [
+      { nombre: '📅 Recordatorio cita',      template: 'Hola [NOMBRE] 👋 Te recuerdo que mañana tenemos nuestra reunión a las [HORA]. ¡Ya casi! Cualquier pregunta me avisas 😊' },
+      { nombre: '✅ Confirmación cita',       template: 'Hola [NOMBRE], te confirmo tu cita para el [DÍA] a las [HORA]. El link: [LINK]. ¡Te esperamos! 🙌' },
+      { nombre: '🔍 Seguimiento post-pres.',  template: 'Hola [NOMBRE], ¿cómo estás? Solo quería saber si pudiste pensar en lo que vimos. Estoy aquí para responder cualquier duda 🙂' },
+      { nombre: '🎉 Bienvenida',              template: 'Hola [NOMBRE], ¡bienvenido/a a la familia Golden Trust Financial! 🎉 En los próximos días recibirás más información. Cualquier pregunta, aquí estoy.' },
+    ]
+  },
+];
+
+// ── CHECKLIST ──
+const TABS_CK_DEFAULT = [
+  {
+    nombre: '☀️ Mañana',
+    items: [
+      'Revisar listados nuevos',
+      'Confirmar citas del día',
+      'Enviar seguimientos pendientes',
+    ]
+  },
+  {
+    nombre: '🌆 Tarde',
+    items: [
+      'Actualizar hoja de seguimiento',
+      'Revisar WhatsApp y mensajes',
+      'Llamadas de prospección',
+    ]
+  },
+  {
+    nombre: '🌙 Cierre',
+    items: [
+      'Reportar resultados del día',
+      'Preparar agenda de mañana',
+    ]
+  },
+];
+
+// ── FAQ ──
+const FAQ_DEFAULT = [
+  { id: 'faq1', color: '#2563eb', titulo: '💡 ¿Qué es el IUL?',          texto: 'IUL = Indexed Universal Life. Seguro de vida permanente con cuenta de valor en efectivo que crece basada en un índice del mercado (S&P 500), con protección contra pérdidas.' },
+  { id: 'faq2', color: '#2563eb', titulo: '💡 ¿Qué es el IUE?',          texto: 'IUE = Indexed Universal Life Employer. Similar al IUL pero estructurado como beneficio empresarial con ventajas fiscales para dueños de negocio o empleados.' },
+  { id: 'faq3', color: '#16a34a', titulo: '🎁 ¿Qué ofrecemos?',           texto: 'Planificación financiera a través de seguros de vida con componente de ahorro e inversión. Protección + crecimiento de capital + beneficios fiscales.' },
+  { id: 'faq4', color: '#16a34a', titulo: '🔄 ¿Cómo es el proceso?',      texto: '1. Llamada inicial (5-10 min) → 2. Presentación virtual (30 min) → 3. Análisis personalizado → 4. Aplicación → 5. Aprobación y póliza activa.' },
+  { id: 'faq5', color: '#ea580c', titulo: '⏱️ ¿Duración de presentación?', texto: 'Aproximadamente 30 minutos de forma virtual (Zoom/Teams). El cliente puede conectarse desde cualquier lugar.' },
+  { id: 'faq6', color: '#ea580c', titulo: '📋 Requisitos básicos',         texto: 'Mayor de 18 años · Residir en Florida u otros estados · SSN o ITIN · Pasar evaluación médica básica.' },
+  { id: 'faq7', color: '#6b7280', titulo: '❓ ¿Es inversión o seguro?',    texto: 'Es ambos. El IUL es un producto híbrido: seguro de vida + vehículo de ahorro con crecimiento indexado.' },
+  { id: 'faq8', color: '#6b7280', titulo: '📞 ¿Qué decir si preguntan el costo?', texto: 'El costo varía según edad, salud y monto deseado. El análisis es personalizado y completamente gratuito.' },
+];
+
+// ── AGENTES ──
+const AGENTES_DEFAULT = [
+  {
+    id: 'ag1', nombre: 'Andreina González', npn: '12345678', correo: 'andreina@goldentrust.com',
+    telefono: '+1 (786) 555-0001', instagram: 'https://instagram.com/andreina_gt',
+    facebook: 'https://facebook.com/andreina.gt', tiktok: '',
+    ssn4: '****',
+    nacimiento: '1990-01-01',
+    carriers: [
+      { nombre: 'Transamerica', codigo: 'TA-2024-001' },
+      { nombre: 'North American', codigo: 'NA-4421-X' },
+      { nombre: 'Mutual of Omaha', codigo: 'MOO-887' },
+    ]
+  },
+];
+
+// ── ASEGURADORAS ──
+const ASEGURADORAS_DEFAULT = [
+  {
+    id: 'as1', nombre: 'Transamerica', logo: '🏦', estado: 'Activa',
+    procedimientos: [
+      { id: 'p1', titulo: '📋 Cómo hacer una aplicación nueva', cuerpo: '1. Ingresar al portal de agentes en transamerica.com/agents\n2. Seleccionar "New Application"\n3. Completar todos los campos del cliente\n4. Adjuntar documentos de identidad\n5. Enviar para revisión médica\n\nTiempo estimado: 3-5 días hábiles.' },
+      { id: 'p2', titulo: '🔄 Cambio de beneficiario', cuerpo: '1. Solicitar formulario en el portal\n2. Cliente debe firmar en presencia de testigo\n3. Enviar por fax o subir al portal\n4. Confirmación en 7-10 días hábiles.' },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// ESTADO DE LA APP
+// ═══════════════════════════════════════════════════════════════
+let TABS_GUIONES, TABS_WA, TABS_CK, FAQ_DATA, AGENTES, ASEGURADORAS, ENLACES;
+let guionesTabActivo = 0;
+let waTabActivo = 0;
+let ckTabActivo = 0;
+let agenteSeleccionado = null;
+let aseguradoraSeleccionada = null;
+let agenteAseguradora = null; // agente de trabajo en vista aseguradoras
+
+let contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+
+// ═══════════════════════════════════════════════════════════════
+// PERSISTENCIA — IndexedDB
+// ═══════════════════════════════════════════════════════════════
+const IDB_NAME    = 'PanelOperativoGT';
+const IDB_VERSION = 1;
+const IDB_STORE   = 'datos';
+let _idb = null;
+
+function abrirIDB() {
+  if (_idb) return Promise.resolve(_idb);
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE, { keyPath: 'k' });
+      }
+    };
+    req.onsuccess = e => { _idb = e.target.result; resolve(_idb); };
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+async function guardar(key, data) {
+  try {
+    const db = await abrirIDB();
+    return new Promise((resolve, reject) => {
+      const tx  = db.transaction(IDB_STORE, 'readwrite');
+      const req = tx.objectStore(IDB_STORE).put({ k: key, v: data, ts: Date.now() });
+      req.onsuccess = () => resolve();
+      req.onerror   = e => reject(e.target.error);
+    });
+  } catch(e) {
+    // fallback localStorage
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch(_) {}
+  }
+}
+
+async function cargar(key, def) {
+  try {
+    const db = await abrirIDB();
+    return new Promise((resolve) => {
+      const tx  = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).get(key);
+      req.onsuccess = e => resolve(e.target.result ? e.target.result.v : def);
+      req.onerror   = () => resolve(def);
+    });
+  } catch(e) {
+    // fallback localStorage
+    try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(_) { return def; }
+  }
+}
+
+async function eliminarIDB(key) {
+  try {
+    const db = await abrirIDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).delete(key);
+      tx.oncomplete = () => resolve();
+    });
+  } catch(e) {}
+}
+
+async function listarTodoIDB() {
+  const db = await abrirIDB();
+  return new Promise((resolve) => {
+    const tx  = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).getAll();
+    req.onsuccess = e => resolve(e.target.result || []);
+    req.onerror   = () => resolve([]);
+  });
+}
+
+// Migrar datos viejos de localStorage a IDB (solo primera vez)
+async function migrarDesdeLocalStorage() {
+  const keys = ['v6_guiones','v6_wa','v6_ck_data','v6_ck_fecha','v6_faq',
+                 'v6_agentes','v6_aseguradoras','v6_contadores','v6_cnt_fecha',
+                 'v6_notas','v6_vista','v6_meta_llamadas','v7_notas','v7_ultima_act','v7_enlaces'];
+  for (const k of keys) {
+    const val = localStorage.getItem(k);
+    if (val !== null) {
+      try { await guardar(k, JSON.parse(val)); } catch(_) {}
+    }
+  }
+}
+
+function hoyFL() { return new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); }
+
+async function cargarTodo() {
+  // Migrar datos viejos de localStorage si existen (solo primera vez)
+  await migrarDesdeLocalStorage();
+
+  // Cargar cada sección — si no existía en IDB, guardar el default ahora
+  const _carg = async (key, def) => {
+    const val = await cargar(key, null);
+    if (val === null) { await guardar(key, def); return JSON.parse(JSON.stringify(def)); }
+    return val;
+  };
+
+  ENLACES      = await _carg('v7_enlaces',      LINKS_DEFAULT);
+  TABS_GUIONES = await _carg('v6_guiones',      TABS_GUIONES_DEFAULT);
+  TABS_WA      = await _carg('v6_wa',           TABS_WA_DEFAULT);
+  FAQ_DATA     = await _carg('v6_faq',          FAQ_DEFAULT);
+  AGENTES      = await _carg('v6_agentes',      AGENTES_DEFAULT);
+  ASEGURADORAS = await _carg('v6_aseguradoras', ASEGURADORAS_DEFAULT);
+
+  // Última actualización
+  const ultimaAct = await cargar('v7_ultima_act', null);
+  if (ultimaAct) {
+    const el = document.getElementById('sb-ultima-act');
+    if (el) el.textContent = '🕐 ' + ultimaAct;
+  }
+
+  // Checklist — resetear si cambió el día
+  const ckData  = await cargar('v6_ck_data',  null);
+  const ckFecha = await cargar('v6_ck_fecha', null);
+  if (ckData && ckFecha === hoyFL()) {
+    TABS_CK = ckData;
+  } else {
+    TABS_CK = JSON.parse(JSON.stringify(TABS_CK_DEFAULT));
+    await guardar('v6_ck_data',  TABS_CK);
+    await guardar('v6_ck_fecha', hoyFL());
+  }
+
+  // Contadores — resetear si cambió el día
+  const cntData      = await cargar('v6_contadores',    null);
+  const cntFecha     = await cargar('v6_cnt_fecha',     null);
+  const metaGuardada = await cargar('v6_meta_llamadas', null);
+  document.getElementById('meta-llamadas').value = metaGuardada ?? 25;
+  if (cntData && cntFecha === hoyFL()) {
+    contadores = cntData;
+  } else {
+    contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+    await guardar('v6_contadores',    contadores);
+    await guardar('v6_cnt_fecha',     hoyFL());
+    await guardar('v6_meta_llamadas', 25);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════════════════
+function activarVista(id, guardarNav = true) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const ni = document.querySelector(`.nav-item[data-view="${id}"]`);
+  if (ni) ni.classList.add('active');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const v = document.getElementById(id);
+  if (v) { v.classList.add('active'); document.getElementById('content').scrollTop = 0; }
+  if (guardarNav) guardar('v6_vista', id);
+  if (id === 'view-idb') renderIDBView();
+  if (id === 'view-aseguradoras') renderSelectorAgenteAseg();
+}
+document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+  item.addEventListener('click', () => activarVista(item.dataset.view));
+});
+
+// ═══════════════════════════════════════════════════════════════
+// HORA FLORIDA
+// ═══════════════════════════════════════════════════════════════
+function actualizarHora() {
+  const ahora = new Date();
+  document.getElementById('fl-time').textContent = ahora.toLocaleTimeString('en-US', { timeZone:'America/New_York', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+  const f = ahora.toLocaleDateString('es-ES', { timeZone:'America/New_York', weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('fl-date').textContent = f.charAt(0).toUpperCase() + f.slice(1);
+}
+actualizarHora();
+setInterval(actualizarHora, 1000);
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+function toast(msg, tipo = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (tipo ? ' ' + tipo : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = '', 2500);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COPIAR / WA
+// ═══════════════════════════════════════════════════════════════
+function copiar(id, btn) {
+  const el = document.getElementById(id);
+  const txt = el ? el.value : id;
+  navigator.clipboard.writeText(txt).then(() => {
+    toast('✅ ¡Copiado!');
+    if (btn) { const o = btn.innerHTML; btn.innerHTML = '✅ Copiado'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = o; btn.classList.remove('success'); }, 2000); }
+  }).catch(() => { if (el) { el.select(); document.execCommand('copy'); } toast('✅ ¡Copiado!'); });
+}
+function abrirWA(id) {
+  const txt = document.getElementById(id)?.value || '';
+  const num = document.getElementById('wa-numero').value.replace(/\D/g, '');
+  window.open(num ? `https://wa.me/${num}?text=${encodeURIComponent(txt)}` : `https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOMBRE — reemplaza [NOMBRE] y [TU NOMBRE] en todos los textareas
+// ═══════════════════════════════════════════════════════════════
+function actualizarNombre() {
+  const nc = document.getElementById('nombre-contacto').value.trim() || '[NOMBRE]';
+  const na = document.getElementById('nombre-asistente').value.trim() || '[TU NOMBRE]';
+  document.querySelectorAll('.guion-ta[data-template]').forEach(el => {
+    el.value = el.dataset.template.replace(/\[NOMBRE\]/g, nc).replace(/\[TU NOMBRE\]/g, na);
+  });
+  renderWA();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER HELPERS — LCDOT genérico de tabs + grids
+// ═══════════════════════════════════════════════════════════════
+function renderTabsBar(containerId, tabs, activo, onClickFn, colorClass = 'blue') {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = tabs.map((t, i) => `
+    <div class="tab-wrap ${i === activo ? 'active' : ''}" id="tabwrap-${containerId}-${i}">
+      <button class="tab-btn ${i === activo ? 'active' : ''}" onclick="${onClickFn}(${i})">${t.nombre}</button>
+      <button class="tab-dots-btn" onclick="toggleTabMenu('${containerId}',${i},event)" title="Opciones">⋯</button>
+      <div class="tab-dots-menu" id="tabmenu-${containerId}-${i}">
+        <div class="tab-dots-item" onclick="modalRenombrarTab('${containerId}',${i})">✏️ Renombrar</div>
+        <div class="tab-dots-item danger" onclick="confirmarEliminarTab('${containerId}',${i})">🗑️ Eliminar tab</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTabMenu(containerId, idx, e) {
+  e.stopPropagation();
+  // cerrar todos los demás
+  document.querySelectorAll('.tab-dots-menu.open').forEach(m => {
+    if (m.id !== `tabmenu-${containerId}-${idx}`) m.classList.remove('open');
+  });
+  document.getElementById(`tabmenu-${containerId}-${idx}`)?.classList.toggle('open');
+}
+// cerrar menús al click fuera
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tab-dots-menu.open').forEach(m => m.classList.remove('open'));
+});
+
+function _tabConfig(containerId) {
+  if (containerId === 'guiones-tabs') return { arr: TABS_GUIONES, saveKey: 'v6_guiones', renderFn: renderGuiones,  tabActivoGet: ()=>guionesTabActivo, tabActivoSet: v=>guionesTabActivo=v };
+  if (containerId === 'wa-tabs')      return { arr: TABS_WA,      saveKey: 'v6_wa',       renderFn: renderWA,       tabActivoGet: ()=>waTabActivo,      tabActivoSet: v=>waTabActivo=v };
+  if (containerId === 'ck-tabs')      return { arr: TABS_CK,      saveKey: 'v6_ck_data',  renderFn: renderChecklist,tabActivoGet: ()=>ckTabActivo,      tabActivoSet: v=>ckTabActivo=v };
+  return null;
+}
+
+function modalRenombrarTab(containerId, idx) {
+  document.querySelectorAll('.tab-dots-menu.open').forEach(m => m.classList.remove('open'));
+  const cfg = _tabConfig(containerId);
+  if (!cfg) return;
+  const tab = cfg.arr[idx];
+  abrirModal('✏️ Renombrar tab', `
+    <div class="form-field">
+      <label class="form-label">Nombre del tab</label>
+      <input class="form-input" id="m-tab-nombre" value="${esc(tab.nombre)}" placeholder="Ej: 🔥 Cierre">
+    </div>
+  `, [
+    { label: 'Cancelar', cls: 'btn-ghost', action: cerrarModal },
+    { label: 'Guardar',  cls: 'btn-blue',  action: () => {
+      const nuevo = document.getElementById('m-tab-nombre').value.trim();
+      if (!nuevo) { toast('Escribe un nombre', 'warn'); return; }
+      cfg.arr[idx].nombre = nuevo;
+      guardar(cfg.saveKey, cfg.arr);
+      cfg.renderFn();
+      cerrarModal();
+      toast('✅ Tab renombrado');
+    }}
+  ]);
+}
+
+function confirmarEliminarTab(containerId, idx) {
+  document.querySelectorAll('.tab-dots-menu.open').forEach(m => m.classList.remove('open'));
+  const cfg = _tabConfig(containerId);
+  if (!cfg) return;
+  if (cfg.arr.length <= 1) { toast('No puedes eliminar el último tab', 'warn'); return; }
+  const tab = cfg.arr[idx];
+  confirmar(`¿Eliminar el tab "<b>${esc(tab.nombre)}</b>"? Se perderá todo su contenido.`, () => {
+    cfg.arr.splice(idx, 1);
+    const nuevoActivo = Math.min(cfg.tabActivoGet(), cfg.arr.length - 1);
+    cfg.tabActivoSet(nuevoActivo);
+    guardar(cfg.saveKey, cfg.arr);
+    cfg.renderFn();
+    toast('Tab eliminado', 'warn');
+  });
+}
+
+function modalAgregarTabCk() {
+  abrirModal('➕ Nuevo tab de checklist', `
+    <div class="form-field"><label class="form-label">Nombre del tab</label><input class="form-input" id="m-nombre" placeholder="Ej: 🌙 Cierre del día"></div>
+  `, [
+    { label: 'Cancelar', cls: 'btn-ghost', action: cerrarModal },
+    { label: 'Crear',    cls: 'btn-blue',  action: () => {
+      const n = document.getElementById('m-nombre').value.trim();
+      if (!n) { toast('Escribe un nombre', 'warn'); return; }
+      TABS_CK.push({ nombre: n, items: [] });
+      guardar('v6_ck_data', TABS_CK);
+      ckTabActivo = TABS_CK.length - 1;
+      renderChecklist();
+      cerrarModal();
+      toast('✅ Tab creado');
+    }}
+  ]);
+}
+
+function copiarTexto(txt, btn) {
+  navigator.clipboard.writeText(txt).then(() => {
+    toast('✅ ¡Copiado!');
+    if (btn) { const o=btn.innerHTML; btn.innerHTML='✅'; btn.classList.add('success'); setTimeout(()=>{btn.innerHTML=o;btn.classList.remove('success')},2000); }
+  }).catch(()=>toast('✅ ¡Copiado!'));
+}
+
+// ── Modal Preview Guión ──
+let _gpmTemplate = '';
+let _gpmShowWA   = false;
+
+function _gpmInit() {
+  const overlay = document.getElementById('guion-preview-overlay');
+  // cerrar al click en el overlay (fondo oscuro)
+  overlay.addEventListener('click', () => _gpmCerrar());
+  // evitar cierre al click dentro del modal (ya tiene stopPropagation en el HTML)
+  document.getElementById('gpm-close-btn').addEventListener('click',  () => _gpmCerrar());
+  document.getElementById('gpm-cerrar-btn').addEventListener('click', () => _gpmCerrar());
+  document.getElementById('gpm-copiar-btn').addEventListener('click', function() { _gpmCopiar(this); });
+  document.getElementById('gpm-wa-btn').addEventListener('click', () => _gpmWA());
+  document.getElementById('gpm-nombre-contacto').addEventListener('input',  actualizarGuionPreview);
+  document.getElementById('gpm-nombre-asistente').addEventListener('input', actualizarGuionPreview);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) _gpmCerrar();
+  });
+}
+
+function abrirGuionPreview(tabNombre, msgNombre, template, showWA) {
+  _gpmTemplate = template;
+  _gpmShowWA   = showWA;
+  document.getElementById('gpm-tag').textContent  = tabNombre;
+  document.getElementById('gpm-title').textContent = msgNombre;
+  document.getElementById('gpm-wa-btn').style.display = showWA ? '' : 'none';
+  // sincronizar nombres con los del panel
+  document.getElementById('gpm-nombre-contacto').value  = document.getElementById('nombre-contacto').value.trim();
+  document.getElementById('gpm-nombre-asistente').value = document.getElementById('nombre-asistente').value.trim();
+  actualizarGuionPreview();
+  document.getElementById('guion-preview-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function actualizarGuionPreview() {
+  const nc  = document.getElementById('gpm-nombre-contacto').value.trim()  || '[NOMBRE]';
+  const na  = document.getElementById('gpm-nombre-asistente').value.trim() || '[TU NOMBRE]';
+  const txt = _gpmTemplate
+    .replace(/\[NOMBRE\]/g, nc)
+    .replace(/\[TU NOMBRE\]/g, na);
+  // HTML con nombres resaltados
+  const escTxt = txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const escNc  = nc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const escNa  = na.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  let hi = escTxt;
+  if (nc !== '[NOMBRE]')    hi = hi.replace(new RegExp(escNc, 'g'), `<mark>${nc}</mark>`);
+  if (na !== '[TU NOMBRE]') hi = hi.replace(new RegExp(escNa, 'g'), `<mark>${na}</mark>`);
+  document.getElementById('gpm-text').innerHTML = hi;
+}
+
+function _gpmCerrar() {
+  document.getElementById('guion-preview-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function _gpmCopiar(btn) {
+  const nc  = document.getElementById('gpm-nombre-contacto').value.trim()  || '[NOMBRE]';
+  const na  = document.getElementById('gpm-nombre-asistente').value.trim() || '[TU NOMBRE]';
+  const txt = _gpmTemplate.replace(/\[NOMBRE\]/g, nc).replace(/\[TU NOMBRE\]/g, na);
+  navigator.clipboard.writeText(txt).then(() => {
+    toast('✅ ¡Copiado!');
+    if (btn) { const o=btn.innerHTML; btn.innerHTML='✅ Copiado!'; btn.classList.add('success'); setTimeout(()=>{btn.innerHTML=o;btn.classList.remove('success')},2000); }
+  });
+}
+
+function _gpmWA() {
+  const nc  = document.getElementById('gpm-nombre-contacto').value.trim()  || '[NOMBRE]';
+  const na  = document.getElementById('gpm-nombre-asistente').value.trim() || '[TU NOMBRE]';
+  const txt = _gpmTemplate.replace(/\[NOMBRE\]/g, nc).replace(/\[TU NOMBRE\]/g, na);
+  const num = document.getElementById('wa-numero')?.value.replace(/\D/g,'') || '';
+  window.open(num ? `https://wa.me/${num}?text=${encodeURIComponent(txt)}` : `https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+}
+
+// Caché de templates para el modal de preview (evita problemas de escape en onclick)
+const _gpmCache = {};
+
+function abrirGuionPreviewIdx(cacheKey) {
+  const d = _gpmCache[cacheKey];
+  if (!d) return;
+  abrirGuionPreview(d.tabNombre, d.msgNombre, d.template, d.showWA);
+}
+
+function renderMsgGrid(containerId, mensajes, tabIdx, onChangeFn, showWA = false) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const nc = document.getElementById('nombre-contacto').value.trim() || '[NOMBRE]';
+  const na = document.getElementById('nombre-asistente').value.trim() || '[TU NOMBRE]';
+  const arr = onChangeFn === 'guion' ? TABS_GUIONES : TABS_WA;
+  const tabNombre = arr[tabIdx]?.nombre || '';
+
+  if (!mensajes.length) { el.innerHTML = '<div class="empty-state">No hay mensajes. Agrega uno con el botón de arriba.</div>'; return; }
+  el.innerHTML = mensajes.map((msg, i) => {
+    const id       = `msg_${tabIdx}_${i}`;
+    const cacheKey = `${onChangeFn}_${tabIdx}_${i}`;
+    const txt      = msg.template.replace(/\[NOMBRE\]/g, nc).replace(/\[TU NOMBRE\]/g, na);
+    const preview  = txt.length > 100 ? txt.slice(0, 100).trimEnd() + '…' : txt;
+    // Guardar en caché para acceder desde onclick sin escapar el template
+    _gpmCache[cacheKey] = { tabNombre, msgNombre: msg.nombre, template: msg.template, showWA };
+    return `
+    <div class="msg-card" onclick="abrirGuionPreviewIdx('${cacheKey}')">
+      <div class="msg-card-header">
+        <span class="msg-card-label">${esc(msg.nombre)}</span>
+        <div class="msg-card-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn" onclick="abrirGuionPreviewIdx('${cacheKey}')" title="Preview">👁️</button>
+          <button class="icon-btn" onclick="${onChangeFn}_editar(${tabIdx},${i})" title="Editar">✏️</button>
+          <button class="icon-btn danger" onclick="${onChangeFn}_eliminar(${tabIdx},${i})" title="Eliminar">🗑️</button>
+        </div>
+      </div>
+      <div class="msg-preview">
+        <div class="msg-preview-text">${esc(preview)}</div>
+      </div>
+      <div class="msg-preview-footer" onclick="event.stopPropagation()">
+        <button class="msg-preview-expand" onclick="abrirGuionPreviewIdx('${cacheKey}')">Ver completo ▾</button>
+        <button class="btn btn-blue btn-sm" onclick="copiarTexto(${JSON.stringify(txt)},this)">📋 Copiar</button>
+        ${showWA ? `<button class="btn btn-green btn-sm" onclick="abrirWA('${id}')">💬 WA</button>` : ''}
+      </div>
+      <textarea class="guion-ta" id="${id}" data-template="${msg.template.replace(/"/g,'&quot;')}"
+        oninput="${onChangeFn}_cambio(${tabIdx},${i},this.value)" style="display:none"
+      >${esc(txt)}</textarea>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENLACES RÁPIDOS
+// ═══════════════════════════════════════════════════════════════
+function renderLinks() {
+  const grid = document.getElementById('links-grid');
+  if (!grid) return;
+  if (!ENLACES.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No hay enlaces. Agrega uno con el botón de arriba.</div>';
+    return;
+  }
+  grid.innerHTML = ENLACES.map((lnk, i) => `
+    <div class="link-card-wrap"
+      draggable="true"
+      data-idx="${i}"
+      ondragstart="linkDragStart(event,${i})"
+      ondragover="linkDragOver(event)"
+      ondrop="linkDrop(event,${i})"
+      ondragleave="linkDragLeave(event)"
+      ondragend="linkDragEnd(event)">
+      <span class="link-drag-handle">⠿⠿</span>
+      <a class="link-card ${esc(lnk.color)}" href="${esc(lnk.url)}" target="_blank" onclick="event.stopPropagation()">
+        <span class="lc-icon">${esc(lnk.icono)}</span>
+        ${esc(lnk.nombre)}
+      </a>
+      <div class="link-card-controls">
+        <button class="link-ctrl-btn" onclick="modalEditarEnlace('${lnk.id}')" title="Editar">✏️</button>
+        <button class="link-ctrl-btn" onclick="eliminarEnlace('${lnk.id}')" title="Eliminar">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function modalAgregarEnlace() {
+  abrirModal('➕ Nuevo enlace', _formEnlace(), [
+    { label: 'Cancelar', cls: 'btn-ghost', action: cerrarModal },
+    { label: 'Agregar',  cls: 'btn-blue',  action: async () => {
+      const lnk = _leerFormEnlace();
+      if (!lnk) return;
+      lnk.id = 'lnk_' + Date.now();
+      ENLACES.push(lnk);
+      await guardar('v7_enlaces', ENLACES);
+      renderLinks(); cerrarModal(); toast('✅ Enlace agregado');
+    }}
+  ]);
+}
+
+function modalEditarEnlace(id) {
+  const lnk = ENLACES.find(l => l.id === id);
+  if (!lnk) return;
+  abrirModal('✏️ Editar enlace', _formEnlace(lnk), [
+    { label: 'Cancelar', cls: 'btn-ghost', action: cerrarModal },
+    { label: 'Guardar',  cls: 'btn-blue',  action: async () => {
+      const vals = _leerFormEnlace();
+      if (!vals) return;
+      Object.assign(lnk, vals);
+      await guardar('v7_enlaces', ENLACES);
+      renderLinks(); cerrarModal(); toast('✅ Enlace actualizado');
+    }}
+  ]);
+}
+
+function eliminarEnlace(id) {
+  const lnk = ENLACES.find(l => l.id === id);
+  confirmar(`¿Eliminar el enlace "<b>${esc(lnk.nombre)}</b>"?`, async () => {
+    ENLACES = ENLACES.filter(l => l.id !== id);
+    await guardar('v7_enlaces', ENLACES);
+    renderLinks(); toast('Enlace eliminado', 'warn');
+  });
+}
+
+function _formEnlace(lnk = {}) {
+  const colores = ['blue','green','orange','red','purple'];
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-field" style="grid-column:span 2">
+        <label class="form-label">URL</label>
+        <input class="form-input" id="m-lnk-url" value="${esc(lnk.url||'')}" placeholder="https://...">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Nombre</label>
+        <input class="form-input" id="m-lnk-nombre" value="${esc(lnk.nombre||'')}" placeholder="Google Drive">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Ícono (emoji)</label>
+        <input class="form-input" id="m-lnk-icono" value="${esc(lnk.icono||'🔗')}" style="font-size:20px;width:80px">
+      </div>
+      <div class="form-field" style="grid-column:span 2">
+        <label class="form-label">Color</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${colores.map(c => `
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600">
+              <input type="radio" name="m-lnk-color" value="${c}" ${(lnk.color||'blue')===c?'checked':''}>
+              <span class="link-card ${c}" style="padding:4px 12px;border-radius:6px;font-size:12px">${c}</span>
+            </label>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function _leerFormEnlace() {
+  const url    = document.getElementById('m-lnk-url').value.trim();
+  const nombre = document.getElementById('m-lnk-nombre').value.trim();
+  const icono  = document.getElementById('m-lnk-icono').value.trim() || '🔗';
+  const color  = document.querySelector('input[name="m-lnk-color"]:checked')?.value || 'blue';
+  if (!url || !nombre) { toast('URL y nombre son obligatorios', 'warn'); return null; }
+  return { url, nombre, icono, color };
+}
+
+// ── Drag & Drop ──
+let _dragIdx = null;
+
+function linkDragStart(e, idx) {
+  _dragIdx = idx;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function linkDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+function linkDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function linkDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.link-card-wrap').forEach(el => el.classList.remove('drag-over'));
+  _dragIdx = null;
+}
+async function linkDrop(e, toIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (_dragIdx === null || _dragIdx === toIdx) return;
+  const [moved] = ENLACES.splice(_dragIdx, 1);
+  ENLACES.splice(toIdx, 0, moved);
+  await guardar('v7_enlaces', ENLACES);
+  renderLinks();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GUIONES
+// ═══════════════════════════════════════════════════════════════
+function renderGuiones() {
+  renderTabsBar('guiones-tabs', TABS_GUIONES, guionesTabActivo, 'cambiarTabGuion');
+  renderMsgGrid('guiones-grid', TABS_GUIONES[guionesTabActivo].mensajes, guionesTabActivo, 'guion');
+}
+function cambiarTabGuion(i) { guionesTabActivo = i; renderGuiones(); }
+
+function guion_cambio(ti, mi, val) {
+  const nc = document.getElementById('nombre-contacto').value.trim() || '[NOMBRE]';
+  const na = document.getElementById('nombre-asistente').value.trim() || '[TU NOMBRE]';
+  TABS_GUIONES[ti].mensajes[mi].template = val
+    .replace(new RegExp(nc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'[NOMBRE]')
+    .replace(new RegExp(na.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'[TU NOMBRE]');
+  guardar('v6_guiones', TABS_GUIONES);
+}
+function guion_editar(ti, mi) {
+  const msg = TABS_GUIONES[ti].mensajes[mi];
+  abrirModal('✏️ Editar guión', `
+    <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="m-nombre" value="${esc(msg.nombre)}"></div>
+    <div class="form-field"><label class="form-label">Texto</label><textarea class="form-textarea" id="m-template" style="min-height:120px">${esc(msg.template)}</textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      TABS_GUIONES[ti].mensajes[mi].nombre   = document.getElementById('m-nombre').value;
+      TABS_GUIONES[ti].mensajes[mi].template = document.getElementById('m-template').value;
+      guardar('v6_guiones', TABS_GUIONES);
+      renderGuiones(); cerrarModal(); toast('✅ Guión actualizado');
+    }}
+  ]);
+}
+function guion_eliminar(ti, mi) {
+  confirmar(`¿Eliminar el guión "<b>${esc(TABS_GUIONES[ti].mensajes[mi].nombre)}</b>"?`, () => {
+    TABS_GUIONES[ti].mensajes.splice(mi, 1);
+    guardar('v6_guiones', TABS_GUIONES);
+    renderGuiones(); toast('Guión eliminado', 'warn');
+  });
+}
+function modalAgregarGuion() {
+  abrirModal('➕ Nuevo guión', `
+    <div class="form-field"><label class="form-label">Tab destino</label>
+      <select class="form-input" id="m-tab">${TABS_GUIONES.map((t,i)=>`<option value="${i}"${i===guionesTabActivo?' selected':''}>${t.nombre}</option>`).join('')}</select>
+    </div>
+    <div class="form-field"><label class="form-label">Nombre del guión</label><input class="form-input" id="m-nombre" placeholder="Ej: Seguimiento 2"></div>
+    <div class="form-field"><label class="form-label">Texto</label><textarea class="form-textarea" id="m-template" placeholder="Hola [NOMBRE]..." style="min-height:110px"></textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar', cls:'btn-blue', action: () => {
+      const ti = parseInt(document.getElementById('m-tab').value);
+      const n = document.getElementById('m-nombre').value.trim();
+      const t = document.getElementById('m-template').value.trim();
+      if (!n || !t) { toast('Completa todos los campos', 'warn'); return; }
+      TABS_GUIONES[ti].mensajes.push({ nombre: n, template: t });
+      guardar('v6_guiones', TABS_GUIONES);
+      guionesTabActivo = ti; renderGuiones(); cerrarModal(); toast('✅ Guión agregado');
+    }}
+  ]);
+}
+function modalAgregarTabGuiones() {
+  abrirModal('➕ Nuevo tab de guiones', `
+    <div class="form-field"><label class="form-label">Nombre del tab</label><input class="form-input" id="m-nombre" placeholder="Ej: 🔥 Cierre"></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Crear', cls:'btn-blue', action: () => {
+      const n = document.getElementById('m-nombre').value.trim();
+      if (!n) { toast('Escribe un nombre', 'warn'); return; }
+      TABS_GUIONES.push({ nombre: n, mensajes: [] });
+      guardar('v6_guiones', TABS_GUIONES);
+      guionesTabActivo = TABS_GUIONES.length - 1;
+      renderGuiones(); cerrarModal(); toast('✅ Tab creado');
+    }}
+  ]);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WHATSAPP
+// ═══════════════════════════════════════════════════════════════
+function renderWA() {
+  renderTabsBar('wa-tabs', TABS_WA, waTabActivo, 'cambiarTabWA', 'green');
+  const el = document.getElementById('wa-tabs');
+  if (el) el.querySelectorAll('.tab-btn.active').forEach(b => { b.style.color='var(--green)'; b.style.borderBottomColor='var(--green)'; b.style.background='var(--green-l)'; });
+  renderMsgGrid('wa-msgs-grid', TABS_WA[waTabActivo].mensajes, waTabActivo, 'wa', true);
+}
+function cambiarTabWA(i) { waTabActivo = i; renderWA(); }
+
+function wa_cambio(ti, mi, val) {
+  const nc = document.getElementById('nombre-contacto').value.trim() || '[NOMBRE]';
+  const na = document.getElementById('nombre-asistente').value.trim() || '[TU NOMBRE]';
+  TABS_WA[ti].mensajes[mi].template = val
+    .replace(new RegExp(nc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'[NOMBRE]')
+    .replace(new RegExp(na.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),'[TU NOMBRE]');
+  guardar('v6_wa', TABS_WA);
+}
+function wa_editar(ti, mi) {
+  const msg = TABS_WA[ti].mensajes[mi];
+  abrirModal('✏️ Editar mensaje WA', `
+    <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="m-nombre" value="${esc(msg.nombre)}"></div>
+    <div class="form-field"><label class="form-label">Mensaje</label><textarea class="form-textarea" id="m-template" style="min-height:120px">${esc(msg.template)}</textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      TABS_WA[ti].mensajes[mi].nombre   = document.getElementById('m-nombre').value;
+      TABS_WA[ti].mensajes[mi].template = document.getElementById('m-template').value;
+      guardar('v6_wa', TABS_WA);
+      renderWA(); cerrarModal(); toast('✅ Mensaje actualizado');
+    }}
+  ]);
+}
+function wa_eliminar(ti, mi) {
+  confirmar(`¿Eliminar el mensaje "<b>${esc(TABS_WA[ti].mensajes[mi].nombre)}</b>"?`, () => {
+    TABS_WA[ti].mensajes.splice(mi, 1);
+    guardar('v6_wa', TABS_WA);
+    renderWA(); toast('Mensaje eliminado', 'warn');
+  });
+}
+function modalAgregarMensajeWA() {
+  abrirModal('➕ Nuevo mensaje WhatsApp', `
+    <div class="form-field"><label class="form-label">Tab destino</label>
+      <select class="form-input" id="m-tab">${TABS_WA.map((t,i)=>`<option value="${i}"${i===waTabActivo?' selected':''}>${t.nombre}</option>`).join('')}</select>
+    </div>
+    <div class="form-field"><label class="form-label">Nombre del mensaje</label><input class="form-input" id="m-nombre" placeholder="Ej: Post-presentación 2"></div>
+    <div class="form-field"><label class="form-label">Mensaje (usa [NOMBRE] y [TU NOMBRE])</label><textarea class="form-textarea" id="m-template" placeholder="Hola [NOMBRE]..." style="min-height:110px"></textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar', cls:'btn-green', action: () => {
+      const ti = parseInt(document.getElementById('m-tab').value);
+      const n = document.getElementById('m-nombre').value.trim();
+      const t = document.getElementById('m-template').value.trim();
+      if (!n || !t) { toast('Completa todos los campos', 'warn'); return; }
+      TABS_WA[ti].mensajes.push({ nombre: n, template: t });
+      guardar('v6_wa', TABS_WA);
+      waTabActivo = ti; renderWA(); cerrarModal(); toast('✅ Mensaje agregado');
+    }}
+  ]);
+}
+function modalAgregarTabWA() {
+  abrirModal('➕ Nuevo tab de WhatsApp', `
+    <div class="form-field"><label class="form-label">Nombre del tab</label><input class="form-input" id="m-nombre" placeholder="Ej: 🏠 Seguros de Hogar"></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Crear', cls:'btn-green', action: () => {
+      const n = document.getElementById('m-nombre').value.trim();
+      if (!n) { toast('Escribe un nombre', 'warn'); return; }
+      TABS_WA.push({ nombre: n, mensajes: [] });
+      guardar('v6_wa', TABS_WA);
+      waTabActivo = TABS_WA.length - 1;
+      renderWA(); cerrarModal(); toast('✅ Tab creado');
+    }}
+  ]);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECKLIST
+// ═══════════════════════════════════════════════════════════════
+function renderChecklist() {
+  renderTabsBar('ck-tabs', TABS_CK, ckTabActivo, 'cambiarTabCk');
+  const lista = document.getElementById('ck-list');
+  if (!lista) return;
+  const items = TABS_CK[ckTabActivo].items;
+  if (!items.length) { lista.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0">No hay tareas. Agrega una abajo.</div>'; return; }
+  lista.innerHTML = items.map((item, i) => {
+    const done = typeof item === 'object' ? item.done : false;
+    const texto = typeof item === 'object' ? item.texto : item;
+    return `
+    <div class="ck-item ${done ? 'done' : ''}" id="ck-${ckTabActivo}-${i}">
+      <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleCk(${ckTabActivo},${i},this.checked)">
+      <span class="ck-text">${esc(texto)}</span>
+      <div class="ck-actions">
+        <button class="icon-btn" onclick="editarCkItem(${ckTabActivo},${i})" title="Editar">✏️</button>
+        <button class="icon-btn danger" onclick="eliminarCkItem(${ckTabActivo},${i})" title="Eliminar">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function cambiarTabCk(i) { ckTabActivo = i; renderChecklist(); }
+function normCk(item) { return typeof item === 'object' ? item : { texto: item, done: false }; }
+
+function toggleCk(ti, i, checked) {
+  TABS_CK[ti].items[i] = { ...normCk(TABS_CK[ti].items[i]), done: checked };
+  guardar('v6_ck_data', TABS_CK);
+  renderChecklist();
+}
+function agregarCkItem() {
+  const inp = document.getElementById('ck-new-input');
+  const texto = inp.value.trim();
+  if (!texto) return;
+  TABS_CK[ckTabActivo].items.push({ texto, done: false });
+  guardar('v6_ck_data', TABS_CK);
+  inp.value = '';
+  renderChecklist();
+}
+document.getElementById('ck-new-input').addEventListener('keydown', e => { if (e.key === 'Enter') agregarCkItem(); });
+
+function editarCkItem(ti, i) {
+  const item = normCk(TABS_CK[ti].items[i]);
+  abrirModal('✏️ Editar tarea', `
+    <div class="form-field"><label class="form-label">Texto de la tarea</label><input class="form-input" id="m-texto" value="${esc(item.texto)}"></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      const t = document.getElementById('m-texto').value.trim();
+      if (!t) return;
+      TABS_CK[ti].items[i] = { ...item, texto: t };
+      guardar('v6_ck_data', TABS_CK);
+      renderChecklist(); cerrarModal(); toast('✅ Tarea actualizada');
+    }}
+  ]);
+}
+function eliminarCkItem(ti, i) {
+  confirmar(`¿Eliminar la tarea "<b>${esc(normCk(TABS_CK[ti].items[i]).texto)}</b>"?`, () => {
+    TABS_CK[ti].items.splice(i, 1);
+    guardar('v6_ck_data', TABS_CK);
+    renderChecklist(); toast('Tarea eliminada', 'warn');
+  });
+}
+function resetChecklist() {
+  confirmar('¿Desmarcar todas las tareas del checklist?', () => {
+    TABS_CK.forEach(tab => tab.items.forEach((item, i) => {
+      tab.items[i] = { ...normCk(item), done: false };
+    }));
+    guardar('v6_ck_data', TABS_CK);
+    renderChecklist(); toast('Checklist reseteado');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTADOR
+// ═══════════════════════════════════════════════════════════════
+function renderContadores() {
+  ['llamadas','contactabilidad','citas'].forEach(k => {
+    document.getElementById(`cc-${k}`).textContent = contadores[k];
+  });
+  actualizarProgreso();
+}
+function incrementar(tipo) {
+  if (tipo === 'citas') {
+    // Cita agendada suma 1 a todo
+    contadores.citas++;
+    contadores.contactabilidad++;
+    contadores.llamadas++;
+  } else if (tipo === 'contactabilidad') {
+    // Contactabilidad suma 1 llamada también
+    contadores.contactabilidad++;
+    contadores.llamadas++;
+  } else {
+    contadores[tipo]++;
+  }
+  bump(`cc-${tipo}`);
+  renderContadores();
+  guardarContadores();
+}
+function decrementar(tipo) {
+  contadores[tipo] = Math.max(0, contadores[tipo] - 1);
+  renderContadores(); guardarContadores();
+}
+function resetUno(tipo) {
+  confirmar(`¿Resetear el contador de <b>${tipo}</b>?`, () => {
+    contadores[tipo] = 0; renderContadores(); guardarContadores();
+  });
+}
+function resetContadores() {
+  confirmar('¿Resetear <b>todos</b> los contadores del día?', () => {
+    contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+    renderContadores(); guardarContadores(); toast('Contadores reseteados');
+  });
+}
+function bump(id) {
+  const el = document.getElementById(id);
+  el.classList.add('bump'); setTimeout(() => el.classList.remove('bump'), 150);
+}
+function guardarContadores() {
+  guardar('v6_contadores', contadores);
+  guardar('v6_cnt_fecha', hoyFL());
+  guardar('v6_meta_llamadas', document.getElementById('meta-llamadas').value);
+  actualizarProgreso();
+}
+function actualizarProgreso() {
+  const meta = parseInt(document.getElementById('meta-llamadas').value) || 25;
+  const pct  = Math.min(100, Math.round((contadores.llamadas / meta) * 100));
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-fill').style.background = pct>=100?'#16a34a':pct>=60?'#f59e0b':'var(--blue)';
+  document.getElementById('progress-info').textContent = `${contadores.llamadas} / ${meta} llamadas`;
+  document.getElementById('progress-pct').textContent  = `${pct}% completado`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTAS
+// ═══════════════════════════════════════════════════════════════
+function getFechaFL() {
+  const a = new Date();
+  return a.toLocaleDateString('es-ES',{timeZone:'America/New_York',weekday:'short',day:'numeric',month:'short'}) + ' · ' +
+         a.toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:true});
+}
+async function renderNotas() {
+  const notas = await cargar('v7_notas', []);
+  const lista = document.getElementById('notas-list');
+  if (!notas.length) { lista.innerHTML = '<div class="notas-empty">📝 No hay notas aún. ¡Agrega la primera!</div>'; return; }
+  lista.innerHTML = [...notas].reverse().map((n, ri) => {
+    const i = notas.length - 1 - ri;
+    return `
+    <div class="nota-card" id="nota-card-${i}">
+      <div class="nota-card-view">
+        <div class="nota-card-header">
+          <div class="nota-card-meta">🕐 ${n.fecha}</div>
+          <div style="display:flex;gap:4px">
+            <button class="icon-btn" onclick="editarNota(${i})" title="Editar">✏️</button>
+            <button class="icon-btn danger" onclick="eliminarNota(${i})" title="Eliminar">🗑️</button>
+          </div>
+        </div>
+        <div class="nota-card-text">${esc(n.texto)}</div>
+      </div>
+      <div class="nota-card-edit">
+        <textarea class="nota-edit-ta" id="nota-edit-${i}">${esc(n.texto)}</textarea>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="btn btn-blue btn-sm" onclick="guardarEditNota(${i})">💾 Guardar</button>
+          <button class="btn btn-gray btn-sm" onclick="cancelarEditNota(${i})">Cancelar</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function agregarNota() {
+  const inp = document.getElementById('nota-nueva');
+  const texto = inp.value.trim();
+  if (!texto) { toast('Escribe algo primero', 'warn'); return; }
+  const notas = await cargar('v7_notas', []);
+  notas.push({ texto, fecha: getFechaFL() });
+  await guardar('v7_notas', notas);
+  inp.value = '';
+  await renderNotas();
+  toast('✅ ¡Nota guardada!');
+}
+function editarNota(i) { document.getElementById(`nota-card-${i}`).classList.add('editing'); }
+function cancelarEditNota(i) { document.getElementById(`nota-card-${i}`).classList.remove('editing'); }
+async function guardarEditNota(i) {
+  const texto = document.getElementById(`nota-edit-${i}`).value.trim();
+  if (!texto) return;
+  const notas = await cargar('v7_notas', []);
+  notas[i].texto = texto;
+  await guardar('v7_notas', notas);
+  cancelarEditNota(i);
+  await renderNotas();
+  toast('✅ Nota actualizada');
+}
+async function eliminarNota(i) {
+  confirmar('¿Eliminar esta nota?', async () => {
+    const notas = await cargar('v7_notas', []);
+    notas.splice(i, 1);
+    await guardar('v7_notas', notas);
+    await renderNotas();
+    toast('Nota eliminada', 'warn');
+  });
+}
+async function confirmarBorrarTodasNotas() {
+  confirmar('¿Borrar <b>todas</b> las notas? Esta acción no se puede deshacer.', async () => {
+    await guardar('v7_notas', []);
+    await renderNotas();
+    toast('Notas borradas', 'warn');
+  });
+}
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter' && document.activeElement.id === 'nota-nueva') agregarNota();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// FAQ
+// ═══════════════════════════════════════════════════════════════
+function renderFAQ(query = '') {
+  const grid = document.getElementById('faq-grid');
+  const q = query.toLowerCase().trim();
+  let vis = 0;
+  grid.innerHTML = FAQ_DATA.map(item => {
+    const txt = (item.titulo + ' ' + item.texto).toLowerCase();
+    const oculto = q && !txt.includes(q);
+    if (!oculto) vis++;
+    const hi = s => q ? s.replace(new RegExp(`(${q})`, 'gi'), '<mark>$1</mark>') : s;
+    return `
+    <div class="faq-item ${oculto ? 'hidden' : ''}" style="border-left-color:${item.color}">
+      <div class="faq-item-header">
+        <h4>${hi(esc(item.titulo))}</h4>
+        <div class="faq-item-actions">
+          <button class="icon-btn" onclick="editarFAQ('${item.id}')" title="Editar">✏️</button>
+          <button class="icon-btn danger" onclick="eliminarFAQ('${item.id}')" title="Eliminar">🗑️</button>
+        </div>
+      </div>
+      <p>${hi(esc(item.texto))}</p>
+    </div>`;
+  }).join('');
+  document.getElementById('faq-no-results').style.display = vis === 0 && q ? 'block' : 'none';
+}
+function buscarFAQ(q) { renderFAQ(q); }
+function modalAgregarFAQ() {
+  abrirModal('➕ Nueva tarjeta FAQ', `
+    <div class="form-field"><label class="form-label">Título</label><input class="form-input" id="m-titulo" placeholder="💡 ¿Qué es...?"></div>
+    <div class="form-field"><label class="form-label">Contenido</label><textarea class="form-textarea" id="m-texto" placeholder="Explicación..."></textarea></div>
+    <div class="form-field"><label class="form-label">Color del borde</label><input type="color" id="m-color" value="#2563eb" style="width:60px;height:34px;border:none;cursor:pointer;border-radius:6px"></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar', cls:'btn-blue', action: () => {
+      const t = document.getElementById('m-titulo').value.trim();
+      const x = document.getElementById('m-texto').value.trim();
+      if (!t || !x) { toast('Completa todos los campos', 'warn'); return; }
+      FAQ_DATA.push({ id: 'faq_' + Date.now(), color: document.getElementById('m-color').value, titulo: t, texto: x });
+      guardar('v6_faq', FAQ_DATA);
+      renderFAQ(); cerrarModal(); toast('✅ Tarjeta agregada');
+    }}
+  ]);
+}
+function editarFAQ(id) {
+  const item = FAQ_DATA.find(f => f.id === id);
+  if (!item) return;
+  abrirModal('✏️ Editar tarjeta FAQ', `
+    <div class="form-field"><label class="form-label">Título</label><input class="form-input" id="m-titulo" value="${esc(item.titulo)}"></div>
+    <div class="form-field"><label class="form-label">Contenido</label><textarea class="form-textarea" id="m-texto">${esc(item.texto)}</textarea></div>
+    <div class="form-field"><label class="form-label">Color del borde</label><input type="color" id="m-color" value="${item.color}" style="width:60px;height:34px;border:none;cursor:pointer;border-radius:6px"></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      item.titulo = document.getElementById('m-titulo').value.trim();
+      item.texto  = document.getElementById('m-texto').value.trim();
+      item.color  = document.getElementById('m-color').value;
+      guardar('v6_faq', FAQ_DATA);
+      renderFAQ(); cerrarModal(); toast('✅ Tarjeta actualizada');
+    }}
+  ]);
+}
+function eliminarFAQ(id) {
+  const item = FAQ_DATA.find(f => f.id === id);
+  confirmar(`¿Eliminar la tarjeta "<b>${esc(item.titulo)}</b>"?`, () => {
+    FAQ_DATA = FAQ_DATA.filter(f => f.id !== id);
+    guardar('v6_faq', FAQ_DATA);
+    renderFAQ(); toast('Tarjeta eliminada', 'warn');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AGENTES
+// ═══════════════════════════════════════════════════════════════
+function renderAgentesList() {
+  const lista = document.getElementById('agentes-list');
+  if (!AGENTES.length) { lista.innerHTML = '<div class="empty-state">No hay agentes. Agrega uno con el botón de arriba.</div>'; return; }
+  lista.innerHTML = AGENTES.map(a => `
+    <div class="agent-list-item ${agenteSeleccionado === a.id ? 'active' : ''}" onclick="seleccionarAgente('${a.id}')">
+      <div class="agent-avatar">${a.nombre.charAt(0)}</div>
+      <div><div class="agent-list-name">${esc(a.nombre)}</div><div class="agent-list-sub">NPN: ${esc(a.npn)}</div></div>
+    </div>`
+  ).join('');
+}
+function seleccionarAgente(id) {
+  agenteSeleccionado = id;
+  renderAgentesList();
+  renderAgenteDetail();
+}
+function renderAgenteDetail() {
+  const el = document.getElementById('agente-detail');
+  if (!agenteSeleccionado) { el.innerHTML = '<div class="no-selection">👈 Selecciona un agente de la lista</div>'; return; }
+  const a = AGENTES.find(x => x.id === agenteSeleccionado);
+  if (!a) return;
+  const links = [
+    a.telefono  && `<a class="contact-link" href="tel:${a.telefono}">📞 ${esc(a.telefono)}</a>`,
+    a.correo    && `<a class="contact-link" href="mailto:${a.correo}">📧 ${esc(a.correo)}</a>`,
+    a.instagram && `<a class="contact-link" href="${a.instagram}" target="_blank">📸 Instagram</a>`,
+    a.facebook  && `<a class="contact-link" href="${a.facebook}"  target="_blank">👍 Facebook</a>`,
+    a.tiktok    && `<a class="contact-link" href="${a.tiktok}"    target="_blank">🎵 TikTok</a>`,
+  ].filter(Boolean).join('');
+  const carriers = a.carriers.map(c => `<tr><td>${esc(c.nombre)}</td><td><span class="carrier-code">${esc(c.codigo)}</span></td></tr>`).join('');
+
+  // Formatear fecha de nacimiento legible
+  let nacStr = '—';
+  if (a.nacimiento) {
+    const [y,m,d] = a.nacimiento.split('-');
+    nacStr = new Date(+y, +m-1, +d).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  el.innerHTML = `
+    <div class="agent-detail-card">
+      <div class="agent-detail-header">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="agent-detail-avatar">${a.nombre.charAt(0)}</div>
+          <div>
+            <div class="agent-detail-name">${esc(a.nombre)}</div>
+            <div class="agent-detail-npn">NPN: ${esc(a.npn)}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="editarAgente('${a.id}')">✏️ Editar</button>
+          <button class="btn btn-red" onclick="eliminarAgente('${a.id}')">🗑️</button>
+        </div>
+      </div>
+
+      <!-- Datos destacados -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
+        <div style="background:#fff;padding:18px 20px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px">🔒 Últimos 4 SSN</div>
+          <div style="font-size:32px;font-weight:900;font-family:'DM Mono',monospace;color:var(--text);letter-spacing:6px">
+            ${a.ssn4 ? `••••&nbsp;${esc(a.ssn4)}` : '<span style="font-size:16px;color:var(--muted);letter-spacing:0">No registrado</span>'}
+          </div>
+        </div>
+        <div style="background:#fff;padding:18px 20px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px">🎂 Fecha de nacimiento</div>
+          <div style="font-size:20px;font-weight:800;color:var(--text);line-height:1.2">${nacStr}</div>
+          ${a.nacimiento ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace">${esc(a.nacimiento)}</div>` : ''}
+        </div>
+      </div>
+
+      <div class="agent-detail-body">
+        <div class="agent-section-title">Contacto y Redes</div>
+        <div class="contact-links">${links || '<span style="color:var(--muted);font-size:13px">Sin datos de contacto</span>'}</div>
+        <div class="agent-section-title" style="margin-top:20px">Carriers y Códigos</div>
+        ${a.carriers.length ? `<table class="carriers-table"><thead><tr><th>Carrier</th><th>Código</th></tr></thead><tbody>${carriers}</tbody></table>` : '<div style="color:var(--muted);font-size:13px">Sin carriers registrados</div>'}
+      </div>
+    </div>`;
+}
+function modalAgregarAgente() {
+  abrirModal('➕ Nuevo agente', `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-field"><label class="form-label">Nombre completo</label><input class="form-input" id="m-nombre" placeholder="María García"></div>
+      <div class="form-field"><label class="form-label">NPN</label><input class="form-input" id="m-npn" placeholder="12345678"></div>
+      <div class="form-field"><label class="form-label">Correo</label><input class="form-input" id="m-correo" placeholder="maria@email.com"></div>
+      <div class="form-field"><label class="form-label">Teléfono</label><input class="form-input" id="m-tel" placeholder="+1 (786) 555-0000"></div>
+      <div class="form-field"><label class="form-label">Instagram URL</label><input class="form-input" id="m-ig" placeholder="https://instagram.com/..."></div>
+      <div class="form-field"><label class="form-label">Facebook URL</label><input class="form-input" id="m-fb" placeholder="https://facebook.com/..."></div>
+      <div class="form-field" style="grid-column:span 2"><label class="form-label">TikTok URL</label><input class="form-input" id="m-tt" placeholder="https://tiktok.com/@..."></div>
+      <div class="form-field"><label class="form-label">Últimos 4 dígitos SSN</label><input class="form-input" id="m-ssn4" placeholder="1234" maxlength="4" style="letter-spacing:3px;font-family:'DM Mono',monospace"></div>
+      <div class="form-field"><label class="form-label">Fecha de nacimiento</label><input type="date" class="form-input" id="m-nac"></div>
+    </div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar agente', cls:'btn-blue', action: () => {
+      const n = document.getElementById('m-nombre').value.trim();
+      if (!n) { toast('El nombre es obligatorio', 'warn'); return; }
+      const ag = {
+        id: 'ag_' + Date.now(), nombre: n,
+        npn: document.getElementById('m-npn').value.trim(),
+        correo: document.getElementById('m-correo').value.trim(),
+        telefono: document.getElementById('m-tel').value.trim(),
+        instagram: document.getElementById('m-ig').value.trim(),
+        facebook: document.getElementById('m-fb').value.trim(),
+        tiktok: document.getElementById('m-tt').value.trim(),
+        ssn4: document.getElementById('m-ssn4').value.trim(),
+        nacimiento: document.getElementById('m-nac').value,
+        carriers: []
+      };
+      AGENTES.push(ag);
+      guardar('v6_agentes', AGENTES);
+      agenteSeleccionado = ag.id;
+      renderAgentesList(); renderAgenteDetail();
+      cerrarModal(); toast('✅ Agente agregado');
+    }}
+  ]);
+}
+function editarAgente(id) {
+  const a = AGENTES.find(x => x.id === id);
+  abrirModal('✏️ Editar agente — ' + esc(a.nombre), `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="m-nombre" value="${esc(a.nombre)}"></div>
+      <div class="form-field"><label class="form-label">NPN</label><input class="form-input" id="m-npn" value="${esc(a.npn)}"></div>
+      <div class="form-field"><label class="form-label">Correo</label><input class="form-input" id="m-correo" value="${esc(a.correo)}"></div>
+      <div class="form-field"><label class="form-label">Teléfono</label><input class="form-input" id="m-tel" value="${esc(a.telefono)}"></div>
+      <div class="form-field"><label class="form-label">Instagram URL</label><input class="form-input" id="m-ig" value="${esc(a.instagram)}"></div>
+      <div class="form-field"><label class="form-label">Facebook URL</label><input class="form-input" id="m-fb" value="${esc(a.facebook)}"></div>
+      <div class="form-field" style="grid-column:span 2"><label class="form-label">TikTok URL</label><input class="form-input" id="m-tt" value="${esc(a.tiktok)}"></div>
+      <div class="form-field"><label class="form-label">Últimos 4 dígitos SSN</label><input class="form-input" id="m-ssn4" value="${esc(a.ssn4||'')}" maxlength="4" style="letter-spacing:3px;font-family:'DM Mono',monospace"></div>
+      <div class="form-field"><label class="form-label">Fecha de nacimiento</label><input type="date" class="form-input" id="m-nac" value="${esc(a.nacimiento||'')}"></div>
+    </div>
+    <div class="form-field" style="margin-top:4px"><label class="form-label">Carriers (uno por línea: Nombre | Código)</label>
+      <textarea class="form-textarea" id="m-carriers" style="min-height:100px">${a.carriers.map(c=>c.nombre+'|'+c.codigo).join('\n')}</textarea>
+    </div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      a.nombre    = document.getElementById('m-nombre').value.trim();
+      a.npn       = document.getElementById('m-npn').value.trim();
+      a.correo    = document.getElementById('m-correo').value.trim();
+      a.telefono  = document.getElementById('m-tel').value.trim();
+      a.instagram = document.getElementById('m-ig').value.trim();
+      a.facebook  = document.getElementById('m-fb').value.trim();
+      a.tiktok      = document.getElementById('m-tt').value.trim();
+      a.ssn4        = document.getElementById('m-ssn4').value.trim();
+      a.nacimiento  = document.getElementById('m-nac').value;
+      a.carriers  = document.getElementById('m-carriers').value.split('\n').filter(l=>l.trim()).map(l => {
+        const [n,c] = l.split('|'); return { nombre: (n||'').trim(), codigo: (c||'').trim() };
+      });
+      guardar('v6_agentes', AGENTES);
+      renderAgentesList(); renderAgenteDetail(); cerrarModal(); toast('✅ Agente actualizado');
+    }}
+  ]);
+}
+function eliminarAgente(id) {
+  const a = AGENTES.find(x => x.id === id);
+  confirmar(`¿Eliminar al agente "<b>${esc(a.nombre)}</b>"? Esta acción no se puede deshacer.`, () => {
+    AGENTES = AGENTES.filter(x => x.id !== id);
+    agenteSeleccionado = null;
+    guardar('v6_agentes', AGENTES);
+    renderAgentesList(); renderAgenteDetail(); toast('Agente eliminado', 'warn');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ASEGURADORAS
+// ═══════════════════════════════════════════════════════════════
+function renderSelectorAgenteAseg() {
+  const sel = document.getElementById('aseg-agente-select');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">— Seleccionar agente —</option>' +
+    AGENTES.map(a => `<option value="${a.id}" ${agenteAseguradora === a.id ? 'selected' : ''}>${esc(a.nombre)}</option>`).join('');
+  if (prev) sel.value = prev;
+  // actualizar badge
+  actualizarBadgeAgenteAseg();
+}
+
+function seleccionarAgenteAseguradora(id) {
+  agenteAseguradora = id || null;
+  actualizarBadgeAgenteAseg();
+  // re-render detail si hay aseguradora seleccionada
+  if (aseguradoraSeleccionada) renderAseguradoraDetail();
+}
+
+function actualizarBadgeAgenteAseg() {
+  const badge = document.getElementById('aseg-agente-badge');
+  if (!badge) return;
+  if (!agenteAseguradora) { badge.style.display = 'none'; return; }
+  const a = AGENTES.find(x => x.id === agenteAseguradora);
+  if (!a) { badge.style.display = 'none'; return; }
+  badge.style.display = 'flex';
+  badge.style.cssText += ';display:flex;align-items:center;gap:6px;background:var(--blue-l);border-radius:20px;padding:4px 12px';
+  badge.innerHTML = `
+    <div style="width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800">${a.nombre.charAt(0)}</div>
+    <span style="font-size:12px;font-weight:700;color:var(--blue)">${esc(a.nombre)}</span>
+    <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted)">NPN ${esc(a.npn)}</span>
+  `;
+}
+
+function renderAseguradorasList() {
+  const lista = document.getElementById('aseguradoras-list');
+  if (!ASEGURADORAS.length) { lista.innerHTML = '<div class="empty-state">No hay aseguradoras. Agrega una.</div>'; return; }
+  lista.innerHTML = ASEGURADORAS.map(a => `
+    <div class="agent-list-item ${aseguradoraSeleccionada === a.id ? 'active' : ''}" onclick="seleccionarAseguradora('${a.id}')">
+      <div class="agent-avatar" style="background:var(--orange-l);color:var(--orange)">${a.logo || '🏢'}</div>
+      <div><div class="agent-list-name">${esc(a.nombre)}</div><div class="agent-list-sub">${a.procedimientos.length} procedimiento(s)</div></div>
+    </div>`
+  ).join('');
+  renderSelectorAgenteAseg();
+}
+function seleccionarAseguradora(id) {
+  aseguradoraSeleccionada = id;
+  renderAseguradorasList();
+  renderAseguradoraDetail();
+}
+function renderAseguradoraDetail() {
+  const el = document.getElementById('aseguradora-detail');
+  if (!aseguradoraSeleccionada) { el.innerHTML = '<div class="no-selection">👈 Selecciona una aseguradora</div>'; return; }
+  const a = ASEGURADORAS.find(x => x.id === aseguradoraSeleccionada);
+  if (!a) return;
+
+  // Datos del agente de trabajo
+  let agenteHtml = '';
+  if (agenteAseguradora) {
+    const ag = AGENTES.find(x => x.id === agenteAseguradora);
+    if (ag) {
+      let nacStr = '—';
+      if (ag.nacimiento) {
+        const [y,m,d] = ag.nacimiento.split('-');
+        nacStr = new Date(+y, +m-1, +d).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+      }
+      // Buscar código del agente para esta aseguradora (carrier con mismo nombre)
+      const codigoCarrier = ag.carriers.find(c => c.nombre.toLowerCase().includes(a.nombre.toLowerCase()))?.codigo || null;
+
+      agenteHtml = `
+        <div style="background:var(--blue-l);border:1.5px solid rgba(37,99,235,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:10px">👤 Agente de trabajo</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(37,99,235,.15);border-radius:8px;overflow:hidden">
+            <div style="background:#fff;padding:12px 14px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">Nombre</div>
+              <div style="font-size:14px;font-weight:800;color:var(--text)">${esc(ag.nombre)}</div>
+              <div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);margin-top:2px">NPN: ${esc(ag.npn)}</div>
+            </div>
+            <div style="background:#fff;padding:12px 14px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">🔒 SSN (últimos 4)</div>
+              <div style="font-size:22px;font-weight:900;font-family:'DM Mono',monospace;color:var(--text);letter-spacing:4px">
+                ${ag.ssn4 ? `••${esc(ag.ssn4)}` : '<span style="font-size:13px;color:var(--muted);letter-spacing:0">—</span>'}
+              </div>
+            </div>
+            <div style="background:#fff;padding:12px 14px">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px">🎂 Nacimiento</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${nacStr}</div>
+            </div>
+          </div>
+          ${codigoCarrier ? `
+          <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;font-weight:700;color:var(--blue)">Código en ${esc(a.nombre)}:</span>
+            <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:800;background:#fff;padding:3px 10px;border-radius:6px;color:var(--blue);border:1px solid rgba(37,99,235,.3)">${esc(codigoCarrier)}</span>
+          </div>` : `
+          <div style="margin-top:8px;font-size:11px;color:var(--muted)">ℹ️ No se encontró código para ${esc(a.nombre)} en los carriers de este agente</div>`}
+        </div>`;
+    }
+  }
+
+  const procs = a.procedimientos.map(p => `
+    <div class="proc-card" id="proc-${p.id}">
+      <div class="proc-card-header" onclick="toggleProc('${p.id}')">
+        <span class="proc-card-title">${esc(p.titulo)}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="icon-btn" onclick="event.stopPropagation();editarProcedimiento('${a.id}','${p.id}')" title="Editar">✏️</button>
+          <button class="icon-btn danger" onclick="event.stopPropagation();eliminarProcedimiento('${a.id}','${p.id}')" title="Eliminar">🗑️</button>
+          <span class="proc-card-arrow" id="arr-${p.id}">⌄</span>
+        </div>
+      </div>
+      <div class="proc-card-body" id="body-${p.id}">${esc(p.cuerpo)}</div>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div class="agent-detail-card">
+      <div class="agent-detail-header">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="agent-detail-avatar">${a.logo || '🏢'}</div>
+          <div><div class="agent-detail-name">${esc(a.nombre)}</div><div class="agent-detail-npn">${a.estado || 'Activa'}</div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="editarAseguradora('${a.id}')">✏️ Editar</button>
+          <button class="btn btn-red" onclick="eliminarAseguradora('${a.id}')">🗑️</button>
+        </div>
+      </div>
+      <div class="agent-detail-body">
+        ${agenteHtml}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="agent-section-title" style="margin:0">Procedimientos</div>
+          <button class="btn btn-blue btn-sm" onclick="modalAgregarProcedimiento('${a.id}')">+ Agregar</button>
+        </div>
+        ${procs || '<div class="empty-state" style="border:2px dashed var(--border)">Sin procedimientos. Agrega uno con el botón de arriba.</div>'}
+      </div>
+    </div>`;
+}
+function toggleProc(pid) {
+  const body = document.getElementById(`body-${pid}`);
+  const arr  = document.getElementById(`arr-${pid}`);
+  body.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+function modalAgregarAseguradora() {
+  abrirModal('➕ Nueva aseguradora', `
+    <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="m-nombre" placeholder="Transamerica"></div>
+    <div class="form-field"><label class="form-label">Logo (emoji)</label><input class="form-input" id="m-logo" placeholder="🏦" style="font-size:20px;width:80px"></div>
+    <div class="form-field"><label class="form-label">Estado</label>
+      <select class="form-input" id="m-estado"><option>Activa</option><option>Inactiva</option><option>En revisión</option></select>
+    </div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar', cls:'btn-blue', action: () => {
+      const n = document.getElementById('m-nombre').value.trim();
+      if (!n) { toast('El nombre es obligatorio', 'warn'); return; }
+      const as = {
+        id: 'as_' + Date.now(), nombre: n,
+        logo: document.getElementById('m-logo').value.trim() || '🏢',
+        estado: document.getElementById('m-estado').value,
+        procedimientos: []
+      };
+      ASEGURADORAS.push(as);
+      guardar('v6_aseguradoras', ASEGURADORAS);
+      aseguradoraSeleccionada = as.id;
+      renderAseguradorasList(); renderAseguradoraDetail();
+      cerrarModal(); toast('✅ Aseguradora agregada');
+    }}
+  ]);
+}
+function editarAseguradora(id) {
+  const a = ASEGURADORAS.find(x => x.id === id);
+  abrirModal('✏️ Editar aseguradora', `
+    <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="m-nombre" value="${esc(a.nombre)}"></div>
+    <div class="form-field"><label class="form-label">Logo (emoji)</label><input class="form-input" id="m-logo" value="${esc(a.logo)}" style="font-size:20px;width:80px"></div>
+    <div class="form-field"><label class="form-label">Estado</label>
+      <select class="form-input" id="m-estado">${['Activa','Inactiva','En revisión'].map(s=>`<option${a.estado===s?' selected':''}>${s}</option>`).join('')}</select>
+    </div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      a.nombre = document.getElementById('m-nombre').value.trim();
+      a.logo   = document.getElementById('m-logo').value.trim() || '🏢';
+      a.estado = document.getElementById('m-estado').value;
+      guardar('v6_aseguradoras', ASEGURADORAS);
+      renderAseguradorasList(); renderAseguradoraDetail(); cerrarModal(); toast('✅ Actualizada');
+    }}
+  ]);
+}
+function eliminarAseguradora(id) {
+  const a = ASEGURADORAS.find(x => x.id === id);
+  confirmar(`¿Eliminar la aseguradora "<b>${esc(a.nombre)}</b>"? Se perderán todos sus procedimientos.`, () => {
+    ASEGURADORAS = ASEGURADORAS.filter(x => x.id !== id);
+    aseguradoraSeleccionada = null;
+    guardar('v6_aseguradoras', ASEGURADORAS);
+    renderAseguradorasList(); renderAseguradoraDetail(); toast('Aseguradora eliminada', 'warn');
+  });
+}
+function modalAgregarProcedimiento(aid) {
+  abrirModal('➕ Nuevo procedimiento', `
+    <div class="form-field"><label class="form-label">Título</label><input class="form-input" id="m-titulo" placeholder="📋 Cómo hacer una aplicación nueva"></div>
+    <div class="form-field"><label class="form-label">Procedimiento</label><textarea class="form-textarea" id="m-cuerpo" style="min-height:140px" placeholder="Escribe los pasos..."></textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Agregar', cls:'btn-blue', action: () => {
+      const t = document.getElementById('m-titulo').value.trim();
+      const c = document.getElementById('m-cuerpo').value.trim();
+      if (!t || !c) { toast('Completa todos los campos', 'warn'); return; }
+      const a = ASEGURADORAS.find(x => x.id === aid);
+      a.procedimientos.push({ id: 'p_' + Date.now(), titulo: t, cuerpo: c });
+      guardar('v6_aseguradoras', ASEGURADORAS);
+      renderAseguradoraDetail(); cerrarModal(); toast('✅ Procedimiento agregado');
+    }}
+  ]);
+}
+function editarProcedimiento(aid, pid) {
+  const a = ASEGURADORAS.find(x => x.id === aid);
+  const p = a.procedimientos.find(x => x.id === pid);
+  abrirModal('✏️ Editar procedimiento', `
+    <div class="form-field"><label class="form-label">Título</label><input class="form-input" id="m-titulo" value="${esc(p.titulo)}"></div>
+    <div class="form-field"><label class="form-label">Procedimiento</label><textarea class="form-textarea" id="m-cuerpo" style="min-height:140px">${esc(p.cuerpo)}</textarea></div>
+  `, [
+    { label:'Cancelar', cls:'btn-ghost', action: cerrarModal },
+    { label:'Guardar', cls:'btn-blue', action: () => {
+      p.titulo = document.getElementById('m-titulo').value.trim();
+      p.cuerpo = document.getElementById('m-cuerpo').value.trim();
+      guardar('v6_aseguradoras', ASEGURADORAS);
+      renderAseguradoraDetail(); cerrarModal(); toast('✅ Procedimiento actualizado');
+    }}
+  ]);
+}
+function eliminarProcedimiento(aid, pid) {
+  const a = ASEGURADORAS.find(x => x.id === aid);
+  const p = a.procedimientos.find(x => x.id === pid);
+  confirmar(`¿Eliminar el procedimiento "<b>${esc(p.titulo)}</b>"?`, () => {
+    a.procedimientos = a.procedimientos.filter(x => x.id !== pid);
+    guardar('v6_aseguradoras', ASEGURADORAS);
+    renderAseguradoraDetail(); toast('Procedimiento eliminado', 'warn');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODAL SYSTEM
+// ═══════════════════════════════════════════════════════════════
+let _confirmCallback = null;
+
+function abrirModal(titulo, bodyHTML, botones) {
+  document.getElementById('modal-title').textContent = titulo;
+  document.getElementById('modal-body').innerHTML = bodyHTML;
+  document.getElementById('modal-footer').innerHTML = botones.map((b, i) =>
+    `<button class="btn ${b.cls}" id="modal-btn-${i}">${b.label}</button>`
+  ).join('');
+  botones.forEach((b, i) => {
+    document.getElementById(`modal-btn-${i}`).addEventListener('click', b.action);
+  });
+  document.getElementById('modal-overlay').classList.add('open');
+  // Focus first input
+  setTimeout(() => { const f = document.querySelector('#modal-body input, #modal-body textarea, #modal-body select'); if (f) f.focus(); }, 100);
+}
+
+function confirmar(msg, cb) {
+  _confirmCallback = cb;
+  document.getElementById('modal-title').textContent = '⚠️ Confirmar acción';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="confirm-modal-icon">⚠️</div>
+    <div class="confirm-modal-msg">${msg}</div>
+  `;
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="btn btn-ghost" id="modal-btn-cancel">Cancelar</button>
+    <button class="btn btn-red" id="modal-btn-confirm">Confirmar</button>
+  `;
+  document.getElementById('modal-btn-cancel').addEventListener('click', cerrarModal);
+  document.getElementById('modal-btn-confirm').addEventListener('click', () => { cerrarModal(); if (_confirmCallback) _confirmCallback(); });
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function cerrarModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function cerrarModalSiOverlay(e) { if (e.target === document.getElementById('modal-overlay')) cerrarModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════════════════════
+function toggleExportMenu() {
+  document.getElementById('export-dropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.export-menu-wrap')) document.getElementById('export-dropdown').classList.remove('open');
+});
+
+// ── Helpers de fecha ──
+function fechaTimestamp() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const yyyy = now.getFullYear();
+  const mm   = pad(now.getMonth() + 1);
+  const dd   = pad(now.getDate());
+  const hh   = pad(now.getHours());
+  const min  = pad(now.getMinutes());
+  return `${yyyy}-${mm}-${dd}_${hh}-${min}`;
+}
+function fechaLegible() {
+  return new Date().toLocaleDateString('es-ES', {
+    timeZone: 'America/New_York',
+    day: 'numeric', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: true
+  });
+}
+async function actualizarUltimaAct(texto) {
+  const el = document.getElementById('sb-ultima-act');
+  if (el) el.textContent = '🕐 ' + texto;
+  await guardar('v7_ultima_act', texto);
+}
+
+// ── Exportar HTML ──
+function exportarHTML() {
+  document.getElementById('export-dropdown').classList.remove('open');
+  let html = document.documentElement.outerHTML;
+  const reemplazos = [
+    ['TABS_GUIONES_DEFAULT', TABS_GUIONES],
+    ['TABS_WA_DEFAULT',      TABS_WA],
+    ['TABS_CK_DEFAULT',      TABS_CK],
+    ['FAQ_DEFAULT',          FAQ_DATA],
+    ['AGENTES_DEFAULT',      AGENTES],
+    ['ASEGURADORAS_DEFAULT', ASEGURADORAS],
+  ];
+  reemplazos.forEach(([key, val]) => {
+    const regex = new RegExp(`const ${key} = \\[[\\s\\S]*?\\n\\];`);
+    html = html.replace(regex, `const ${key} = ${JSON.stringify(val, null, 2)};`);
+  });
+  const ts   = fechaTimestamp();
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `panel-operativo-${ts}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  const leg = fechaLegible();
+  actualizarUltimaAct(leg);
+  toast('✅ ¡HTML exportado!');
+}
+
+// ── Exportar DB (.json) ──
+function exportarDB() {
+  document.getElementById('export-dropdown').classList.remove('open');
+  const autor = document.getElementById('nombre-asistente')?.value?.trim() || 'Desconocido';
+  const ts    = fechaTimestamp();
+  const leg   = fechaLegible();
+  const db = {
+    _meta: {
+      version:    'v7',
+      exportado:  leg,
+      por:        autor,
+      timestamp:  Date.now()
+    },
+    enlaces:      ENLACES,
+    guiones:      TABS_GUIONES,
+    whatsapp:     TABS_WA,
+    checklist:    TABS_CK,
+    faq:          FAQ_DATA,
+    agentes:      AGENTES,
+    aseguradoras: ASEGURADORAS,
+    notas:        cargar('v7_notas', cargar('v6_notas', [])),
+    contadores:   contadores,
+  };
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `panel-db-${ts}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  actualizarUltimaAct(leg);
+  toast('📦 DB exportada como .json');
+}
+
+// ── Abrir modal importar DB ──
+function abrirImportarDB() {
+  document.getElementById('export-dropdown').classList.remove('open');
+  document.getElementById('db-import-input').value = '';
+  abrirModal('📥 Importar DB', `
+    <div class="db-drop-zone" id="db-drop-zone" onclick="document.getElementById('db-import-input').click()"
+      ondragover="event.preventDefault();this.classList.add('dragover')"
+      ondragleave="this.classList.remove('dragover')"
+      ondrop="event.preventDefault();this.classList.remove('dragover');procesarArchivoDB({files:event.dataTransfer.files})">
+      <div class="dz-icon">📂</div>
+      <div class="dz-text">Haz clic o arrastra tu archivo aquí</div>
+      <div class="dz-sub">Acepta archivos <b>panel-db-*.json</b></div>
+    </div>
+    <div id="db-preview-wrap" style="display:none"></div>
+  `, [
+    { label: 'Cancelar', cls: 'btn-ghost', action: cerrarModal },
+    { label: '📥 Importar y combinar', cls: 'btn-blue', action: confirmarImportDB }
+  ]);
+  // deshabilitar botón importar hasta que haya archivo válido
+  setTimeout(() => {
+    const btn = document.querySelector('#modal-footer .btn-blue');
+    if (btn) btn.disabled = true;
+  }, 50);
+}
+
+let _dbImportData = null;
+
+function procesarArchivoDB(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data._meta || !data.guiones) {
+        toast('❌ Archivo inválido o corrupto', 'err');
+        return;
+      }
+      _dbImportData = data;
+      mostrarPreviewDB(data);
+    } catch {
+      toast('❌ No se pudo leer el archivo', 'err');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function contarItems(seccion) {
+  if (!seccion) return 0;
+  if (Array.isArray(seccion)) return seccion.length;
+  return 0;
+}
+
+function mostrarPreviewDB(data) {
+  const wrap = document.getElementById('db-preview-wrap');
+  if (!wrap) return;
+
+  // contar novedades que se van a combinar
+  const enlacesNuevos     = (data.enlaces || []).filter(n => !ENLACES.find(a => a.id === n.id)).length;
+  const notasNuevas       = (data.notas || []).filter(n => {
+    const actuales = cargar('v7_notas', []);
+    return !actuales.find(a => a.fecha === n.fecha && a.texto === n.texto);
+  }).length;
+  const faqNuevos         = (data.faq || []).filter(n => !FAQ_DATA.find(a => a.id === n.id)).length;
+  const agentesNuevos     = (data.agentes || []).filter(n => !AGENTES.find(a => a.id === n.id)).length;
+  const asegNuevas        = (data.aseguradoras || []).filter(n => !ASEGURADORAS.find(a => a.id === n.id)).length;
+
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="db-preview">
+      <div class="db-preview-title">📋 Contenido del archivo</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">
+        Exportado por <b>${esc(data._meta?.por || '?')}</b> el <b>${esc(data._meta?.exportado || '?')}</b>
+      </div>
+      <div class="db-preview-grid">
+        <div class="db-preview-item"><span class="dpi-label">🔗 Enlaces</span><span class="dpi-count orange">+${enlacesNuevos} nuevos</span></div>
+        <div class="db-preview-item"><span class="dpi-label">📝 Guiones</span><span class="dpi-count">${contarItems(data.guiones)} tabs</span></div>
+        <div class="db-preview-item"><span class="dpi-label">💬 WhatsApp</span><span class="dpi-count">${contarItems(data.whatsapp)} tabs</span></div>
+        <div class="db-preview-item"><span class="dpi-label">ℹ️ FAQ</span><span class="dpi-count orange">+${faqNuevos} nuevos</span></div>
+        <div class="db-preview-item"><span class="dpi-label">👥 Agentes</span><span class="dpi-count orange">+${agentesNuevos} nuevos</span></div>
+        <div class="db-preview-item"><span class="dpi-label">🏢 Aseguradoras</span><span class="dpi-count orange">+${asegNuevas} nuevas</span></div>
+        <div class="db-preview-item"><span class="dpi-label">🗒️ Notas</span><span class="dpi-count green">+${notasNuevas} nuevas</span></div>
+      </div>
+      <div class="db-merge-notice">
+        ⚡ <b>Modo: Combinar.</b> Solo se agregan registros nuevos (por ID o contenido).
+        Lo que ya existe en tu panel <b>no se toca</b>. Los guiones y WhatsApp se reemplazan por completo ya que tienen estructura de tabs.
+      </div>
+    </div>
+  `;
+
+  // habilitar botón importar
+  const btn = document.querySelector('#modal-footer .btn-blue');
+  if (btn) btn.disabled = false;
+}
+
+async function confirmarImportDB() {
+  if (!_dbImportData) { toast('Primero selecciona un archivo', 'warn'); return; }
+  const data = _dbImportData;
+  _dbImportData = null;
+
+  // ── Enlaces: combinar por id
+  if (data.enlaces?.length) {
+    const existingIds = new Set(ENLACES.map(l => l.id));
+    data.enlaces.forEach(l => { if (!existingIds.has(l.id)) ENLACES.push(l); });
+    await guardar('v7_enlaces', ENLACES);
+  }
+
+  // ── Guiones: reemplazar tabs completos (estructura compleja)
+  if (data.guiones?.length) {
+    TABS_GUIONES = data.guiones;
+    await guardar('v6_guiones', TABS_GUIONES);
+  }
+
+  // ── WhatsApp: reemplazar tabs completos
+  if (data.whatsapp?.length) {
+    TABS_WA = data.whatsapp;
+    await guardar('v6_wa', TABS_WA);
+  }
+
+  // ── FAQ: combinar por id
+  if (data.faq?.length) {
+    const existingIds = new Set(FAQ_DATA.map(f => f.id));
+    data.faq.forEach(item => { if (!existingIds.has(item.id)) FAQ_DATA.push(item); });
+    await guardar('v6_faq', FAQ_DATA);
+  }
+
+  // ── Agentes: combinar por id
+  if (data.agentes?.length) {
+    const existingIds = new Set(AGENTES.map(a => a.id));
+    data.agentes.forEach(ag => { if (!existingIds.has(ag.id)) AGENTES.push(ag); });
+    await guardar('v6_agentes', AGENTES);
+  }
+
+  // ── Aseguradoras: combinar por id
+  if (data.aseguradoras?.length) {
+    const existingIds = new Set(ASEGURADORAS.map(a => a.id));
+    data.aseguradoras.forEach(as => { if (!existingIds.has(as.id)) ASEGURADORAS.push(as); });
+    await guardar('v6_aseguradoras', ASEGURADORAS);
+  }
+
+  // ── Notas: combinar por contenido+fecha (evita duplicados exactos)
+  if (data.notas?.length) {
+    const actuales   = await cargar('v7_notas', []);
+    const signaturas = new Set(actuales.map(n => n.fecha + '||' + n.texto));
+    data.notas.forEach(n => { if (!signaturas.has(n.fecha + '||' + n.texto)) actuales.push(n); });
+    await guardar('v7_notas', actuales);
+  }
+
+  cerrarModal();
+
+  // re-render todo
+  renderLinks();
+  renderGuiones();
+  renderWA();
+  renderFAQ();
+  renderAgentesList();
+  renderAgenteDetail();
+  renderAseguradorasList();
+  renderAseguradoraDetail();
+  renderNotas();
+
+  const leg = fechaLegible();
+  await actualizarUltimaAct('Importado: ' + leg);
+  toast('✅ DB importada y combinada correctamente');
+}
+
+function resetearTodo() {
+  document.getElementById('export-dropdown').classList.remove('open');
+  confirmar('¿Resetear <b>toda la app</b> a los valores por defecto? Se perderán todos los datos guardados.', async () => {
+    const keys = ['v6_guiones','v6_wa','v6_ck_data','v6_ck_fecha','v6_faq','v6_agentes','v6_aseguradoras',
+                  'v6_contadores','v6_cnt_fecha','v6_notas','v6_vista','v6_meta_llamadas',
+                  'v7_notas','v7_ultima_act','v7_enlaces'];
+    for (const k of keys) { await eliminarIDB(k); localStorage.removeItem(k); }
+    location.reload();
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VISTA BASE DE DATOS — IndexedDB Explorer
+// ═══════════════════════════════════════════════════════════════
+const IDB_TABLE_META = {
+  'v7_enlaces':      { label: 'Enlaces Rápidos',  icon: '🔗', tipo: 'array' },
+  'v6_guiones':      { label: 'Guiones',           icon: '📝', tipo: 'tabs' },
+  'v6_wa':           { label: 'WhatsApp',        icon: '💬', tipo: 'tabs' },
+  'v6_ck_data':      { label: 'Checklist',       icon: '✅', tipo: 'tabs' },
+  'v6_faq':          { label: 'FAQ',             icon: 'ℹ️',  tipo: 'array' },
+  'v6_agentes':      { label: 'Agentes',         icon: '👥', tipo: 'array' },
+  'v6_aseguradoras': { label: 'Aseguradoras',    icon: '🏢', tipo: 'array' },
+  'v7_notas':        { label: 'Notas',           icon: '🗒️', tipo: 'array' },
+  'v6_contadores':   { label: 'Contadores',      icon: '📞', tipo: 'object' },
+  'v6_meta_llamadas':{ label: 'Meta llamadas',   icon: '🎯', tipo: 'scalar' },
+  'v6_ck_fecha':     { label: 'Fecha checklist', icon: '📅', tipo: 'scalar' },
+  'v6_cnt_fecha':    { label: 'Fecha contadores',icon: '📅', tipo: 'scalar' },
+  'v6_vista':        { label: 'Vista activa',    icon: '👁️', tipo: 'scalar' },
+  'v7_ultima_act':   { label: 'Última acción',   icon: '🕐', tipo: 'scalar' },
+};
+
+async function renderIDBView() {
+  const statusBar  = document.getElementById('idb-status-bar');
+  const tablesWrap = document.getElementById('idb-tables-wrap');
+  if (!statusBar || !tablesWrap) return;
+
+  statusBar.innerHTML  = '<div style="color:var(--muted);font-size:13px">⏳ Cargando IndexedDB...</div>';
+  tablesWrap.innerHTML = '';
+
+  let registros;
+  try { registros = await listarTodoIDB(); }
+  catch(e) {
+    statusBar.innerHTML = `<div style="color:var(--red)">❌ Error al abrir IndexedDB: ${e.message}</div>`;
+    return;
+  }
+
+  // ── Status bar ──
+  const totalBytes = new Blob([JSON.stringify(registros)]).size;
+  const kb = (totalBytes / 1024).toFixed(1);
+  statusBar.innerHTML = `
+    <div class="idb-stat"><span class="idb-stat-icon">🗄️</span><div class="idb-stat-info"><div class="idb-stat-val">${registros.length}</div><div class="idb-stat-lbl">Registros</div></div></div>
+    <div class="idb-stat"><span class="idb-stat-icon">💾</span><div class="idb-stat-info"><div class="idb-stat-val">${kb} KB</div><div class="idb-stat-lbl">Tamaño total</div></div></div>
+    <div class="idb-stat"><span class="idb-stat-icon">📦</span><div class="idb-stat-info"><div class="idb-stat-val">${IDB_NAME}</div><div class="idb-stat-lbl">Base de datos</div></div></div>
+  `;
+
+  if (!registros.length) {
+    tablesWrap.innerHTML = '<div class="empty-state">No hay datos en IndexedDB todavía. Interactúa con el panel y vuelve aquí.</div>';
+    return;
+  }
+
+  // Ordenar: primero los conocidos en el orden de IDB_TABLE_META, luego los desconocidos
+  const orden = Object.keys(IDB_TABLE_META);
+  registros.sort((a, b) => {
+    const ia = orden.indexOf(a.k), ib = orden.indexOf(b.k);
+    if (ia === -1 && ib === -1) return a.k.localeCompare(b.k);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
+  tablesWrap.innerHTML = registros.map(rec => {
+    const meta = IDB_TABLE_META[rec.k] || { label: rec.k, icon: '📄', tipo: 'scalar' };
+    const ts   = rec.ts ? new Date(rec.ts).toLocaleString('es-ES', { timeZone: 'America/New_York', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
+    const rows = buildIDBRows(rec.k, rec.v, meta.tipo);
+    return `
+    <div class="idb-table-card">
+      <div class="idb-table-header" onclick="toggleIDBTable('idb-body-${rec.k.replace(/[^a-z0-9]/gi,'_')}')">
+        <div class="idb-table-title">
+          <span>${meta.icon}</span>
+          <span>${meta.label}</span>
+          <span class="idb-key-chip">${rec.k}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          ${ts ? `<span class="idb-ts">Guardado: ${ts}</span>` : ''}
+          <span class="idb-table-meta">${idbRecCount(rec.v, meta.tipo)}</span>
+          <span style="color:var(--muted);font-size:16px" id="idb-arr-${rec.k.replace(/[^a-z0-9]/gi,'_')}">⌄</span>
+        </div>
+      </div>
+      <div class="idb-table-body" id="idb-body-${rec.k.replace(/[^a-z0-9]/gi,'_')}">
+        ${rows}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleIDBTable(bodyId) {
+  const body = document.getElementById(bodyId);
+  const arrId = bodyId.replace('idb-body-', 'idb-arr-');
+  const arr   = document.getElementById(arrId);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (arr) arr.textContent = body.classList.contains('open') ? '⌃' : '⌄';
+}
+
+function idbRecCount(v, tipo) {
+  if (tipo === 'tabs')   return Array.isArray(v) ? `${v.length} tabs · ${v.reduce((a,t)=>a+(t.mensajes||t.items||[]).length,0)} ítems` : '—';
+  if (tipo === 'array')  return Array.isArray(v) ? `${v.length} registros` : '—';
+  if (tipo === 'object') return typeof v === 'object' && v ? `${Object.keys(v).length} campos` : '—';
+  return typeof v === 'string' ? `"${v}"` : String(v ?? '—');
+}
+
+function buildIDBRows(key, v, tipo) {
+  if (tipo === 'scalar') {
+    return `<table class="idb-table"><thead><tr><th>Valor</th></tr></thead><tbody>
+      <tr><td>${formatIDBVal(v)}</td></tr>
+    </tbody></table>`;
+  }
+  if (tipo === 'object' && typeof v === 'object' && v) {
+    return `<table class="idb-table"><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>
+      ${Object.entries(v).map(([k,val]) => `<tr><td><b>${esc(k)}</b></td><td>${formatIDBVal(val)}</td></tr>`).join('')}
+    </tbody></table>`;
+  }
+  if (tipo === 'tabs' && Array.isArray(v)) {
+    return v.map(tab => {
+      const items = tab.mensajes || tab.items || [];
+      if (!items.length) return `<div style="padding:10px 18px;font-size:12px;color:var(--muted)">📂 <b>${esc(tab.nombre)}</b> — sin ítems</div>`;
+      return `
+        <div style="padding:8px 18px 0;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)">📂 ${esc(tab.nombre)}</div>
+        <table class="idb-table">
+          <thead><tr>${Object.keys(items[0]).map(k=>`<th>${esc(k)}</th>`).join('')}</tr></thead>
+          <tbody>${items.map(item=>`<tr>${Object.values(item).map(val=>`<td>${formatIDBVal(val)}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>`;
+    }).join('<hr style="border:none;border-top:1px solid var(--border)">');
+  }
+  if (tipo === 'array' && Array.isArray(v)) {
+    if (!v.length) return `<div style="padding:14px 18px;color:var(--muted);font-size:13px">Sin registros</div>`;
+    const allKeys = [...new Set(v.flatMap(r => Object.keys(r || {})))];
+    return `<table class="idb-table">
+      <thead><tr>${allKeys.map(k=>`<th>${esc(k)}</th>`).join('')}</tr></thead>
+      <tbody>${v.map(row=>`<tr>${allKeys.map(k=>`<td>${formatIDBVal(row[k])}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
+  }
+  // fallback JSON
+  return `<div style="padding:14px 18px"><pre style="font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all">${esc(JSON.stringify(v, null, 2))}</pre></div>`;
+}
+
+function formatIDBVal(v) {
+  if (v === null || v === undefined) return `<span class="idb-val-null">null</span>`;
+  if (typeof v === 'boolean') return `<span class="idb-val-bool">${v}</span>`;
+  if (typeof v === 'number')  return `<span class="idb-val-num">${v}</span>`;
+  if (typeof v === 'string') {
+    const s = esc(v);
+    if (s.length > 120) return `<span class="idb-val-str" title="${s}">"${s.slice(0,120)}…"</span>`;
+    return `<span class="idb-val-str">"${s}"</span>`;
+  }
+  if (typeof v === 'object') {
+    const json = esc(JSON.stringify(v, null, 2));
+    const uid  = 'idbv_' + Math.random().toString(36).slice(2);
+    return `<span class="idb-val-obj" id="${uid}" onclick="document.getElementById('${uid}').classList.toggle('expanded')">${json}</span>`;
+  }
+  return esc(String(v));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILIDADES
+// ═══════════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+(async () => {
+  await cargarTodo();
+  renderLinks();
+  renderGuiones();
+  renderWA();
+  renderChecklist();
+  renderContadores();
+  renderNotas();
+  renderFAQ();
+  renderAgentesList();
+  renderAgenteDetail();
+  renderAseguradorasList();
+  renderAseguradoraDetail();
+  actualizarNombre();
+  _gpmInit();
+  const vistaGuardada = await cargar('v6_vista', 'view-links');
+  activarVista(vistaGuardada, false);
+})();
+</script>
+</body>
+</html>
