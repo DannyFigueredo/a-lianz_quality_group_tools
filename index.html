@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Herramientas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --border: rgba(255,255,255,0.07);
+    --gold: #f0a832;
+    --gold-d: #c8881a;
+    --blue: #3b82f6;
+    --blue-d: #1d4ed8;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --glow-gold: 0 0 40px rgba(240,168,50,0.18);
+    --glow-blue: 0 0 40px rgba(59,130,246,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .bg-mesh {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  }
+  .bg-mesh::before {
+    content: ''; position: absolute; top: -20%; left: -10%; width: 55%; height: 55%;
+    background: radial-gradient(ellipse, rgba(240,168,50,0.07) 0%, transparent 70%);
+    animation: drift1 12s ease-in-out infinite alternate;
+  }
+  .bg-mesh::after {
+    content: ''; position: absolute; bottom: -20%; right: -10%; width: 60%; height: 60%;
+    background: radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%);
+    animation: drift2 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(4%,6%)} }
+  @keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(-4%,-5%)} }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+    background-size: 48px 48px; pointer-events: none;
+  }
+  .container {
+    position: relative; z-index: 1; text-align: center;
+    padding: 32px 20px; width: 100%; max-width: 780px;
+  }
+  .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px; display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+  }
+  .eyebrow::before, .eyebrow::after { content:''; width:32px; height:1px; background:var(--border); }
+  h1 {
+    font-family: 'Syne', sans-serif; font-size: clamp(2rem,5vw,3.2rem); font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px;
+  }
+  h1 span {
+    background: linear-gradient(135deg, var(--gold), #fff8e1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 52px; font-weight: 400; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .tool-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 32px 28px; text-decoration: none; color: inherit; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s, border-color 0.25s;
+    display: flex; flex-direction: column; gap: 16px; text-align: left;
+  }
+  .tool-card::before {
+    content:''; position:absolute; inset:0; border-radius:20px; opacity:0;
+    transition:opacity 0.3s; pointer-events:none;
+  }
+  .tool-card.gold::before { background:radial-gradient(ellipse at 30% 30%,rgba(240,168,50,0.12) 0%,transparent 65%); }
+  .tool-card.blue::before { background:radial-gradient(ellipse at 30% 30%,rgba(59,130,246,0.12) 0%,transparent 65%); }
+  .tool-card:hover { transform: translateY(-5px) scale(1.01); }
+  .tool-card.gold:hover { border-color:rgba(240,168,50,0.4); box-shadow:var(--glow-gold),0 20px 40px rgba(0,0,0,0.3); }
+  .tool-card.blue:hover { border-color:rgba(59,130,246,0.4); box-shadow:var(--glow-blue),0 20px 40px rgba(0,0,0,0.3); }
+  .tool-card:hover::before { opacity:1; }
+  .tool-card::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    border-radius:20px 20px 0 0; opacity:0.5; transition:opacity 0.25s;
+  }
+  .tool-card.gold::after { background:linear-gradient(90deg,var(--gold),transparent); }
+  .tool-card.blue::after  { background:linear-gradient(90deg,var(--blue),transparent); }
+  .tool-card:hover::after { opacity:1; }
+  .card-icon {
+    width:52px; height:52px; border-radius:14px; display:flex; align-items:center;
+    justify-content:center; font-size:24px; flex-shrink:0; transition:transform 0.25s;
+  }
+  .tool-card.gold .card-icon { background:rgba(240,168,50,0.12); }
+  .tool-card.blue .card-icon { background:rgba(59,130,246,0.12); }
+  .tool-card:hover .card-icon { transform:scale(1.1) rotate(-4deg); }
+  .card-body { flex:1; }
+  .card-tag { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:7px; }
+  .tool-card.gold .card-tag { color:var(--gold); }
+  .tool-card.blue .card-tag  { color:var(--blue); }
+  .card-title { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; line-height:1.2; color:var(--text); margin-bottom:8px; }
+  .card-desc  { font-size:13px; color:var(--muted); line-height:1.6; }
+  .card-cta { display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+  .card-btn {
+    display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700;
+    padding:8px 16px; border-radius:100px; border:none; cursor:pointer;
+    font-family:'DM Sans',sans-serif; transition:transform 0.2s,filter 0.2s;
+  }
+  .tool-card.gold .card-btn { background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#1a0f00; }
+  .tool-card.blue .card-btn  { background:linear-gradient(135deg,var(--blue),var(--blue-d)); color:#fff; }
+  .card-btn:hover { transform:translateX(2px); filter:brightness(1.1); }
+  .card-arrow { font-size:18px; opacity:0.3; transition:opacity 0.2s,transform 0.2s; }
+  .tool-card:hover .card-arrow { opacity:0.7; transform:translateX(4px); }
+  .chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+  .chip { font-size:10px; font-weight:600; padding:3px 9px; border-radius:100px; border:1px solid var(--border); color:var(--muted); }
+  .footer {
+    position:relative; z-index:1; margin-top:36px; font-size:11.5px; color:var(--muted);
+    display:flex; align-items:center; gap:8px; justify-content:center;
+  }
+  .footer-dot { width:4px; height:4px; border-radius:50%; background:var(--border); }
+  @media(max-width:580px){ .cards{grid-template-columns:1fr} h1{font-size:2rem} }
+  .container > * { opacity:0; transform:translateY(12px); animation:rise 0.55s forwards; }
+  .eyebrow  { animation-delay:0.05s; }
+  h1        { animation-delay:0.12s; }
+  .subtitle { animation-delay:0.18s; }
+  .cards    { animation-delay:0.26s; }
+  .footer   { animation-delay:0.38s; }
+  @keyframes rise { to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+
+<div class="container">
+  <div class="eyebrow">Centro de Herramientas</div>
+  <h1>Tus <span>Herramientas</span></h1>
+  <p class="subtitle">Selecciona una aplicación para comenzar</p>
+
+  <div class="cards">
+
+    <a class="tool-card gold" href="golden-trust.html" target="_blank">
+      <div class="card-icon">📋</div>
+      <div class="card-body">
+        <div class="card-tag">Operaciones</div>
+        <div class="card-title">Panel Operativo Golden Trust</div>
+        <div class="card-desc">Centro de operaciones diario: guiones, WhatsApp, checklists, agentes y más.</div>
+        <div class="chips">
+          <span class="chip">📞 Contador</span>
+          <span class="chip">💬 WhatsApp</span>
+          <span class="chip">✅ Checklist</span>
+          <span class="chip">👥 Agentes</span>
+        </div>
+      </div>
+      <div class="card-cta">
+        <button class="card-btn">Abrir →</button>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+    <a class="tool-card blue" href="insurepro.html" target="_blank">
+      <div class="card-icon">🛡️</div>
+      <div class="card-body">
+        <div class="card-tag">Elegibilidad</div>
+        <div class="card-title">Formulario de Elegibilidad InsurePro</div>
+        <div class="card-desc">Recopila, organiza y exporta datos de elegibilidad. Genera PDFs profesionales.</div>
+        <div class="chips">
+          <span class="chip">📄 PDF</span>
+          <span class="chip">💾 JSON</span>
+          <span class="chip">👥 Clientes</span>
+          <span class="chip">🩺 Historial</span>
+        </div>
+      </div>
+      <div class="card-cta">
+        <button class="card-btn">Abrir →</button>
+        <span class="card-arrow">›</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div class="footer">
+  <span>2 herramientas</span>
+  <div class="footer-dot"></div>
+  <span>Se abren en nueva pestaña</span>
+</div>
+
+</body>
+</html>
