@@ -422,18 +422,8 @@
     <span class="logo-main">A-LIANZ</span>
     <span class="logo-sub">— Quality Group —</span>
   </div>
-  <div class="nav-divider"></div>
-
-  <button class="tab-btn" id="tab-gt" onclick="cargar('golden-trust.html', 'gt')">
-    <span class="tab-icon">📋</span>
-    <span>Panel Golden Trust</span>
-  </button>
-
-  <button class="tab-btn" id="tab-ip" onclick="cargar('insurepro.html', 'ip')">
-    <span class="tab-icon">🛡️</span>
-    <span>InsurePro</span>
-  </button>
-
+  <div class="nav-divider" id="nav-divider"></div>
+  <div id="nav-tabs" style="display:flex;gap:6px;align-items:center;flex:1;overflow-x:auto"></div>
   <button class="home-btn" onclick="irHome()">🏠 Inicio</button>
 </nav>
 
@@ -447,42 +437,14 @@
       <div class="home-title"><span>A-LIANZ</span></div>
       <div class="home-qg">— QUALITY GROUP —</div>
       <p class="home-sub">Selecciona una herramienta para comenzar</p>
-      <div class="home-cards">
-
-        <div class="home-card gold" onclick="cargar('golden-trust.html','gt')">
-          <div class="card-glow"></div>
-          <span class="hc-icon">📋</span>
-          <div class="hc-tag">Operaciones</div>
-          <div class="hc-title">Panel Operativo Golden Trust</div>
-          <div class="hc-desc">Guiones, WhatsApp, checklists, contador de llamadas, agentes y más.</div>
-          <button class="hc-btn">Abrir →</button>
-        </div>
-
-        <div class="home-card blue" onclick="cargar('insurepro.html','ip')">
-          <div class="card-glow"></div>
-          <span class="hc-icon">🛡️</span>
-          <div class="hc-tag">Elegibilidad</div>
-          <div class="hc-title">Formulario de Elegibilidad InsurePro</div>
-          <div class="hc-desc">Recopila datos de elegibilidad, gestiona clientes y exporta PDFs profesionales.</div>
-          <button class="hc-btn">Abrir →</button>
-        </div>
-        <div class="home-card gold" onclick="cargar('mi-tool.html','mt')">
-  <div class="card-glow"></div>
-  <span class="hc-icon">🔧</span>
-  <div class="hc-tag">Categoría</div>
-  <div class="hc-title">Nombre de la Tool</div>
-  <div class="hc-desc">Descripción breve de lo que hace.</div>
-  <button class="hc-btn">Abrir →</button>
-</div>
-
-      </div>
+      <div class="home-cards" id="home-cards"></div>
     </div>
   </div>
 
   <!-- Loader -->
   <div class="loader" id="loader">
     <div class="loader-spinner"></div>
-    <div class="loader-text">Cargando...</div>
+    <div class="loader-text" id="loader-text">Cargando...</div>
   </div>
 
   <!-- iFrame -->
@@ -491,54 +453,160 @@
 </div>
 
 <script>
-  var tabActivo = null;
-
-  function cargar(archivo, tabId) {
-    var frame   = document.getElementById('frame');
-    var loader  = document.getElementById('loader');
-    var home    = document.getElementById('home-screen');
-
-    // Si ya está cargado, no recargar
-    if (tabActivo === tabId) return;
-    tabActivo = tabId;
-
-    // Ocultar home
-    home.classList.add('hidden');
-
-    // Mostrar loader, ocultar iframe
-    loader.classList.add('show');
-    frame.classList.remove('visible');
-
-    // Actualizar tabs
-    document.querySelectorAll('.tab-btn').forEach(function(b) {
-      b.classList.remove('active-gold', 'active-blue');
-    });
-    var activeClass = tabId === 'gt' ? 'active-gold' : 'active-blue';
-    document.getElementById('tab-' + tabId).classList.add(activeClass);
-
-    // Cargar iframe
-    frame.src = archivo;
-    frame.onload = function() {
-      loader.classList.remove('show');
-      frame.classList.add('visible');
-    };
+// ═══════════════════════════════════════════════════════
+//  ✏️  AGREGA O EDITA TUS HERRAMIENTAS AQUÍ
+//  Campos:
+//    id      → identificador único (sin espacios)
+//    archivo → nombre del archivo html en la misma carpeta
+//    icono   → emoji que aparece en la card y el tab
+//    color   → "gold" | "blue" | "green" | "red" | "purple"
+//    tag     → categoría pequeña arriba del título
+//    titulo  → nombre de la herramienta
+//    desc    → descripción corta
+// ═══════════════════════════════════════════════════════
+var TOOLS = [
+  {
+    id:      'gt',
+    archivo: 'golden-trust.html',
+    icono:   '📋',
+    color:   'gold',
+    tag:     'Operaciones',
+    titulo:  'Panel Operativo Golden Trust',
+    desc:    'Guiones, WhatsApp, checklists, contador de llamadas, agentes y más.'
+  },
+  {
+    id:      'ip',
+    archivo: 'insurepro.html',
+    icono:   '🛡️',
+    color:   'blue',
+    tag:     'Elegibilidad',
+    titulo:  'Formulario de Elegibilidad InsurePro',
+    desc:    'Recopila datos de elegibilidad, gestiona clientes y exporta PDFs profesionales.'
   }
+  // ── Para agregar una nueva tool, copia uno de los bloques de arriba ──
+  // ,{
+  //   id:      'mi-tool',
+  //   archivo: 'mi-tool.html',
+  //   icono:   '🔧',
+  //   color:   'green',
+  //   tag:     'Mi Categoría',
+  //   titulo:  'Mi Nueva Herramienta',
+  //   desc:    'Descripción de lo que hace esta herramienta.'
+  // }
+];
 
-  function irHome() {
-    var frame  = document.getElementById('frame');
-    var loader = document.getElementById('loader');
-    var home   = document.getElementById('home-screen');
+// ── Colores disponibles ──
+var COLOR_MAP = {
+  gold:   { accent: '#f0a832', bg: 'rgba(240,168,50,0.1)',  border: 'rgba(240,168,50,0.3)',  glow: 'rgba(240,168,50,0.1)',  hover_bg: '#131c2e', hover_border: 'rgba(240,168,50,0.4)',  hover_glow: 'rgba(240,168,50,0.14)',  btn: 'linear-gradient(135deg,#f0a832,#c8881a)', btn_text: '#1a0f00' },
+  blue:   { accent: '#3b82f6', bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.3)',  glow: 'rgba(59,130,246,0.1)',  hover_bg: '#111d30', hover_border: 'rgba(59,130,246,0.4)',  hover_glow: 'rgba(59,130,246,0.14)',  btn: 'linear-gradient(135deg,#3b82f6,#1d4ed8)', btn_text: '#fff'    },
+  green:  { accent: '#10b981', bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.3)',  glow: 'rgba(16,185,129,0.1)', hover_bg: '#0f1f1a', hover_border: 'rgba(16,185,129,0.4)',  hover_glow: 'rgba(16,185,129,0.14)', btn: 'linear-gradient(135deg,#10b981,#059669)', btn_text: '#fff'    },
+  red:    { accent: '#ef4444', bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.3)',   glow: 'rgba(239,68,68,0.1)',  hover_bg: '#1f1010', hover_border: 'rgba(239,68,68,0.4)',   hover_glow: 'rgba(239,68,68,0.14)',   btn: 'linear-gradient(135deg,#ef4444,#dc2626)', btn_text: '#fff'    },
+  purple: { accent: '#a855f7', bg: 'rgba(168,85,247,0.1)',  border: 'rgba(168,85,247,0.3)',  glow: 'rgba(168,85,247,0.1)', hover_bg: '#160f20', hover_border: 'rgba(168,85,247,0.4)',  hover_glow: 'rgba(168,85,247,0.14)', btn: 'linear-gradient(135deg,#a855f7,#7c3aed)', btn_text: '#fff'    }
+};
 
-    tabActivo = null;
-    frame.classList.remove('visible');
+// ── Inyectar estilos dinámicos por color ──
+function injectColorStyles() {
+  var css = '';
+  Object.keys(COLOR_MAP).forEach(function(c) {
+    var m = COLOR_MAP[c];
+    css += '\n'
+      + '.home-card.'  + c + '::after { background: linear-gradient(90deg,' + m.accent + ',transparent); }\n'
+      + '.home-card.'  + c + ' .card-glow { background: radial-gradient(ellipse at 25% 25%,' + m.glow + ' 0%,transparent 65%); }\n'
+      + '.home-card.'  + c + ':hover { border-color:' + m.hover_border + '; background:' + m.hover_bg + '; box-shadow: 0 0 0 1px ' + m.border + ', 0 0 40px ' + m.hover_glow + ', 0 20px 48px rgba(0,0,0,0.4); }\n'
+      + '.home-card.'  + c + ' .hc-tag { color:' + m.accent + '; }\n'
+      + '.home-card.'  + c + ' .hc-btn { background:' + m.btn + '; color:' + m.btn_text + '; }\n'
+      + '.tab-btn.active-' + c + ' { background:' + m.bg + '; border-color:' + m.border + '; color:' + m.accent + '; }\n';
+  });
+  var style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+}
+
+// ── Construir nav tabs ──
+function buildNav() {
+  var nav      = document.getElementById('nav-tabs');
+  var divider  = document.getElementById('nav-divider');
+  nav.innerHTML = '';
+  TOOLS.forEach(function(tool) {
+    var btn = document.createElement('button');
+    btn.className   = 'tab-btn';
+    btn.id          = 'tab-' + tool.id;
+    btn.innerHTML   = '<span class="tab-icon">' + tool.icono + '</span><span>' + tool.titulo + '</span>';
+    btn.onclick     = function() { cargar(tool); };
+    nav.appendChild(btn);
+  });
+}
+
+// ── Construir cards ──
+function buildCards() {
+  var grid = document.getElementById('home-cards');
+  grid.innerHTML = '';
+  TOOLS.forEach(function(tool) {
+    var card = document.createElement('div');
+    card.className = 'home-card ' + tool.color;
+    card.innerHTML =
+      '<div class="card-glow"></div>' +
+      '<span class="hc-icon">' + tool.icono + '</span>' +
+      '<div class="hc-tag">'   + tool.tag   + '</div>'  +
+      '<div class="hc-title">' + tool.titulo + '</div>' +
+      '<div class="hc-desc">'  + tool.desc   + '</div>' +
+      '<button class="hc-btn">Abrir →</button>';
+    card.onclick = function() { cargar(tool); };
+    grid.appendChild(card);
+  });
+}
+
+// ── Cargar tool en iframe ──
+var tabActivo = null;
+
+function cargar(tool) {
+  var frame  = document.getElementById('frame');
+  var loader = document.getElementById('loader');
+  var loaderText = document.getElementById('loader-text');
+  var home   = document.getElementById('home-screen');
+
+  if (tabActivo === tool.id) return;
+  tabActivo = tool.id;
+
+  home.classList.add('hidden');
+  loader.classList.add('show');
+  loaderText.textContent = 'Cargando ' + tool.titulo + '...';
+  frame.classList.remove('visible');
+
+  // Limpiar todos los tabs activos
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.className = 'tab-btn';
+  });
+  var tabEl = document.getElementById('tab-' + tool.id);
+  if (tabEl) tabEl.classList.add('active-' + tool.color);
+
+  frame.src = tool.archivo;
+  frame.onload = function() {
     loader.classList.remove('show');
-    frame.src = 'about:blank';
-    home.classList.remove('hidden');
+    frame.classList.add('visible');
+  };
+}
 
-    document.querySelectorAll('.tab-btn').forEach(function(b) {
-      b.classList.remove('active-gold', 'active-blue');
-    });
-  }
+function irHome() {
+  var frame  = document.getElementById('frame');
+  var loader = document.getElementById('loader');
+  var home   = document.getElementById('home-screen');
+
+  tabActivo = null;
+  frame.classList.remove('visible');
+  loader.classList.remove('show');
+  frame.src = 'about:blank';
+  home.classList.remove('hidden');
+
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.className = 'tab-btn';
+  });
+}
+
+// ── Init ──
+injectColorStyles();
+buildNav();
+buildCards();
 </script>
 
 </body>
