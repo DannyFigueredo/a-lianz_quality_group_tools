@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Elegibilidad — InsurePro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4f8;--bg2:#e4eaf0;--surface:#fff;--surface2:#f5f8fc;
+  --border:#cdd6e0;--primary:#1a5fa8;--primary-l:#2272c3;--primary-ul:#e8f0fb;
+  --accent:#0ea47a;--accent-l:#e6f7f3;--text:#1a2535;--text2:#4a5a6e;--text3:#8a9ab0;
+  --danger:#d93025;--warn:#f59e0b;--gold:#f0a500;
+  --shadow:0 1px 4px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--r:10px;--rs:6px;
+}
+[data-theme=dark]{
+  --bg:#0d1b2a;--bg2:#111e2d;--surface:#162435;--surface2:#0f1e2d;
+  --border:rgba(255,255,255,.09);--primary:#4899e8;--primary-l:#5aabf5;
+  --primary-ul:rgba(72,153,232,.12);--accent:#00c2a8;--accent-l:rgba(0,194,168,.12);
+  --text:#e8f0f8;--text2:#8aa8c4;--text3:#5a7a98;
+  --shadow:0 2px 8px rgba(0,0,0,.4);--shadow-sm:0 1px 4px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:300;box-shadow:var(--shadow-sm)}
+.logo{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--primary),var(--primary-l));border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px;fill:white}
+.logo-text{font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.logo-text span{color:var(--primary)}
+.hdr-center{display:flex;flex-direction:column;align-items:center;gap:2px}
+.hdr-title{font-size:.73rem;color:var(--text2);font-weight:500}
+.prog-wrap{display:flex;align-items:center;gap:7px}
+.prog-track{width:130px;height:4px;background:var(--bg2);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px;transition:width .5s}
+.prog-pct{font-size:.67rem;color:var(--text3);font-weight:700;min-width:26px}
+.hdr-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.save-badge{font-size:.67rem;padding:3px 9px;border-radius:100px;background:var(--accent-l);color:var(--accent);font-weight:700;transition:all .3s;white-space:nowrap}
+.save-badge.unsaved{background:#fef3cd;color:var(--warn)}
+.icon-btn{width:33px;height:33px;border-radius:7px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;font-size:.85rem}
+.icon-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-ul)}
+.hdr-btn{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:'Inter',sans-serif;font-size:.73rem;font-weight:700;color:var(--text2);transition:all .2s;white-space:nowrap}
+.hdr-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-ul)}
+.app-body{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:190px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:12px 7px;display:flex;flex-direction:column;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.sb-hint{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:2px 8px 9px;font-weight:700}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:var(--rs);cursor:pointer;transition:all .18s;color:var(--text2);font-size:.78rem;font-weight:500;border:1px solid transparent;user-select:none}
+.nav-item .dh{color:var(--text3);font-size:.62rem;cursor:grab;opacity:.5;flex-shrink:0}
+.nav-item:hover{background:var(--primary-ul);color:var(--primary)}
+.nav-item.active{background:var(--primary-ul);color:var(--primary);border-color:var(--primary);font-weight:700}
+.nav-item.done .sn{background:var(--accent);color:white}
+.nav-item.has-missing .sn{background:var(--warn);color:white}
+.nav-item.has-missing{color:var(--warn)}
+.sn{width:18px;height:18px;border-radius:50%;background:var(--bg2);color:var(--text3);font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.nav-item.active .sn{background:var(--primary);color:white}
+.sl{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-divider{height:1px;background:var(--border);margin:8px 0}
+.sb-extra-btn{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:var(--rs);cursor:pointer;font-size:.78rem;font-weight:600;color:var(--text2);border:1px solid transparent;transition:all .18s}
+.sb-extra-btn:hover{background:var(--primary-ul);color:var(--primary)}
+.sb-extra-btn.av{background:var(--primary-ul);color:var(--primary);border-color:var(--primary)}
+.main{flex:1;padding:24px 28px;min-width:0;display:flex;flex-direction:column;align-items:center}
+.main-inner{width:100%;max-width:840px}
+.view{display:none}
+.view.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.section{display:none;animation:fadeUp .3s ease}
+.section.active{display:block}
+.sec-header{margin-bottom:18px}
+.sec-title{font-size:1.38rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.sec-sub{font-size:.8rem;color:var(--text3);margin-top:3px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:13px;box-shadow:var(--shadow-sm)}
+.card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:15px}
+.card-ico{width:25px;height:25px;border-radius:5px;background:var(--primary-ul);display:flex;align-items:center;justify-content:center;font-size:.8rem}
+.card-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text2)}
+.grid{display:grid;gap:12px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:1fr 1fr 1fr}.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:680px){.c2,.c3,.c4{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:4px;position:relative}
+.field label{font-size:.68rem;font-weight:700;color:var(--text2);letter-spacing:.02em;text-transform:uppercase}
+.field input,.field select,.field textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Inter',sans-serif;font-size:.85rem;padding:8px 10px;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,95,168,.1)}
+.field input:disabled,.field select:disabled{opacity:.4;cursor:not-allowed}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%234a5a6e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
+.field textarea{resize:vertical;min-height:65px}
+.req{color:var(--primary)}
+
+/* ====== MISSING FIELDS BANNER ====== */
+.missing-banner{background:linear-gradient(135deg,#fff8e6,#fef3cd);border:1.5px solid var(--warn);border-radius:var(--r);padding:13px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:11px;animation:fadeUp .3s ease}
+.missing-banner h3{font-size:.83rem;font-weight:700;color:#92600a;margin-bottom:5px}
+.missing-banner ul{list-style:none;padding:0;margin:0}
+.missing-banner ul li{font-size:.75rem;color:#92600a;padding:2px 0;display:flex;align-items:center;gap:5px}
+.missing-banner ul li::before{content:'⚠️';font-size:.65rem}
+.missing-banner .close-banner{margin-left:auto;background:none;border:none;cursor:pointer;font-size:1rem;color:#92600a;opacity:.6;flex-shrink:0;padding:0 2px}
+.missing-banner .close-banner:hover{opacity:1}
+
+/* ====== SECTION MISSING DOTS on nav ====== */
+.missing-dot{width:6px;height:6px;border-radius:50%;background:var(--warn);flex-shrink:0;margin-left:auto}
+
+.ac-list{position:absolute;top:100%;left:0;right:0;z-index:600;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);box-shadow:var(--shadow);max-height:180px;overflow-y:auto;margin-top:2px;display:none}
+.ac-list.open{display:block}
+.ac-item{padding:8px 11px;font-size:.82rem;cursor:pointer;color:var(--text);transition:background .15s}
+.ac-item:hover,.ac-item.focused{background:var(--primary-ul);color:var(--primary)}
+.ac-item small{display:block;font-size:.68rem;color:var(--text3)}
+.med-table{width:100%;border-collapse:collapse}
+.med-table th{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);padding:8px 9px;text-align:left;border-bottom:2px solid var(--border);background:var(--surface2)}
+.med-table td{padding:5px 4px;border-bottom:1px solid var(--border);vertical-align:middle}
+.med-table td:first-child{font-size:.79rem;color:var(--text);font-weight:500;padding-left:8px;min-width:145px}
+.med-table tr:last-child td{border-bottom:none}
+.med-table tr.hc{background:rgba(14,164,122,.04)}
+.med-table td input[type=text],.med-table td input[type=date]{background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Inter',sans-serif;font-size:.77rem;padding:5px 7px;outline:none;width:100%;transition:border-color .2s}
+.med-table td input:focus{border-color:var(--primary)}
+.med-table td .cw{display:flex;align-items:center;justify-content:center}
+.med-table td input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--primary)}
+.add-cond{margin-top:8px;display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:var(--primary);cursor:pointer;padding:6px 10px;border:1px dashed var(--primary);border-radius:var(--rs);background:var(--primary-ul);transition:all .2s}
+.add-cond:hover{background:var(--primary);color:white}
+.del-row{color:var(--danger);background:none;border:none;cursor:pointer;font-size:.9rem;padding:2px 5px;border-radius:4px;transition:background .2s;opacity:.6}
+.del-row:hover{background:rgba(217,48,37,.1);opacity:1}
+.bene-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:10px;position:relative}
+.bene-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.bene-num{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary)}
+.pct-badge{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--primary-ul);color:var(--primary)}
+.pct-bar{display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:var(--rs);background:var(--surface2);border:1px solid var(--border);margin-bottom:11px;font-size:.78rem}
+.pct-bar.ok{background:var(--accent-l);border-color:var(--accent);color:var(--accent)}
+.pct-bar.err{background:#fde8e7;border-color:var(--danger);color:var(--danger)}
+.add-bene{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:700;color:var(--primary);cursor:pointer;padding:7px 12px;border:1px dashed var(--primary);border-radius:var(--rs);background:var(--primary-ul);transition:all .2s;margin-top:5px}
+.add-bene:hover{background:var(--primary);color:white}
+.del-bene{position:absolute;top:11px;right:11px;background:none;border:none;cursor:pointer;color:var(--text3);font-size:.85rem;padding:3px 5px;border-radius:4px;transition:all .2s}
+.del-bene:hover{color:var(--danger);background:rgba(217,48,37,.1)}
+.nav-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;align-items:center}
+.btn{font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;padding:9px 19px;border-radius:100px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+.btn-primary{background:var(--primary);color:white}
+.btn-primary:hover{background:var(--primary-l);transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,95,168,.25)}
+.btn-danger{background:transparent;border:1px solid rgba(217,48,37,.3);color:var(--danger);font-size:.74rem;padding:7px 13px;margin-right:auto}
+.btn-danger:hover{background:rgba(217,48,37,.07)}
+.btn-pdf{background:linear-gradient(135deg,var(--gold),#d88f00);color:white}
+.btn-pdf:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(240,165,0,.3)}
+.btn-json{background:linear-gradient(135deg,#28a745,#1e7e34);color:white}
+.btn-json:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(40,167,69,.28)}
+.divider{border:none;border-top:1px solid var(--border);margin:13px 0}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:16px}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:14px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.25);transform:translateY(10px);transition:transform .25s;max-height:90vh;overflow-y:auto}
+.overlay.open .modal{transform:translateY(0)}
+.modal-title{font-size:.98rem;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.modal-sm{width:340px}.modal-xl{width:min(960px,100%)}
+.th-opts{display:flex;gap:9px;margin-bottom:13px}
+.th-opt{flex:1;padding:10px;border-radius:var(--r);border:2px solid var(--border);cursor:pointer;text-align:center;transition:all .2s;font-size:.78rem;font-weight:700;color:var(--text2)}
+.th-opt:hover{border-color:var(--primary)}
+.th-opt.active{border-color:var(--primary);background:var(--primary-ul);color:var(--primary)}
+.th-opt .tp{width:100%;height:28px;border-radius:5px;margin-bottom:7px}
+.th-opt.lgt .tp{background:linear-gradient(135deg,#f0f4f8,#fff)}
+.th-opt.drk .tp{background:linear-gradient(135deg,#0d1b2a,#162435)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 20px;border-radius:100px;font-size:.8rem;font-weight:700;z-index:4000;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none;box-shadow:var(--shadow);white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#toast.ok{border-color:var(--accent);color:var(--accent)}
+#toast.err{border-color:var(--danger);color:var(--danger)}
+#toast.warn{border-color:var(--warn);color:var(--warn)}
+.app-desc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--r);padding:13px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:11px}
+.app-desc h3{font-size:.83rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.app-desc p{font-size:.74rem;color:var(--text3);line-height:1.6}
+.cv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.clients-count{font-size:.76rem;color:var(--text3);background:var(--bg2);padding:3px 11px;border-radius:100px;font-weight:600}
+.ct-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm)}
+.ct{width:100%;border-collapse:collapse}
+.ct th{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);padding:10px 13px;text-align:left;border-bottom:2px solid var(--border);background:var(--surface2)}
+.ct td{padding:10px 13px;border-bottom:1px solid var(--border);font-size:.82rem;color:var(--text);vertical-align:middle}
+.ct tr:last-child td{border-bottom:none}
+.ct tr:hover td{background:var(--primary-ul)}
+.ct-badge{display:inline-flex;padding:2px 8px;border-radius:100px;font-size:.65rem;font-weight:700}
+.ct-badge.f{background:#fce8f8;color:#a81a8f}
+.ct-badge.m{background:#e8f4fd;color:#1a5fa8}
+.ct-actions{display:flex;gap:5px;align-items:center}
+.ct-btn{padding:4px 11px;border-radius:100px;border:1px solid var(--border);background:var(--surface);font-family:'Inter',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;color:var(--text2)}
+.ct-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-ul)}
+.ct-btn.del:hover{border-color:var(--danger);color:var(--danger);background:#fde8e7}
+.ct-btn.load{background:var(--primary);color:white;border-color:var(--primary)}
+.ct-btn.load:hover{background:var(--primary-l)}
+.ct-btn.resume{background:linear-gradient(135deg,var(--warn),#e08c00);color:white;border-color:var(--warn)}
+.ct-btn.resume:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.empty-state{text-align:center;padding:44px 20px;color:var(--text3)}
+.empty-icon{font-size:2.3rem;margin-bottom:11px}
+.empty-title{font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:5px}
+.search-bar{display:flex;gap:9px;margin-bottom:12px}
+.search-bar input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:'Inter',sans-serif;font-size:.84rem;padding:8px 12px;outline:none;transition:border-color .2s}
+.search-bar input:focus{border-color:var(--primary)}
+.comp-wrap{display:flex;align-items:center;gap:6px}
+.comp-track{width:64px;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;flex-shrink:0}
+.comp-fill{height:100%;border-radius:3px;transition:width .4s}
+.comp-pct{font-size:.7rem;font-weight:700}
+.comp-lbl{font-size:.65rem;color:var(--text3)}
+.prev-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
+@media(max-width:600px){.prev-grid{grid-template-columns:1fr}}
+.prev-sec{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:13px}
+.prev-sec-title{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:9px}
+.prev-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)}
+.prev-row:last-child{border-bottom:none}
+.pr-lbl{font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;flex-shrink:0;min-width:95px}
+.pr-val-wrap{display:flex;align-items:center;gap:5px;flex:1;justify-content:flex-end}
+.pr-val{font-size:.8rem;color:var(--text);font-weight:500;text-align:right;word-break:break-word}
+.copy-btn{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3);transition:all .2s;flex-shrink:0}
+.copy-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-ul)}
+.copy-btn.copied{border-color:var(--accent);color:var(--accent);background:var(--accent-l)}
+.prev-comp-header{display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-bottom:14px}
+.prev-comp-big{font-size:2rem;font-weight:700;line-height:1}
+.prev-comp-info{flex:1}
+.prev-comp-info p{font-size:.76rem;color:var(--text3);margin-top:2px}
+.prev-comp-bar{width:100%;height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-top:6px}
+.prev-comp-bar-fill{height:100%;border-radius:4px;transition:width .6s}
+#json-file-input{display:none}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg></div>
+    <span class="logo-text">Insure<span>Pro</span></span>
+  </div>
+  <div class="hdr-center">
+    <div class="hdr-title" id="step-indicator">Paso 1 de 7</div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" id="prog" style="width:14%"></div></div>
+      <span class="prog-pct" id="prog-pct">14%</span>
+    </div>
+  </div>
+  <div class="hdr-actions">
+    <span class="save-badge" id="save-badge">✓ Guardado</span>
+    <button class="hdr-btn db-btn" id="db-link-btn" onclick="linkOrOpenDB()" title="Vincular base de datos JSON">🗄️ <span id="db-btn-label">Vincular BD</span></button>
+    <button class="icon-btn" onclick="exportPDF()" title="PDF">📄</button>
+    <button class="icon-btn" onclick="openSettings()" title="Config">⚙️</button>
+  </div>
+</header>
+<input type="file" id="json-file-input" accept=".json">
+<div class="app-body">
+  <nav class="sidebar">
+    <div class="sb-hint">Formulario <span style="opacity:.5">(arrastra)</span></div>
+    <div id="nav-list">
+      <div class="nav-item active" data-sec="0" onclick="goTo(0)"><span class="dh">⠿</span><span class="sn">1</span><span class="sl">Datos Generales</span></div>
+      <div class="nav-item" data-sec="1" onclick="goTo(1)"><span class="dh">⠿</span><span class="sn">2</span><span class="sl">Historial Médico</span></div>
+      <div class="nav-item" data-sec="2" onclick="goTo(2)"><span class="dh">⠿</span><span class="sn">3</span><span class="sl">Doctor</span></div>
+      <div class="nav-item" data-sec="3" onclick="goTo(3)"><span class="dh">⠿</span><span class="sn">4</span><span class="sl">Antecedentes</span></div>
+      <div class="nav-item" data-sec="4" onclick="goTo(4)"><span class="dh">⠿</span><span class="sn">5</span><span class="sl">Empleo</span></div>
+      <div class="nav-item" data-sec="5" onclick="goTo(5)"><span class="dh">⠿</span><span class="sn">6</span><span class="sl">Beneficiarios</span></div>
+      <div class="nav-item" data-sec="6" onclick="goTo(6)"><span class="dh">⠿</span><span class="sn">7</span><span class="sl">Seguro & Banco</span></div>
+    </div>
+    <div class="sb-divider"></div>
+    <div>
+      <div class="sb-extra-btn av" id="sb-form" onclick="showView('form')">📝 Nuevo Cliente</div>
+      <div class="sb-extra-btn" id="sb-clients" onclick="showView('clients')">👥 Mis Clientes</div>
+    </div>
+  </nav>
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- FORM VIEW -->
+      <div class="view active" id="view-form">
+        <div class="app-desc">
+          <span style="font-size:1.35rem;flex-shrink:0">🛡️</span>
+          <div><h3>Sistema de Elegibilidad para Seguros de Vida</h3><p>Recopila, organiza y exporta la información de elegibilidad de cada cliente. Los datos se guardan automáticamente. Exporta a PDF profesional o JSON para archivar múltiples clientes.</p></div>
+        </div>
+
+        <!-- MISSING BANNER (hidden by default) -->
+        <div class="missing-banner" id="missing-banner" style="display:none">
+          <span style="font-size:1.2rem;flex-shrink:0">⚠️</span>
+          <div style="flex:1">
+            <h3>Información incompleta en esta sección</h3>
+            <ul id="missing-list"></ul>
+          </div>
+          <button class="close-banner" onclick="document.getElementById('missing-banner').style.display='none'">✕</button>
+        </div>
+
+        <!-- SEC 0 -->
+        <div class="section active" id="sec-0">
+          <div class="sec-header"><div class="sec-title">Datos Generales</div><div class="sec-sub">Información personal e identificación del cliente</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">📋</div><div class="card-title">Póliza & Fecha</div></div>
+            <div class="grid c2">
+              <div class="field"><label># DE PÓLIZA</label><input type="text" id="poliza" placeholder="POL-000123"></div>
+              <div class="field"><label>FECHA</label><input type="date" id="fecha"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">👤</div><div class="card-title">Información Personal</div></div>
+            <div class="grid c2" style="margin-bottom:12px">
+              <div class="field"><label>NOMBRE COMPLETO <span class="req">*</span></label><input type="text" id="nombre" placeholder="Nombre completo"></div>
+              <div class="field"><label>CORREO ELECTRÓNICO</label><input type="email" id="email" placeholder="correo@ejemplo.com"></div>
+            </div>
+            <div class="grid c4">
+              <div class="field"><label>TELÉFONO</label><input type="tel" id="telefono" placeholder="(000) 000-0000"></div>
+              <div class="field"><label>FECHA NACIMIENTO</label><input type="date" id="dob"></div>
+              <div class="field"><label>EDAD</label><input type="number" id="edad" placeholder="0" min="0" max="120"></div>
+              <div class="field"><label>GÉNERO</label><select id="genero"><option value="">—</option><option value="F">Femenino</option><option value="M">Masculino</option></select></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🏠</div><div class="card-title">Dirección</div></div>
+            <div class="grid c2" style="margin-bottom:12px">
+              <div class="field" style="grid-column:1/-1"><label>DIRECCIÓN</label><input type="text" id="direccion" placeholder="Empiece a escribir..." autocomplete="off"><div class="ac-list" id="ac-dir"></div></div>
+              <div class="field"><label>CIUDAD</label><input type="text" id="ciudad" placeholder="Ciudad"></div>
+              <div class="field"><label>ESTADO</label><select id="estado_dir"><option value="">— Seleccionar —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
+            </div>
+            <div class="grid c3">
+              <div class="field"><label>CÓDIGO POSTAL</label><input type="text" id="cp" placeholder="00000"></div>
+              <div class="field"><label>LUGAR DE NACIMIENTO</label><input type="text" id="nacimiento" placeholder="País / Ciudad"></div>
+              <div class="field"><label>TIEMPO EN EL PAÍS</label><input type="text" id="tiempo_pais" placeholder="Ej. 5 años"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">📏</div><div class="card-title">Medidas & Hábitos</div></div>
+            <div class="grid c4">
+              <div class="field"><label>PESO</label><input type="text" id="peso" placeholder="lbs"></div>
+              <div class="field"><label>ALTURA</label><input type="text" id="altura" placeholder="ft'in"></div>
+              <div class="field"><label>FUMADOR</label><select id="fumador" onchange="handleSmoker()"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>CIGARROS/DÍA</label><input type="number" id="cigarros" placeholder="0" min="0"></div>
+            </div>
+            <div class="grid c2" style="margin-top:10px"><div class="field"><label>FUMA DESDE</label><input type="date" id="fuma_desde"></div></div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-danger" onclick="clearAll()">🗑 Limpiar</button><button class="btn btn-primary" onclick="goTo(1)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 1 -->
+        <div class="section" id="sec-1">
+          <div class="sec-header"><div class="sec-title">Historial Médico</div><div class="sec-sub">Marque las condiciones activas</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🩺</div><div class="card-title">Condiciones y Diagnósticos</div></div>
+            <div style="overflow-x:auto"><table class="med-table"><thead><tr><th>Condición</th><th style="width:44px">¿Tiene?</th><th style="width:108px">Fecha</th><th>Prescripción</th><th>Detalle</th><th style="width:32px"></th></tr></thead><tbody id="med-tbody"></tbody></table></div>
+            <div class="add-cond" onclick="addCustomCondition()">+ Añadir enfermedad</div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(0)">← Anterior</button><button class="btn btn-primary" onclick="goTo(2)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 2 -->
+        <div class="section" id="sec-2">
+          <div class="sec-header"><div class="sec-title">Doctor / Clínica</div><div class="sec-sub">Médico principal y antecedentes familiares</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🏥</div><div class="card-title">Datos del Doctor</div></div>
+            <div class="grid c2" style="margin-bottom:12px">
+              <div class="field"><label>DOCTOR / CLÍNICA</label><input type="text" id="doc_nombre" placeholder="Dr. / Clínica..."></div>
+              <div class="field"><label>ÚLTIMA VISITA</label><input type="date" id="doc_visita"></div>
+            </div>
+            <div class="grid c2">
+              <div class="field"><label>TELÉFONO</label><input type="tel" id="doc_tel" placeholder="(000) 000-0000"></div>
+              <div class="field"><label>DIRECCIÓN</label><input type="text" id="doc_dir" placeholder="Dirección clínica..." autocomplete="off"><div class="ac-list" id="ac-doc"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">👨‍👩‍👧</div><div class="card-title">Antecedentes Familiares</div></div>
+            <div class="grid c2">
+              <div class="field"><label>PADRE — VIVE</label><select id="padre_vive"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>PADRE — EDAD</label><input type="text" id="padre_edad" placeholder="70 o Falleció 65"></div>
+              <div class="field"><label>MADRE — VIVE</label><select id="madre_vive"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>MADRE — EDAD</label><input type="text" id="madre_edad" placeholder="68"></div>
+            </div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(1)">← Anterior</button><button class="btn btn-primary" onclick="goTo(3)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 3 -->
+        <div class="section" id="sec-3">
+          <div class="sec-header"><div class="sec-title">Antecedentes Legales</div><div class="sec-sub">Historial legal, estatus migratorio e identificación</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">⚖️</div><div class="card-title">Antecedentes</div></div>
+            <div class="grid c2">
+              <div class="field"><label>CRIMINALES</label><select id="criminal"><option value="">—</option><option>No</option><option>Sí</option></select></div>
+              <div class="field"><label>DETALLE</label><input type="text" id="criminal_det" placeholder="Descripción..."></div>
+              <div class="field"><label>ALCOHOL / DROGA</label><input type="text" id="alcohol" placeholder="Detalles..."></div>
+              <div class="field"><label>DUI</label><select id="dui"><option value="">—</option><option>No</option><option>Sí</option></select></div>
+              <div class="field"><label>FECHA DUI</label><input type="date" id="dui_fecha"></div>
+              <div class="field"><label>LIC. SUSPENDIDA</label><select id="lic_suspendida"><option value="">—</option><option>No</option><option>Sí</option></select></div>
+              <div class="field"><label>CORTE</label><input type="text" id="corte" placeholder="Tribunal..."></div>
+              <div class="field"><label>BANCARROTA</label><input type="text" id="bancarrota" placeholder="Detalles..."></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">📄</div><div class="card-title">Estatus Migratorio</div></div>
+            <div class="grid c3" style="margin-bottom:12px">
+              <div class="field"><label>CIUDADANO</label><select id="ciudadano"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>RESIDENTE</label><select id="residente"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label># RESIDENTE</label><input type="text" id="res_num" placeholder="#"></div>
+              <div class="field"><label>VENC. RESIDENCIA</label><input type="date" id="res_exp"></div>
+              <div class="field"><label>PERMISO TRABAJO</label><select id="permiso"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label># PERMISO</label><input type="text" id="permiso_num" placeholder="#"></div>
+            </div>
+            <div class="grid c2">
+              <div class="field"><label>SSN / ITIN #</label><input type="text" id="ssn" placeholder="000-00-0000"></div>
+              <div class="field"><label>ESTADO LIC.</label><input type="text" id="lic_estado" placeholder="FL, TX…"></div>
+              <div class="field"><label>LICENCIA #</label><input type="text" id="lic_num" placeholder="Número"></div>
+              <div class="field"><label># ID / PASAPORTE</label><input type="text" id="id_num" placeholder="Número"></div>
+              <div class="field"><label>PAÍS (ID)</label><input type="text" id="id_pais" placeholder="País emisor"></div>
+            </div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(2)">← Anterior</button><button class="btn btn-primary" onclick="goTo(4)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 4 -->
+        <div class="section" id="sec-4">
+          <div class="sec-header"><div class="sec-title">Empleo & Finanzas</div><div class="sec-sub">Situación laboral, ingresos y vivienda</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">💼</div><div class="card-title">Empleo</div></div>
+            <div class="grid c3" style="margin-bottom:12px">
+              <div class="field"><label>TRABAJA</label><select id="trabaja"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>JUBILADO</label><select id="jubilado"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>DESHABILITADO</label><select id="deshabilitado"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+            </div>
+            <div class="grid c3">
+              <div class="field"><label>EMPLEADOR</label><input type="text" id="empleador" placeholder="Empresa..."></div>
+              <div class="field"><label>OCUPACIÓN</label><input type="text" id="ocupacion" placeholder="Cargo..."></div>
+              <div class="field"><label>TIEMPO EN COMPAÑÍA</label><input type="text" id="tiempo_empresa" placeholder="Ej. 3 años"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🏦</div><div class="card-title">Finanzas & Vivienda</div></div>
+            <div class="grid c2" style="margin-bottom:12px">
+              <div class="field"><label>INGRESO MENSUAL</label><input type="text" id="ingreso" placeholder="$"></div>
+              <div class="field"><label>GASTOS MENSUALES</label><input type="text" id="gastos" placeholder="$"></div>
+            </div>
+            <hr class="divider">
+            <div class="grid c4" style="margin-bottom:12px">
+              <div class="field"><label>CASA</label><select id="casa_tipo"><option value="">—</option><option>Renta</option><option>Dueño</option></select></div>
+              <div class="field"><label>HIPOTECA</label><input type="text" id="hipoteca" placeholder="$"></div>
+              <div class="field"><label>AÑOS HIP.</label><input type="number" id="anos_hip" placeholder="0" min="0"></div>
+              <div class="field"><label>PERSONAS EN CASA</label><input type="number" id="personas_casa" placeholder="0" min="1"></div>
+            </div>
+            <hr class="divider">
+            <div class="grid c3">
+              <div class="field"><label>ESTADO CIVIL</label><select id="estado_civil"><option value="">—</option><option>Casado/a</option><option>Soltero/a</option><option>Viudo/a</option><option>Divorciado/a</option></select></div>
+              <div class="field" style="grid-column:span 2"><label>HIJOS MENORES 18</label><input type="text" id="hijos" placeholder="Nombres y edades"></div>
+            </div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(3)">← Anterior</button><button class="btn btn-primary" onclick="goTo(5)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 5 -->
+        <div class="section" id="sec-5">
+          <div class="sec-header"><div class="sec-title">Beneficiarios</div><div class="sec-sub">Porcentajes de cada grupo deben sumar 100%</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">👥</div><div class="card-title">Principales</div></div>
+            <div id="pct-bar-p" class="pct-bar">⚖️ Total: <strong id="pct-total-p">0%</strong> — Se requiere 100%</div>
+            <div id="bene-p-wrap"></div>
+            <div class="add-bene" onclick="addBene('p')">+ Añadir principal</div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">👥</div><div class="card-title">Contingentes</div></div>
+            <div id="pct-bar-c" class="pct-bar">⚖️ Total: <strong id="pct-total-c">0%</strong> — Se requiere 100%</div>
+            <div id="bene-c-wrap"></div>
+            <div class="add-bene" onclick="addBene('c')">+ Añadir contingente</div>
+          </div>
+          <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(4)">← Anterior</button><button class="btn btn-primary" onclick="goTo(6)">Siguiente →</button></div>
+        </div>
+
+        <!-- SEC 6 -->
+        <div class="section" id="sec-6">
+          <div class="sec-header"><div class="sec-title">Seguro & Banco</div><div class="sec-sub">Póliza actual y datos bancarios</div></div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🛡️</div><div class="card-title">Seguro Existente</div></div>
+            <div class="grid c3">
+              <div class="field"><label>¿TIENE SEGURO?</label><select id="tiene_seguro"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+              <div class="field"><label>TIPO</label><select id="seg_tipo"><option value="">—</option><option>Privado</option><option>Trabajo</option></select></div>
+              <div class="field"><label>COMPAÑÍA</label><input type="text" id="seg_compania" placeholder="Nombre"></div>
+              <div class="field"><label>COBERTURA</label><input type="text" id="seg_cobertura" placeholder="$"></div>
+              <div class="field"><label>PRIMA MENSUAL</label><input type="text" id="seg_prima" placeholder="$"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><div class="card-ico">🏦</div><div class="card-title">Datos Bancarios</div></div>
+            <div class="grid c2" style="margin-bottom:12px">
+              <div class="field"><label>BANCO</label><select id="banco_nombre" onchange="handleBancoOtro()"><option value="">— Seleccionar —</option><option>JPMorgan Chase</option><option>Bank of America</option><option>Wells Fargo</option><option>Citibank</option><option>U.S. Bank</option><option>Truist Bank</option><option>PNC Bank</option><option>Goldman Sachs</option><option>TD Bank</option><option>Capital One</option><option>Citizens Bank</option><option>Fifth Third Bank</option><option>Huntington Bank</option><option>KeyBank</option><option>Regions Bank</option><option>M&amp;T Bank</option><option>Comerica</option><option>Webster Bank</option><option>First Citizens Bank</option><option>Ally Bank</option><option>BMO Bank</option><option>Santander Bank</option><option>HSBC USA</option><option>Zions Bank</option><option>Synovus Bank</option><option>First Horizon Bank</option><option>Wintrust Bank</option><option>Prosperity Bank</option><option>Cadence Bank</option><option>Valley National Bank</option><option>TD Bank</option><option>Atlantic Union Bank</option><option>TowneBank</option><option>Seacoast Bank</option><option value="OTRO">Otro (ingresar manualmente)</option></select></div>
+              <div class="field" id="banco-otro-wrap" style="display:none"><label>NOMBRE BANCO</label><input type="text" id="banco_otro" placeholder="Nombre del banco"></div>
+              <div class="field"><label>ESTADO</label><select id="banco_estado"><option value="">— Estado —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
+              <div class="field"><label># RUTA</label><input type="text" id="banco_ruta" placeholder="000000000"></div>
+              <div class="field"><label># CUENTA</label><input type="text" id="banco_cuenta" placeholder="# cuenta"></div>
+            </div>
+            <div class="grid c2">
+              <div class="field"><label>FECHA 1ER PAGO</label><input type="date" id="pago1"></div>
+              <div class="field"><label>FECHA SIGUIENTE PAGO</label><input type="date" id="pago2"></div>
+            </div>
+          </div>
+          <div class="nav-btns">
+            <button class="btn btn-ghost" onclick="goTo(5)">← Anterior</button>
+            <button class="btn btn-json" onclick="exportJSON()">💾 Guardar JSON</button>
+            <button class="btn btn-pdf" onclick="exportPDF()">📄 Exportar PDF</button>
+          </div>
+        </div>
+      </div><!-- /view-form -->
+
+      <!-- CLIENTS VIEW -->
+      <div class="view" id="view-clients">
+        <div class="cv-header">
+          <div><div class="sec-title">Mis Clientes</div><div class="sec-sub">Clientes guardados en el archivo JSON</div></div>
+          <div style="display:flex;gap:7px;align-items:center">
+            <span class="clients-count" id="clients-count">0 clientes</span>
+            <button class="btn btn-primary" onclick="triggerJSONImport()">📂 Cargar Base de datos</button>
+            <button class="btn btn-json" onclick="showView('form')">+ Nuevo</button>
+          </div>
+        </div>
+        <div class="search-bar"><input type="text" id="client-search" placeholder="🔍  Buscar por nombre, póliza, teléfono..." oninput="renderClientsTable()"></div>
+        <div class="ct-wrap"><div id="ct-container"><div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">Sin clientes cargados</div><p style="font-size:.8rem">Carga un archivo JSON o guarda el formulario actual</p></div></div></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="modal-settings">
+  <div class="modal modal-sm">
+    <div class="modal-title">⚙️ Configuración</div>
+    <div style="font-size:.68rem;color:var(--text3);margin-bottom:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em">Tema Visual</div>
+    <div class="th-opts">
+      <div class="th-opt lgt active" id="th-light" onclick="setTheme('light')"><div class="tp"></div>Claro</div>
+      <div class="th-opt drk" id="th-dark" onclick="setTheme('dark')"><div class="tp"></div>Oscuro</div>
+    </div>
+    <hr class="divider">
+    <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="closeModal('modal-settings')">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="overlay" id="modal-preview">
+  <div class="modal modal-xl">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="modal-title" style="margin-bottom:0" id="preview-modal-title">👁️ Datos del Cliente</div>
+      <button class="btn btn-ghost" onclick="closeModal('modal-preview')" style="padding:6px 13px">Cerrar ×</button>
+    </div>
+    <div id="preview-content"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+// ===================== CONDITIONS =====================
+var DEF_CONDS=[
+  {name:'Ataque al corazon',extras:[]},{name:'Derrame cerebral (Stroke)',extras:[]},
+  {name:'Marcapasos / Stent',extras:[]},{name:'Cancer',extras:['Remision','Estadio']},
+  {name:'Diabetes',extras:['A1C']},{name:'Presion Alta',extras:['Sistolica','Diastolica','Ult.fecha Dr.']},
+  {name:'Neuropatia',extras:[]},{name:'Lupus',extras:[]},{name:'Asma',extras:[]},
+  {name:'Tiroides',extras:[]},{name:'Enfermedad Higado',extras:[]},{name:'Enfermedad Rinones',extras:[]},
+  {name:'Dialisis',extras:[]},{name:'Colesterol Alto',extras:[]},{name:'Depresion / Ansiedad',extras:[]},
+  {name:'Bipolaridad / Parkinson',extras:[]},{name:'Demencia / Alzheimer',extras:[]},
+  {name:'VIH / SIDA',extras:[]},{name:'Cirugia',extras:[]},{name:'Trasplante',extras:[]}
+];
+var customConds=[];
+function allConds(){return DEF_CONDS.concat(customConds);}
+
+function buildMedTable(){
+  var tb=document.getElementById('med-tbody');
+  if(!tb)return;
+  tb.innerHTML='';
+  allConds().forEach(function(c,i){
+    var isC=i>=DEF_CONDS.length;
+    var id='med_'+i;
+    var row=document.createElement('tr');
+    row.id='mr'+i;
+    var det='<input type="text" id="'+id+'_det" placeholder="Detalles...">';
+    if(c.extras&&c.extras.length){
+      det=c.extras.map(function(e,j){return '<input type="text" id="'+id+'_ex'+j+'" placeholder="'+e+'" style="margin-bottom:3px">';}).join('');
+    }
+    var nameC=isC?'<input type="text" id="'+id+'_name" value="'+c.name+'" placeholder="Condicion..." style="font-size:.77rem;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);padding:2px;width:135px;outline:none">':c.name;
+    var delBtn=isC?'<button class="del-row" onclick="delCond('+(i-DEF_CONDS.length)+')">×</button>':'';
+    row.innerHTML='<td>'+nameC+'</td><td><div class="cw"><input type="checkbox" id="'+id+'_chk" onchange="hlRow('+i+')"></div></td><td><input type="date" id="'+id+'_fecha"></td><td><input type="text" id="'+id+'_rx" placeholder="Medicamento..."></td><td>'+det+'</td><td>'+delBtn+'</td>';
+    tb.appendChild(row);
+  });
+}
+function hlRow(i){var r=document.getElementById('mr'+i),c=document.getElementById('med_'+i+'_chk');if(r)r.className=c&&c.checked?'hc':'';}
+function addCustomCondition(){var n=prompt('Nombre de la condicion:');if(!n||!n.trim())return;customConds.push({name:n.trim(),extras:[]});buildMedTable();showToast('Condicion añadida','ok');}
+function delCond(idx){customConds.splice(idx,1);buildMedTable();}
+function handleSmoker(){var val=document.getElementById('fumador').value;var no=val==='No';['cigarros','fuma_desde'].forEach(function(id){var el=document.getElementById(id);if(el){el.disabled=no;if(no)el.value='';}});}
+
+// ===================== BENEFICIARIES =====================
+var RELS=['Conyuge','Esposo/a','Companero/a de vida','Hijo/a','Hijo/a adoptivo/a','Padrastro/Madrastra','Padre','Madre','Hermano/a','Abuelo/a','Nieto/a','Tio/a','Sobrino/a','Primo/a','Suegro/a','Cunado/a','Amigo/a intimo/a','Fideicomiso','Organizacion Benefica','Otro'];
+var bpC=0,bcC=0;
+function addBene(type){
+  var wrap=document.getElementById(type==='p'?'bene-p-wrap':'bene-c-wrap');
+  if(!wrap)return;
+  var n=type==='p'?++bpC:++bcC;
+  var pfx=type+n;
+  var lbl=type==='p'?'Principal':'Contingente';
+  var relOpts=RELS.map(function(r){return '<option value="'+r+'">'+r+'</option>';}).join('');
+  var d=document.createElement('div');
+  d.className='bene-card';d.id='bc-'+pfx;
+  d.innerHTML='<button class="del-bene" onclick="delBene(\''+pfx+'\',\''+type+'\')">×</button><div class="bene-card-hdr"><div class="bene-num">'+lbl+' #'+n+'</div><div class="pct-badge" id="pb-'+pfx+'">0%</div></div><div class="grid c2"><div class="field"><label>NOMBRE</label><input type="text" id="'+pfx+'_nombre" placeholder="Nombre completo"></div><div class="field"><label>FECHA NACIMIENTO</label><input type="date" id="'+pfx+'_dob"></div><div class="field"><label>RELACION</label><select id="'+pfx+'_rel"><option value="">— Seleccionar —</option>'+relOpts+'</select></div><div class="field"><label>TELÉFONO</label><input type="tel" id="'+pfx+'_tel" placeholder="(000) 000-0000"></div><div class="field"><label>PORCENTAJE (%)</label><input type="number" id="'+pfx+'_pct" placeholder="0" min="0" max="100" oninput="updPct()"></div></div>';
+  wrap.appendChild(d);updPct();
+}
+function delBene(pfx,type){var c=document.getElementById('bc-'+pfx);if(c)c.remove();updPct();}
+function getPcts(type){var w=document.getElementById(type==='p'?'bene-p-wrap':'bene-c-wrap');if(!w)return[];return Array.from(w.querySelectorAll('input[type=number]')).map(function(el){return{el:el,val:parseFloat(el.value)||0};});}
+function updPct(){['p','c'].forEach(function(t){var list=getPcts(t);var tot=list.reduce(function(s,x){return s+x.val;},0);var te=document.getElementById('pct-total-'+t);var bar=document.getElementById('pct-bar-'+t);if(te)te.textContent=tot.toFixed(0)+'%';if(bar){bar.className='pct-bar'+(list.length===0?'':tot===100?' ok':' err');bar.innerHTML=tot===100?'✅ Total: <strong>100%</strong> — ¡Correcto!':'⚖️ Total: <strong>'+tot.toFixed(0)+'%</strong> — Se requiere exactamente 100%';}list.forEach(function(x){var c=x.el.closest('.bene-card');if(!c)return;var b=c.querySelector('.pct-badge');if(b)b.textContent=x.val.toFixed(0)+'%';});});}
+
+// ===================== ADDRESS AUTOCOMPLETE =====================
+var US_ADDR=[
+  {main:'100 Main St, Miami, FL 33101',city:'Miami',state:'Florida',zip:'33101'},
+  {main:'200 Brickell Ave, Miami, FL 33131',city:'Miami',state:'Florida',zip:'33131'},
+  {main:'300 NW 2nd Ave, Miami, FL 33128',city:'Miami',state:'Florida',zip:'33128'},
+  {main:'9000 SW 107th Ave, Miami, FL 33176',city:'Miami',state:'Florida',zip:'33176'},
+  {main:'700 NE 2nd Ave, Hialeah, FL 33010',city:'Hialeah',state:'Florida',zip:'33010'},
+  {main:'1500 W 49th St, Hialeah, FL 33012',city:'Hialeah',state:'Florida',zip:'33012'},
+  {main:'8200 NW 33rd St, Doral, FL 33122',city:'Doral',state:'Florida',zip:'33122'},
+  {main:'2000 University Dr, Coral Springs, FL 33071',city:'Coral Springs',state:'Florida',zip:'33071'},
+  {main:'1000 Corporate Dr, Fort Lauderdale, FL 33334',city:'Fort Lauderdale',state:'Florida',zip:'33334'},
+  {main:'350 Fifth Ave, New York, NY 10118',city:'New York',state:'New York',zip:'10118'},
+  {main:'233 S Wacker Dr, Chicago, IL 60606',city:'Chicago',state:'Illinois',zip:'60606'},
+  {main:'500 W Temple St, Los Angeles, CA 90012',city:'Los Angeles',state:'California',zip:'90012'},
+  {main:'1600 Pennsylvania Ave NW, Washington, DC 20500',city:'Washington',state:'District of Columbia',zip:'20500'}
+];
+function setupAC(inputId,listId){
+  var inp=document.getElementById(inputId),list=document.getElementById(listId);
+  if(!inp||!list)return;
+  var idx=-1;
+  function upd(){
+    var q=inp.value.trim().toLowerCase();list.innerHTML='';idx=-1;
+    if(q.length<2){list.classList.remove('open');return;}
+    var matches=US_ADDR.filter(function(s){return s.main.toLowerCase().includes(q);});
+    var synth=['St','Ave','Blvd','Dr','Rd','Way'].map(function(sx){return{main:q.replace(/\b\w/g,function(c){return c.toUpperCase();})+' '+sx+', Miami, FL',city:'Miami',state:'Florida',zip:'33101'};});
+    var all=matches.concat(synth).slice(0,8);
+    if(!all.length){list.classList.remove('open');return;}
+    all.forEach(function(s){
+      var li=document.createElement('div');li.className='ac-item';
+      li.innerHTML='📍 '+s.main+(s.city?'<small>'+s.city+', '+s.state+'</small>':'');
+      li.onclick=function(){
+        inp.value=s.main;
+        if(s.city){var ci=document.getElementById('ciudad');var st=document.getElementById('estado_dir');var zp=document.getElementById('cp');if(ci&&!ci.value)ci.value=s.city;if(st&&!st.value)st.value=s.state;if(zp&&!zp.value&&s.zip)zp.value=s.zip;}
+        list.classList.remove('open');schedSave();
+      };
+      list.appendChild(li);
+    });
+    list.classList.add('open');
+  }
+  inp.addEventListener('input',upd);
+  inp.addEventListener('keydown',function(e){
+    var items=list.querySelectorAll('.ac-item');
+    if(e.key==='ArrowDown'){idx=Math.min(idx+1,items.length-1);items.forEach(function(el,i){el.classList.toggle('focused',i===idx);});e.preventDefault();}
+    else if(e.key==='ArrowUp'){idx=Math.max(idx-1,0);items.forEach(function(el,i){el.classList.toggle('focused',i===idx);});e.preventDefault();}
+    else if(e.key==='Enter'&&idx>=0){items[idx].click();e.preventDefault();}
+    else if(e.key==='Escape')list.classList.remove('open');
+  });
+  document.addEventListener('click',function(e){if(!inp.contains(e.target)&&!list.contains(e.target))list.classList.remove('open');});
+}
+function handleBancoOtro(){var el=document.getElementById('banco-otro-wrap');var sel=document.getElementById('banco_nombre');if(el&&sel)el.style.display=sel.value==='OTRO'?'flex':'none';}
+
+// ===================== NAV =====================
+var curStep=0;var TOTAL=7;
+function goTo(n, missingFields){
+  schedSave();
+  var old=document.getElementById('sec-'+curStep);if(old)old.classList.remove('active');
+  setNavState(curStep,'done');
+  curStep=n;
+  var nw=document.getElementById('sec-'+n);if(nw)nw.classList.add('active');
+  setNavState(n,'active');
+  var pct=Math.round(((n+1)/TOTAL)*100);
+  var p=document.getElementById('prog');if(p)p.style.width=pct+'%';
+  var pp=document.getElementById('prog-pct');if(pp)pp.textContent=pct+'%';
+  var si=document.getElementById('step-indicator');if(si)si.textContent='Paso '+(n+1)+' de '+TOTAL;
+
+  // Show missing banner if provided
+  var banner=document.getElementById('missing-banner');
+  var ml=document.getElementById('missing-list');
+  if(missingFields&&missingFields.length&&banner&&ml){
+    ml.innerHTML=missingFields.map(function(f){return'<li>'+f+'</li>';}).join('');
+    banner.style.display='flex';
+  } else if(banner){
+    banner.style.display='none';
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setNavState(n,cls){
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    if(parseInt(item.getAttribute('data-sec'))===n){item.classList.remove('active','done','has-missing');item.classList.add(cls);}
+  });
+}
+
+// ===================== MISSING FIELDS DETECTION =====================
+// Defines what fields are "important" per section
+var SECTION_CHECKS = [
+  // sec 0: Datos Generales
+  {label:'Datos Generales', checks:[
+    {id:'nombre', label:'Nombre completo'},
+    {id:'telefono', label:'Teléfono'},
+    {id:'dob', label:'Fecha de nacimiento'},
+    {id:'edad', label:'Edad'},
+    {id:'genero', label:'Género'},
+    {id:'direccion', label:'Dirección'},
+    {id:'ciudad', label:'Ciudad'},
+    {id:'estado_dir', label:'Estado'},
+    {id:'cp', label:'Código postal'},
+    {id:'peso', label:'Peso'},
+    {id:'altura', label:'Altura'},
+    {id:'fumador', label:'Fumador (Sí/No)'}
+  ]},
+  // sec 1: Historial Médico (no required fields, just informational)
+  {label:'Historial Médico', checks:[]},
+  // sec 2: Doctor
+  {label:'Doctor / Clínica', checks:[
+    {id:'doc_nombre', label:'Nombre del doctor o clínica'},
+    {id:'doc_visita', label:'Fecha última visita'},
+    {id:'doc_tel', label:'Teléfono del doctor'}
+  ]},
+  // sec 3: Antecedentes
+  {label:'Antecedentes Legales', checks:[
+    {id:'ciudadano', label:'Ciudadano (Sí/No)'},
+    {id:'residente', label:'Residente (Sí/No)'},
+    {id:'ssn', label:'SSN / ITIN'},
+    {id:'criminal', label:'Antecedentes criminales (Sí/No)'},
+    {id:'dui', label:'DUI (Sí/No)'}
+  ]},
+  // sec 4: Empleo
+  {label:'Empleo & Finanzas', checks:[
+    {id:'trabaja', label:'¿Trabaja? (Sí/No)'},
+    {id:'ingreso', label:'Ingreso mensual'},
+    {id:'estado_civil', label:'Estado civil'},
+    {id:'personas_casa', label:'Personas en casa'}
+  ]},
+  // sec 5: Beneficiarios — checked programmatically
+  {label:'Beneficiarios', checks:[], custom: checkBeneficiariosMissing},
+  // sec 6: Seguro & Banco
+  {label:'Seguro & Banco', checks:[
+    {id:'tiene_seguro', label:'¿Tiene seguro? (Sí/No)'},
+    {id:'banco_nombre', label:'Banco'},
+    {id:'banco_ruta', label:'# de ruta bancaria'},
+    {id:'banco_cuenta', label:'# de cuenta bancaria'},
+    {id:'pago1', label:'Fecha 1er pago'}
+  ]}
+];
+
+function checkBeneficiariosMissing(){
+  var missing=[];
+  var pw=document.getElementById('bene-p-wrap');
+  if(!pw||!pw.querySelector('.bene-card'))missing.push('Al menos un beneficiario principal');
+  else {
+    var pctInputs=Array.from(pw.querySelectorAll('input[type=number]'));
+    var tot=pctInputs.reduce(function(s,el){return s+(parseFloat(el.value)||0);},0);
+    if(tot!==100)missing.push('Porcentajes de principales deben sumar 100% (actual: '+tot.toFixed(0)+'%)');
+  }
+  return missing;
+}
+
+function getMissingForSection(secIdx){
+  var sec=SECTION_CHECKS[secIdx];if(!sec)return[];
+  var missing=[];
+  sec.checks.forEach(function(c){
+    var el=document.getElementById(c.id);
+    if(!el)return;
+    var val=(el.type==='checkbox'?el.checked.toString():el.value||'').trim();
+    if(!val)missing.push(c.label);
+  });
+  if(sec.custom)missing=missing.concat(sec.custom());
+  return missing;
+}
+
+// Returns the first section index with missing fields (priority order)
+// Priority: sec0 > sec2 > sec3 > sec4 > sec5 > sec6 > sec1
+var SECTION_PRIORITY=[0,2,3,4,5,6,1];
+
+function getFirstIncompleteSectionWithMissing(){
+  // Returns {secIdx, missing}
+  for(var i=0;i<SECTION_PRIORITY.length;i++){
+    var si=SECTION_PRIORITY[i];
+    var missing=getMissingForSection(si);
+    if(missing.length>0)return{secIdx:si,missing:missing};
+  }
+  return null;
+}
+
+// Mark all nav items with missing info after loading client
+function markNavMissing(){
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    var si=parseInt(item.getAttribute('data-sec'));
+    var dot=item.querySelector('.missing-dot');
+    if(dot)dot.remove();
+    var missing=getMissingForSection(si);
+    if(missing.length>0&&si!==curStep){
+      item.classList.add('has-missing');
+      var d=document.createElement('span');d.className='missing-dot';
+      item.appendChild(d);
+    } else {
+      item.classList.remove('has-missing');
+    }
+  });
+}
+
+// ===================== VIEWS =====================
+function showView(v){
+  document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
+  var vEl=document.getElementById('view-'+v);if(vEl)vEl.classList.add('active');
+  ['form','clients'].forEach(function(name){
+    var btn=document.getElementById('sb-'+name);
+    if(btn)btn.classList.toggle('av',name===v);
+  });
+  if(v==='clients')renderClientsTable();
+}
+
+// ===================== INDEXEDDB =====================
+var DB_NAME='InsurePro4',STORE='fd',KEY='cur';var db=null;
+function openDB(){return new Promise(function(res,rej){var r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=function(e){e.target.result.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=function(e){db=e.target.result;res(db);};r.onerror=function(e){rej(e);};});}
+function getAllEls(){return Array.from(document.querySelectorAll('input[id],select[id],textarea[id]'));}
+function collectForm(){var d={id:KEY,customConds:customConds,theme:curTheme,bpC:bpC,bcC:bcC};getAllEls().forEach(function(el){d[el.id]=el.type==='checkbox'?el.checked:el.value;});return d;}
+function restoreForm(d){
+  if(d.customConds){customConds=d.customConds;buildMedTable();}
+  if(d.theme)setTheme(d.theme,true);
+  if(d.bpC>1)for(var i=2;i<=d.bpC;i++)addBene('p');
+  if(d.bcC>0)for(var j=1;j<=d.bcC;j++)addBene('c');
+  getAllEls().forEach(function(el){if(!(el.id in d))return;if(el.type==='checkbox')el.checked=d[el.id];else el.value=d[el.id];});
+  handleSmoker();handleBancoOtro();updPct();
+}
+var saveTimer=null;
+function schedSave(){var b=document.getElementById('save-badge');if(b){b.textContent='● Sin guardar';b.className='save-badge unsaved';}clearTimeout(saveTimer);saveTimer=setTimeout(doSave,1100);}
+function doSave(){if(!db)return;try{var tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(collectForm());tx.oncomplete=function(){var b=document.getElementById('save-badge');if(b){b.textContent='✓ Guardado';b.className='save-badge';}};}catch(e){console.error('save:',e);}}
+function loadIDB(){if(!db)return;try{var tx=db.transaction(STORE,'readonly');var r=tx.objectStore(STORE).get(KEY);r.onsuccess=function(e){if(e.target.result)restoreForm(e.target.result);};}catch(e){console.error('load:',e);}}
+function clearAll(){if(!confirm('¿Limpiar todos los datos del formulario?'))return;getAllEls().forEach(function(el){if(el.type==='checkbox')el.checked=false;else el.value='';});customConds=[];buildMedTable();var pw=document.getElementById('bene-p-wrap');var cw=document.getElementById('bene-c-wrap');if(pw)pw.innerHTML='';if(cw)cw.innerHTML='';bpC=0;bcC=0;addBene('p');document.getElementById('missing-banner').style.display='none';document.querySelectorAll('.nav-item').forEach(function(item){item.classList.remove('has-missing');var dot=item.querySelector('.missing-dot');if(dot)dot.remove();});if(db){try{var tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(KEY);}catch(e){}}showToast('Formulario limpiado','ok');}
+document.addEventListener('input',schedSave);document.addEventListener('change',schedSave);
+openDB().then(loadIDB).catch(function(e){console.error('DB:',e);});
+
+// ===================== THEME =====================
+var curTheme='light';
+function setTheme(t,silent){curTheme=t;document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'');var l=document.getElementById('th-light');var dk=document.getElementById('th-dark');if(l)l.classList.toggle('active',t==='light');if(dk)dk.classList.toggle('active',t==='dark');if(!silent){schedSave();showToast(t==='dark'?'🌙 Modo oscuro':'☀️ Modo claro','ok');}}
+
+// ===================== MODALS =====================
+function openModal(id){var el=document.getElementById(id);if(el)el.classList.add('open');}
+function closeModal(id){var el=document.getElementById(id);if(el)el.classList.remove('open');}
+function openSettings(){openModal('modal-settings');}
+document.querySelectorAll('.overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===e.currentTarget)closeModal(e.currentTarget.id);});});
+
+// ===================== TOAST =====================
+function showToast(msg,type){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.className='show '+(type||'');clearTimeout(t._t);t._t=setTimeout(function(){t.className=type||'';},3000);}
+
+// ===================== VALUE HELPERS =====================
+function v(id){var el=document.getElementById(id);if(!el)return'';if(el.type==='checkbox')return el.checked?'Si':'';return el.value||'';}
+function getBanco(){var s=v('banco_nombre');return s==='OTRO'?v('banco_otro'):s;}
+function getMedRows(){
+  return allConds().map(function(c,i){
+    var id='med_'+i;var chk=document.getElementById(id+'_chk');
+    if(!chk||!chk.checked)return null;
+    var det=v(id+'_det');
+    if(c.extras&&c.extras.length){det=c.extras.map(function(e,j){var val=v(id+'_ex'+j);return val?e+': '+val:'';}).filter(Boolean).join('; ');}
+    var nm=document.getElementById(id+'_name')?v(id+'_name'):c.name;
+    return[nm,v(id+'_fecha'),v(id+'_rx'),det];
+  }).filter(Boolean);
+}
+function getBeneData(type){
+  var wrap=document.getElementById(type==='p'?'bene-p-wrap':'bene-c-wrap');
+  if(!wrap)return[];
+  return Array.from(wrap.querySelectorAll('.bene-card')).map(function(card){
+    var n=card.querySelector('input[id$="_nombre"]');if(!n||!n.value)return null;
+    var r=card.querySelector('select');var d=card.querySelector('input[id$="_dob"]');
+    var t=card.querySelector('input[id$="_tel"]');var p=card.querySelector('input[type=number]');
+    return{nombre:n?n.value:'',dob:d?d.value:'',relacion:r?r.value:'',telefono:t?t.value:'',porciento:p?p.value+'%':''};
+  }).filter(Boolean);
+}
+
+// ===================== COLLECT CLIENT DATA =====================
+function collectClientData(){
+  return{
+    _id:Date.now().toString(36)+Math.random().toString(36).slice(2),
+    _saved:new Date().toISOString(),
+    poliza:v('poliza'),fecha:v('fecha'),
+    personal:{nombre:v('nombre'),email:v('email'),telefono:v('telefono'),dob:v('dob'),edad:v('edad'),genero:v('genero')},
+    direccion:{direccion:v('direccion'),ciudad:v('ciudad'),estado:v('estado_dir'),cp:v('cp'),nacimiento:v('nacimiento'),tiempo_pais:v('tiempo_pais')},
+    medidas:{peso:v('peso'),altura:v('altura'),fumador:v('fumador'),cigarros:v('cigarros'),fuma_desde:v('fuma_desde')},
+    medico:{condiciones:getMedRows()},
+    doctor:{nombre:v('doc_nombre'),visita:v('doc_visita'),telefono:v('doc_tel'),direccion:v('doc_dir'),padre_vive:v('padre_vive'),padre_edad:v('padre_edad'),madre_vive:v('madre_vive'),madre_edad:v('madre_edad')},
+    legal:{criminal:v('criminal'),criminal_det:v('criminal_det'),alcohol:v('alcohol'),dui:v('dui'),dui_fecha:v('dui_fecha'),lic_suspendida:v('lic_suspendida'),corte:v('corte'),bancarrota:v('bancarrota'),ciudadano:v('ciudadano'),residente:v('residente'),res_num:v('res_num'),res_exp:v('res_exp'),permiso:v('permiso'),permiso_num:v('permiso_num'),ssn:v('ssn'),lic_estado:v('lic_estado'),lic_num:v('lic_num'),id_num:v('id_num'),id_pais:v('id_pais')},
+    empleo:{trabaja:v('trabaja'),jubilado:v('jubilado'),deshabilitado:v('deshabilitado'),empleador:v('empleador'),ocupacion:v('ocupacion'),tiempo_empresa:v('tiempo_empresa'),ingreso:v('ingreso'),gastos:v('gastos'),casa_tipo:v('casa_tipo'),hipoteca:v('hipoteca'),anos_hip:v('anos_hip'),personas_casa:v('personas_casa'),estado_civil:v('estado_civil'),hijos:v('hijos')},
+    beneficiarios_p:getBeneData('p'),
+    beneficiarios_c:getBeneData('c'),
+    seguro:{tiene:v('tiene_seguro'),tipo:v('seg_tipo'),compania:v('seg_compania'),cobertura:v('seg_cobertura'),prima:v('seg_prima')},
+    banco:{banco:getBanco(),estado:v('banco_estado'),ruta:v('banco_ruta'),cuenta:v('banco_cuenta'),pago1:v('pago1'),pago2:v('pago2')}
+  };
+}
+
+// ===================== COMPLETENESS =====================
+function calcCompleteness(c){
+  var checks=[
+    [c.personal&&c.personal.nombre,8],[c.personal&&c.personal.telefono,5],[c.personal&&c.personal.email,3],
+    [c.personal&&c.personal.dob,4],[c.personal&&c.personal.genero,2],[c.personal&&c.personal.edad,2],
+    [c.direccion&&c.direccion.direccion,5],[c.direccion&&c.direccion.ciudad,2],[c.direccion&&c.direccion.estado,2],[c.direccion&&c.direccion.cp,1],
+    [c.medidas&&c.medidas.peso,2],[c.medidas&&c.medidas.altura,2],[c.medidas&&c.medidas.fumador,1],
+    [c.doctor&&c.doctor.nombre,5],[c.doctor&&c.doctor.visita,3],[c.doctor&&c.doctor.telefono,2],
+    [c.legal&&c.legal.ciudadano,3],[c.legal&&c.legal.residente,3],[c.legal&&c.legal.ssn,4],[c.legal&&c.legal.criminal,3],[c.legal&&c.legal.lic_num,2],
+    [c.empleo&&c.empleo.trabaja,3],[c.empleo&&c.empleo.ingreso,4],[c.empleo&&c.empleo.empleador,3],[c.empleo&&c.empleo.estado_civil,3],[c.empleo&&c.empleo.personas_casa,2],
+    [c.beneficiarios_p&&c.beneficiarios_p.length>0,7],[c.beneficiarios_p&&c.beneficiarios_p.length>0&&c.beneficiarios_p[0].porciento,3],
+    [c.banco&&c.banco.banco,2],[c.banco&&c.banco.ruta,2],[c.banco&&c.banco.pago1,1]
+  ];
+  var total=checks.reduce(function(s,x){return s+x[1];},0);
+  var earned=checks.reduce(function(s,x){return s+(x[0]?x[1]:0);},0);
+  return Math.round((earned/total)*100);
+}
+function compColor(pct){return pct>=80?'#0ea47a':pct>=50?'#f59e0b':'#d93025';}
+function compLabel(pct){return pct>=80?'Completo':pct>=50?'Parcial':'Incompleto';}
+function compBar(pct){
+  var col=compColor(pct);
+  return '<div class="comp-wrap"><div class="comp-track"><div class="comp-fill" style="width:'+pct+'%;background:'+col+'"></div></div><span class="comp-pct" style="color:'+col+'">'+pct+'%</span><span class="comp-lbl">'+compLabel(pct)+'</span></div>';
+}
+
+// ===================== JSON EXPORT =====================
+var loadedClients=[];
+
+function exportJSON(){
+  var nombre=v('nombre');
+  if(!nombre||!nombre.trim()){showToast('Ingresa al menos el nombre del cliente','err');return;}
+  var client;
+  try{client=collectClientData();}catch(err){showToast('Error al recopilar datos: '+err.message,'err');console.error(err);return;}
+  var idx=loadedClients.findIndex(function(c){return c.poliza&&c.poliza===client.poliza&&client.poliza!=='';});
+  if(idx>-1){
+    if(!confirm('Ya existe un cliente con esta póliza ('+client.poliza+'). ¿Deseas reemplazarlo?'))return;
+    loadedClients[idx]=client;
+    showToast('Cliente actualizado en el JSON','ok');
+  } else {
+    loadedClients.push(client);
+    showToast('Cliente añadido al JSON ('+loadedClients.length+' en total)','ok');
+  }
+  try{
+    var blob=new Blob([JSON.stringify({app:'InsurePro',version:'1.0',exportDate:new Date().toISOString(),total:loadedClients.length,clientes:loadedClients},null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='InsurePro_Clientes.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+  }catch(err){showToast('Error al descargar: '+err.message,'err');console.error(err);}
+}
+
+// ===================== JSON IMPORT =====================
+function triggerJSONImport(){var fi=document.getElementById('json-file-input');if(fi)fi.click();}
+document.getElementById('json-file-input').addEventListener('change',function(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(evt){
+    try{
+      var data=JSON.parse(evt.target.result);
+      var clients=[];
+      if(Array.isArray(data))clients=data;
+      else if(data.clientes&&Array.isArray(data.clientes))clients=data.clientes;
+      else{showToast('Formato JSON no reconocido','err');return;}
+      var added=0,updated=0;
+      clients.forEach(function(nc){
+        var ei=loadedClients.findIndex(function(ec){return ec._id&&ec._id===nc._id;});
+        if(ei>-1){loadedClients[ei]=nc;updated++;}else{loadedClients.push(nc);added++;}
+      });
+      showToast('Cargado: +'+added+' nuevos, '+updated+' actualizados','ok');
+      showView('clients');
+    }catch(err){showToast('Error al leer JSON: '+err.message,'err');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+});
+
+// ===================== CLIENTS TABLE =====================
+function renderClientsTable(){
+  var q=(document.getElementById('client-search').value||'').toLowerCase();
+  var filtered=loadedClients.filter(function(c){
+    var name=(c.personal&&c.personal.nombre||'').toLowerCase();
+    var pol=(c.poliza||'').toLowerCase();
+    var tel=(c.personal&&c.personal.telefono||'').toLowerCase();
+    return!q||name.includes(q)||pol.includes(q)||tel.includes(q);
+  });
+  var cc=document.getElementById('clients-count');if(cc)cc.textContent=loadedClients.length+' cliente'+(loadedClients.length!==1?'s':'');
+  var container=document.getElementById('ct-container');if(!container)return;
+  if(!loadedClients.length){container.innerHTML='<div class="empty-state"><div class="empty-icon">📁</div><div class="empty-title">Sin clientes cargados</div><p style="font-size:.78rem">Carga un archivo JSON o guarda el formulario actual</p></div>';return;}
+  if(!filtered.length){container.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Sin resultados</div><p style="font-size:.78rem">No hay clientes que coincidan</p></div>';return;}
+  var rows=filtered.map(function(c){
+    var nombre=c.personal&&c.personal.nombre||'—';
+    var pol=c.poliza||'—';var tel=c.personal&&c.personal.telefono||'—';
+    var gen=c.personal&&c.personal.genero||'';var dob=c.personal&&c.personal.dob||'—';
+    var saved=c._saved?new Date(c._saved).toLocaleDateString('es-US'):'—';
+    var badge=gen?'<span class="ct-badge '+gen.toLowerCase()+'">'+gen+'</span>':'';
+    var pct=calcCompleteness(c);
+    var ri=loadedClients.indexOf(c);
+    // Show "Continuar" button for incomplete clients, "Editar" for complete ones
+    var isIncomplete=pct<100;
+    var editBtn=isIncomplete
+      ?'<button class="ct-btn resume" onclick="loadClientToForm('+ri+',true)">▶ Continuar</button>'
+      :'<button class="ct-btn load" onclick="loadClientToForm('+ri+',false)">📝 Editar</button>';
+    return '<tr><td><strong>'+nombre+'</strong>'+(badge?'<br>'+badge:'')+'</td><td>'+pol+'</td><td>'+tel+'</td><td>'+dob+'</td><td>'+compBar(pct)+'</td><td>'+saved+'</td><td><div class="ct-actions"><button class="ct-btn" onclick="previewClient('+ri+')">👁️ Ver</button>'+editBtn+'<button class="ct-btn del" onclick="deleteClient('+ri+')">🗑</button></div></td></tr>';
+  }).join('');
+  container.innerHTML='<table class="ct"><thead><tr><th>Nombre</th><th>Póliza</th><th>Teléfono</th><th>Nacimiento</th><th>Completitud</th><th>Guardado</th><th>Acciones</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function deleteClient(idx){var c=loadedClients[idx];if(!confirm('¿Eliminar a '+(c.personal&&c.personal.nombre||'este cliente')+'?'))return;loadedClients.splice(idx,1);renderClientsTable();showToast('Cliente eliminado','ok');}
+
+function loadClientToForm(idx, resumeMode){
+  var c=loadedClients[idx];
+  resumeMode = resumeMode === undefined ? false : resumeMode;
+  if(!confirm('¿Cargar datos de este cliente? Se sobrescribirá el formulario actual.'))return;
+
+  // Reset form silently
+  getAllEls().forEach(function(el){if(el.type==='checkbox')el.checked=false;else el.value='';});
+  customConds=[];buildMedTable();
+  var pw=document.getElementById('bene-p-wrap');var cw=document.getElementById('bene-c-wrap');
+  if(pw)pw.innerHTML='';if(cw)cw.innerHTML='';
+  bpC=0;bcC=0;
+
+  function setV(id,val){var el=document.getElementById(id);if(!el||val===undefined||val===null)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val||'';}
+  setV('poliza',c.poliza);setV('fecha',c.fecha);
+  if(c.personal){setV('nombre',c.personal.nombre);setV('email',c.personal.email);setV('telefono',c.personal.telefono);setV('dob',c.personal.dob);setV('edad',c.personal.edad);setV('genero',c.personal.genero);}
+  if(c.direccion){setV('direccion',c.direccion.direccion);setV('ciudad',c.direccion.ciudad);setV('estado_dir',c.direccion.estado);setV('cp',c.direccion.cp);setV('nacimiento',c.direccion.nacimiento);setV('tiempo_pais',c.direccion.tiempo_pais);}
+  if(c.medidas){setV('peso',c.medidas.peso);setV('altura',c.medidas.altura);setV('fumador',c.medidas.fumador);setV('cigarros',c.medidas.cigarros);setV('fuma_desde',c.medidas.fuma_desde);}
+  if(c.doctor){setV('doc_nombre',c.doctor.nombre);setV('doc_visita',c.doctor.visita);setV('doc_tel',c.doctor.telefono);setV('doc_dir',c.doctor.direccion);setV('padre_vive',c.doctor.padre_vive);setV('padre_edad',c.doctor.padre_edad);setV('madre_vive',c.doctor.madre_vive);setV('madre_edad',c.doctor.madre_edad);}
+  if(c.legal){Object.entries(c.legal).forEach(function(e){setV(e[0],e[1]);});}
+  if(c.empleo){setV('trabaja',c.empleo.trabaja);setV('jubilado',c.empleo.jubilado);setV('deshabilitado',c.empleo.deshabilitado);setV('empleador',c.empleo.empleador);setV('ocupacion',c.empleo.ocupacion);setV('tiempo_empresa',c.empleo.tiempo_empresa);setV('ingreso',c.empleo.ingreso);setV('gastos',c.empleo.gastos);setV('casa_tipo',c.empleo.casa_tipo);setV('hipoteca',c.empleo.hipoteca);setV('anos_hip',c.empleo.anos_hip);setV('personas_casa',c.empleo.personas_casa);setV('estado_civil',c.empleo.estado_civil);setV('hijos',c.empleo.hijos);}
+  if(c.seguro){setV('tiene_seguro',c.seguro.tiene);setV('seg_tipo',c.seguro.tipo);setV('seg_compania',c.seguro.compania);setV('seg_cobertura',c.seguro.cobertura);setV('seg_prima',c.seguro.prima);}
+  if(c.banco){var bn=c.banco.banco||'';var opts=document.querySelectorAll('#banco_nombre option');var found=false;opts.forEach(function(o){if(o.value===bn)found=true;});setV('banco_nombre',found?bn:'OTRO');if(!found)setV('banco_otro',bn);setV('banco_estado',c.banco.estado);setV('banco_ruta',c.banco.ruta);setV('banco_cuenta',c.banco.cuenta);setV('pago1',c.banco.pago1);setV('pago2',c.banco.pago2);handleBancoOtro();}
+  if(c.beneficiarios_p&&c.beneficiarios_p.length){
+    for(var i=1;i<c.beneficiarios_p.length;i++)addBene('p');
+    c.beneficiarios_p.forEach(function(b,i){var pfx='p'+(i+1);setV(pfx+'_nombre',b.nombre);setV(pfx+'_dob',b.dob);setV(pfx+'_rel',b.relacion);setV(pfx+'_tel',b.telefono);setV(pfx+'_pct',parseFloat(b.porciento)||0);});
+    updPct();
+  } else {
+    addBene('p'); // ensure at least one empty beneficiary card
+  }
+  if(c.beneficiarios_c&&c.beneficiarios_c.length){
+    for(var j=0;j<c.beneficiarios_c.length;j++)addBene('c');
+    c.beneficiarios_c.forEach(function(b,i){var pfx='c'+(i+1);setV(pfx+'_nombre',b.nombre);setV(pfx+'_dob',b.dob);setV(pfx+'_rel',b.relacion);setV(pfx+'_tel',b.telefono);setV(pfx+'_pct',parseFloat(b.porciento)||0);});
+    updPct();
+  }
+  handleSmoker();
+  showView('form');
+
+  if(resumeMode){
+    // Find first incomplete section and go there with missing fields highlighted
+    var result=getFirstIncompleteSectionWithMissing();
+    if(result){
+      goTo(result.secIdx, result.missing);
+      // Mark all nav items with orange dots for sections that have missing info
+      setTimeout(markNavMissing, 100);
+      showToast('📋 Continuar llenando: '+SECTION_CHECKS[result.secIdx].label,'warn');
+    } else {
+      goTo(0);
+      showToast('✅ Cliente cargado — parece completo','ok');
+    }
+  } else {
+    goTo(0);
+    showToast('Cliente cargado: '+(c.personal&&c.personal.nombre||''),'ok');
+  }
+}
+
+// ===================== PREVIEW =====================
+function previewClient(idx){
+  var c=loadedClients[idx];
+  var pc=document.getElementById('preview-content');if(!pc)return;
+  var pct=calcCompleteness(c);
+  var col=compColor(pct);var lbl=compLabel(pct);
+  var nombre=c.personal&&c.personal.nombre||'Cliente';
+
+  function row(label,val){
+    if(!val)return'';
+    var safe=String(val).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
+    return'<div class="prev-row"><span class="pr-lbl">'+label+'</span><div class="pr-val-wrap"><span class="pr-val">'+val+'</span><button class="copy-btn" onclick="copyVal(this,\''+safe+'\')">📋</button></div></div>';
+  }
+  function sec(title,rowsArr){
+    var content=rowsArr.join('');if(!content)return'';
+    return'<div class="prev-sec"><div class="prev-sec-title">'+title+'</div>'+content+'</div>';
+  }
+  var bpRows=(c.beneficiarios_p||[]).map(function(b,i){return row('Principal '+(i+1),b.nombre+(b.relacion?' ('+b.relacion+')':'')+(b.porciento?' — '+b.porciento:''));}).join('');
+  var bcRows=(c.beneficiarios_c||[]).map(function(b,i){return row('Contingente '+(i+1),b.nombre+(b.relacion?' ('+b.relacion+')':'')+(b.porciento?' — '+b.porciento:''));}).join('');
+  var medRows=(c.medico&&c.medico.condiciones||[]).map(function(m){return row(m[0],[m[1]||'',m[2]||'',m[3]||''].filter(Boolean).join(' | '));}).join('');
+
+  pc.innerHTML=
+    '<div class="prev-comp-header">'+
+      '<div class="prev-comp-big" style="color:'+col+'">'+pct+'%</div>'+
+      '<div class="prev-comp-info">'+
+        '<strong style="font-size:.9rem">'+nombre+'</strong>'+
+        '<p>Completitud del expediente — '+lbl+'</p>'+
+        '<div class="prev-comp-bar"><div class="prev-comp-bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'+
+      '</div>'+
+      '<button class="btn btn-json" onclick="loadClientToForm('+idx+',true);closeModal(\'modal-preview\')">▶ Continuar</button>'+
+    '</div>'+
+    '<div class="prev-grid">'+
+      sec('🛡️ Póliza',[row('# Póliza',c.poliza),row('Fecha',c.fecha)])+
+      sec('👤 Personal',[row('Nombre',c.personal&&c.personal.nombre),row('Teléfono',c.personal&&c.personal.telefono),row('Correo',c.personal&&c.personal.email),row('Nacimiento',c.personal&&c.personal.dob),row('Edad',c.personal&&c.personal.edad),row('Género',c.personal&&c.personal.genero)])+
+      sec('🏠 Dirección',[row('Dirección',c.direccion&&c.direccion.direccion),row('Ciudad',c.direccion&&c.direccion.ciudad),row('Estado',c.direccion&&c.direccion.estado),row('CP',c.direccion&&c.direccion.cp),row('Nació en',c.direccion&&c.direccion.nacimiento)])+
+      sec('📏 Medidas',[row('Peso',c.medidas&&c.medidas.peso),row('Altura',c.medidas&&c.medidas.altura),row('Fumador',c.medidas&&c.medidas.fumador),row('Cigarros/día',c.medidas&&c.medidas.cigarros)])+
+      (medRows?sec('🩺 Condiciones Médicas',[medRows]):'')+
+      sec('🏥 Doctor',[row('Doctor',c.doctor&&c.doctor.nombre),row('Última Visita',c.doctor&&c.doctor.visita),row('Teléfono',c.doctor&&c.doctor.telefono),row('Dirección',c.doctor&&c.doctor.direccion)])+
+      sec('⚖️ Legal',[row('Criminal',c.legal&&c.legal.criminal),row('Ciudadano',c.legal&&c.legal.ciudadano),row('Residente',c.legal&&c.legal.residente),row('SSN/ITIN',c.legal&&c.legal.ssn),row('DUI',c.legal&&c.legal.dui),row('Lic. #',c.legal&&c.legal.lic_num)])+
+      sec('💼 Empleo',[row('Trabaja',c.empleo&&c.empleo.trabaja),row('Empleador',c.empleo&&c.empleo.empleador),row('Ocupación',c.empleo&&c.empleo.ocupacion),row('Ingreso',c.empleo&&c.empleo.ingreso),row('Estado Civil',c.empleo&&c.empleo.estado_civil),row('Personas Casa',c.empleo&&c.empleo.personas_casa)])+
+      ((bpRows||bcRows)?sec('👥 Beneficiarios',[bpRows,bcRows]):'')+
+      sec('🛡️ Seguro',[row('Tiene Seguro',c.seguro&&c.seguro.tiene),row('Compañía',c.seguro&&c.seguro.compania),row('Cobertura',c.seguro&&c.seguro.cobertura),row('Prima',c.seguro&&c.seguro.prima)])+
+      sec('🏦 Banco',[row('Banco',c.banco&&c.banco.banco),row('# Ruta',c.banco&&c.banco.ruta),row('# Cuenta',c.banco&&c.banco.cuenta),row('1er Pago',c.banco&&c.banco.pago1)])+
+    '</div>';
+  openModal('modal-preview');
+}
+
+function copyVal(btn,val){
+  navigator.clipboard.writeText(val).then(function(){
+    btn.textContent='✓';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='📋';btn.classList.remove('copied');},1800);
+  }).catch(function(){showToast('No se pudo copiar','err');});
+}
+
+// ===================== AUTO-AGE =====================
+document.getElementById('dob').addEventListener('change',function(){
+  if(!this.value)return;
+  document.getElementById('edad').value=Math.floor((new Date()-new Date(this.value))/(365.25*24*3600*1000));
+});
+
+// ===================== PDF =====================
+function exportPDF(){
+  doSave();
+  if(!window.jspdf){showToast('jsPDF no cargado aún, intenta de nuevo','err');return;}
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  var PW=215.9,PH=279.4,ML=9,MR=9,UW=PW-ML-MR;var y=0;
+  var CB=[26,95,168],CT=[0,194,168],CL=[237,244,252],CA=[220,235,250],CD=[30,55,85],CG=[100,125,152],CW=[255,255,255];
+  doc.setFillColor(248,251,255);doc.rect(0,0,PW,PH,'F');
+  doc.setFillColor(CB[0],CB[1],CB[2]);doc.rect(0,0,PW,18,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(CW[0],CW[1],CW[2]);
+  doc.text('INSUREPRO — FORMULARIO DE ELEGIBILIDAD',ML,11.5);
+  var pol=v('poliza'),fch=v('fecha');var hdr='';
+  if(pol)hdr+='Poliza: '+pol;if(fch)hdr+=(pol?'   ':'')+'Fecha: '+fch;
+  if(hdr){doc.setFontSize(7.5);doc.text(hdr,PW-MR,11.5,{align:'right'});}
+  doc.setFillColor(CT[0],CT[1],CT[2]);doc.rect(0,18,PW,2,'F');y=26;
+  function sh(title){if(y>PH-35){doc.addPage();doc.setFillColor(248,251,255);doc.rect(0,0,PW,PH,'F');y=14;}doc.setFillColor(CB[0],CB[1],CB[2]);doc.roundedRect(ML,y,UW,6.5,1.2,1.2,'F');doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(CW[0],CW[1],CW[2]);doc.text(title.toUpperCase(),ML+3,y+4.4);y+=8;}
+  function kv(pairs,cols){cols=cols||4;var cw=UW/cols,rh=7.5;var valid=pairs.filter(function(p){return p[1];});if(!valid.length){y+=2;return;}var col=0;valid.forEach(function(p){if(y+rh>PH-14){doc.addPage();doc.setFillColor(248,251,255);doc.rect(0,0,PW,PH,'F');y=14;}var x=ML+col*cw;doc.setFillColor(CL[0],CL[1],CL[2]);doc.roundedRect(x+.3,y,cw-.6,rh,.8,.8,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.2);doc.setTextColor(CG[0],CG[1],CG[2]);doc.text(p[0].toUpperCase(),x+2,y+2.8);doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(CD[0],CD[1],CD[2]);var lines=doc.splitTextToSize(String(p[1]),cw-4);doc.text(lines[0],x+2,y+5.8);col++;if(col>=cols){col=0;y+=rh+.5;}});if(col>0)y+=rh+.5;y+=2;}
+  function at(head,body,colW){if(!body||!body.length)return;if(y>PH-35){doc.addPage();doc.setFillColor(248,251,255);doc.rect(0,0,PW,PH,'F');y=14;}var cs={};if(colW)colW.forEach(function(w,i){cs[i]={cellWidth:w};});doc.autoTable({startY:y,margin:{left:ML,right:MR},head:[head],body:body,styles:{fontSize:6.3,cellPadding:[2,2,2,2],font:'helvetica',textColor:CD,fillColor:CL},headStyles:{fillColor:CB,textColor:CW,fontStyle:'bold',fontSize:6.3},alternateRowStyles:{fillColor:CA},columnStyles:cs,tableWidth:UW,theme:'plain'});y=doc.lastAutoTable.finalY+3;}
+  sh('DATOS PERSONALES');kv([['Nombre',v('nombre')],['Telefono',v('telefono')],['Correo',v('email')],['Genero',v('genero')],['Nacimiento',v('dob')],['Edad',v('edad')],['Lugar Nac.',v('nacimiento')],['Tiempo Pais',v('tiempo_pais')],['Direccion',v('direccion')],['Ciudad',v('ciudad')],['Estado',v('estado_dir')],['CP',v('cp')],['Peso',v('peso')],['Altura',v('altura')],['Fumador',v('fumador')],['Cigarros/dia',v('cigarros')]],4);
+  var mr=getMedRows();if(mr.length){sh('HISTORIAL MEDICO — CONDICIONES ACTIVAS');at(['Condicion','Fecha','Prescripcion','Detalle'],mr,[42,22,50,UW-114]);}
+  sh('DOCTOR / CLINICA & FAMILIA');kv([['Doctor',v('doc_nombre')],['Ultima Visita',v('doc_visita')],['Tel.',v('doc_tel')],['Direccion',v('doc_dir')],['Padre Vive',v('padre_vive')],['Edad Padre',v('padre_edad')],['Madre Vive',v('madre_vive')],['Edad Madre',v('madre_edad')]],4);
+  sh('ANTECEDENTES LEGALES & MIGRATORIOS');kv([['Criminal',v('criminal')],['Detalle',v('criminal_det')],['DUI',v('dui')],['Fecha DUI',v('dui_fecha')],['Lic.Suspendida',v('lic_suspendida')],['Bancarrota',v('bancarrota')],['Ciudadano',v('ciudadano')],['Residente',v('residente')],['# Residencia',v('res_num')],['Venc.Res.',v('res_exp')],['Permiso',v('permiso')],['SSN/ITIN',v('ssn')],['Lic.#',v('lic_num')],['Estado Lic.',v('lic_estado')],['# ID/Pasap.',v('id_num')],['Pais ID',v('id_pais')]],4);
+  sh('EMPLEO, FINANZAS & ESTADO CIVIL');kv([['Trabaja',v('trabaja')],['Jubilado',v('jubilado')],['Deshabilitado',v('deshabilitado')],['Empleador',v('empleador')],['Ocupacion',v('ocupacion')],['Tiempo Empresa',v('tiempo_empresa')],['Ingreso',v('ingreso')],['Gastos',v('gastos')],['Casa',v('casa_tipo')],['Hipoteca',v('hipoteca')],['Anos Hip.',v('anos_hip')],['Personas Casa',v('personas_casa')],['Estado Civil',v('estado_civil')],['Hijos <18',v('hijos')],['',''],['','']],4);
+  var bp=getBeneData('p'),bc=getBeneData('c');
+  var allB=bp.map(function(b){return['Principal',b.nombre,b.dob,b.relacion,b.telefono,b.porciento];}).concat(bc.map(function(b){return['Contingente',b.nombre,b.dob,b.relacion,b.telefono,b.porciento];}));
+  if(allB.length){sh('BENEFICIARIOS');at(['Tipo','Nombre','Nacimiento','Relacion','Telefono','%'],allB,[22,UW-22-22-30-26-14,22,30,26,14]);}
+  sh('SEGURO EXISTENTE & BANCO');kv([['Tiene Seguro',v('tiene_seguro')],['Tipo',v('seg_tipo')],['Compania',v('seg_compania')],['Cobertura',v('seg_cobertura')],['Prima',v('seg_prima')],['Banco',getBanco()],['Estado Banco',v('banco_estado')],['# Ruta',v('banco_ruta')],['# Cuenta',v('banco_cuenta')],['1er Pago',v('pago1')],['Sig.Pago',v('pago2')],['','']],4);
+  var tp=doc.internal.getNumberOfPages();
+  for(var p=1;p<=tp;p++){doc.setPage(p);doc.setFillColor(CB[0],CB[1],CB[2]);doc.rect(0,PH-9,PW,9,'F');doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.setTextColor(CW[0],CW[1],CW[2]);doc.text('InsurePro — Formulario de Elegibilidad — CONFIDENCIAL',ML,PH-4);doc.text('Pag. '+p+' / '+tp,PW-MR,PH-4,{align:'right'});}
+  var nm=v('nombre')||'cliente';
+  doc.save('Elegibilidad_'+nm.replace(/[^a-zA-Z0-9]/g,'_')+'.pdf');
+  showToast('PDF exportado','ok');
+}
+
+// ===================== SORTABLE =====================
+try{
+  Sortable.create(document.getElementById('nav-list'),{
+    animation:160,handle:'.dh',
+    onEnd:function(){document.querySelectorAll('.nav-item').forEach(function(item,i){var sn=item.querySelector('.sn');if(sn)sn.textContent=i+1;});}
+  });
+}catch(e){console.warn('Sortable:',e);}
+
+// ===================== INIT =====================
+buildMedTable();
+setupAC('direccion','ac-dir');
+setupAC('doc_dir','ac-doc');
+addBene('p');
+var fechaEl=document.getElementById('fecha');if(fechaEl)fechaEl.value=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
