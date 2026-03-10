@@ -426,8 +426,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
             </div>
             <div class="grid c2">
               <div class="field"><label>SSN / ITIN #</label><input type="text" id="ssn" placeholder="000-00-0000"></div>
-              <div class="field"><label>ESTADO LIC.</label><input type="text" id="lic_estado" placeholder="FL, TX…"></div>
+              <div class="field"></div>
               <div class="field"><label>LICENCIA #</label><input type="text" id="lic_num" placeholder="Número"></div>
+              <div class="field"><label>ESTADO DE LA LICENCIA</label><select id="lic_estado"><option value="">— Estado —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
               <div class="field"><label># ID / PASAPORTE</label><input type="text" id="id_num" placeholder="Número"></div>
               <div class="field"><label>PAÍS (ID)</label><input type="text" id="id_pais" placeholder="País emisor"></div>
             </div>
@@ -453,11 +454,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           </div>
           <div class="card">
             <div class="card-hdr"><div class="card-ico">🏦</div><div class="card-title">Finanzas & Vivienda</div></div>
-            <div class="grid c4" style="margin-bottom:12px">
-              <div class="field"><label>INGRESO MENSUAL</label><input type="text" id="ingreso" placeholder="$" oninput="calcAnual('ingreso')"></div>
-              <div class="field"><label>INGRESO ANUAL</label><input type="text" id="ingreso_anual" placeholder="$" oninput="calcMensual('ingreso_anual')"></div>
-              <div class="field"><label>INGRESOS DEL HOGAR</label><input type="text" id="ingreso_hogar" placeholder="$ (total familiar)"></div>
-              <div class="field"><label>GASTOS MENSUALES</label><input type="text" id="gastos" placeholder="$"></div>
+            <div class="grid c3" style="margin-bottom:4px">
+              <div style="font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:2px 0">Ingresos Personales</div>
+              <div style="font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:2px 0">Ingresos del Hogar</div>
+              <div style="font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;padding:2px 0">Gastos</div>
+            </div>
+            <div class="grid c3" style="margin-bottom:8px">
+              <div class="field"><label>INGRESO MENSUAL</label><input type="text" id="ingreso" placeholder="$0.00" oninput="calcAnual('ingreso')"></div>
+              <div class="field"><label>HOGAR MENSUAL</label><input type="text" id="ingreso_hogar" placeholder="$0.00" oninput="calcHogarAnual('ingreso_hogar')"></div>
+              <div class="field"><label>GASTO MENSUAL</label><input type="text" id="gastos" placeholder="$0.00" oninput="calcGastoAnual('gastos')"></div>
+            </div>
+            <div class="grid c3" style="margin-bottom:12px">
+              <div class="field"><label>INGRESO ANUAL</label><input type="text" id="ingreso_anual" placeholder="$0.00" oninput="calcMensual('ingreso_anual')"></div>
+              <div class="field"><label>HOGAR ANUAL</label><input type="text" id="ingreso_hogar_anual" placeholder="$0.00" oninput="calcHogarMensual('ingreso_hogar_anual')"></div>
+              <div class="field"><label>GASTO ANUAL</label><input type="text" id="gastos_anual" placeholder="$0.00" oninput="calcGastoMensual('gastos_anual')"></div>
             </div>
             <hr class="divider">
             <div class="grid c4" style="margin-bottom:12px">
@@ -615,19 +625,19 @@ function addCustomCondition(){var n=prompt('Nombre de la condicion:');if(!n||!n.
 function delCond(idx){customConds.splice(idx,1);buildMedTable();}
 function handleSmoker(){var val=document.getElementById('fumador').value;var no=val==='No';['cigarros','fuma_desde'].forEach(function(id){var el=document.getElementById(id);if(el){el.disabled=no;if(no)el.value='';}});}
 
-// Income auto-calc
 function parseMoney(s){return parseFloat((s||'').replace(/[^0-9.]/g,''))||0;}
 function fmtMoney(n){return n?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'';}
-function calcAnual(fromId){
-  var m=parseMoney(document.getElementById('ingreso').value);
-  var anualEl=document.getElementById('ingreso_anual');
-  if(m&&anualEl&&document.activeElement===document.getElementById(fromId)){anualEl.value=fmtMoney(m*12);}
-}
-function calcMensual(fromId){
-  var a=parseMoney(document.getElementById('ingreso_anual').value);
-  var menEl=document.getElementById('ingreso');
-  if(a&&menEl&&document.activeElement===document.getElementById(fromId)){menEl.value=fmtMoney(a/12);}
-}
+// Personal income
+function calcAnual(fromId){var m=parseMoney(document.getElementById('ingreso').value);var el=document.getElementById('ingreso_anual');if(m&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(m*12);}
+function calcMensual(fromId){var a=parseMoney(document.getElementById('ingreso_anual').value);var el=document.getElementById('ingreso');if(a&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(a/12);}
+// Hogar income
+function calcHogarAnual(fromId){var m=parseMoney(document.getElementById('ingreso_hogar').value);var el=document.getElementById('ingreso_hogar_anual');if(m&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(m*12);}
+function calcHogarMensual(fromId){var a=parseMoney(document.getElementById('ingreso_hogar_anual').value);var el=document.getElementById('ingreso_hogar');if(a&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(a/12);}
+// Gastos
+function calcGastoAnual(fromId){var m=parseMoney(document.getElementById('gastos').value);var el=document.getElementById('gastos_anual');if(m&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(m*12);}
+function calcGastoMensual(fromId){var a=parseMoney(document.getElementById('gastos_anual').value);var el=document.getElementById('gastos');if(a&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(a/12);}
+// Auto-fill license state from datos generales state when user enters sec-3
+function syncLicState(){var edo=document.getElementById('estado_dir');var lic=document.getElementById('lic_estado');if(edo&&lic&&edo.value&&!lic.value)lic.value=edo.value;}
 function handleParent(which){
   var sel=document.getElementById(which+'_vive');
   var wrap=document.getElementById(which+'_causa_wrap');
@@ -713,54 +723,121 @@ function delBene(pfx,type){var c=document.getElementById('bc-'+pfx);if(c)c.remov
 function getPcts(type){var w=document.getElementById(type==='p'?'bene-p-wrap':'bene-c-wrap');if(!w)return[];return Array.from(w.querySelectorAll('input[type=number]')).map(function(el){return{el:el,val:parseFloat(el.value)||0};});}
 function updPct(){['p','c'].forEach(function(t){var list=getPcts(t);var tot=list.reduce(function(s,x){return s+x.val;},0);var te=document.getElementById('pct-total-'+t);var bar=document.getElementById('pct-bar-'+t);if(te)te.textContent=tot.toFixed(0)+'%';if(bar){bar.className='pct-bar'+(list.length===0?'':tot===100?' ok':' err');bar.innerHTML=tot===100?'✅ Total: <strong>100%</strong> — ¡Correcto!':'⚖️ Total: <strong>'+tot.toFixed(0)+'%</strong> — Se requiere exactamente 100%';}list.forEach(function(x){var c=x.el.closest('.bene-card');if(!c)return;var b=c.querySelector('.pct-badge');if(b)b.textContent=x.val.toFixed(0)+'%';});});}
 
-// ===================== ADDRESS AUTOCOMPLETE =====================
-var US_ADDR=[
-  {main:'100 Main St, Miami, FL 33101',city:'Miami',state:'Florida',zip:'33101'},
-  {main:'200 Brickell Ave, Miami, FL 33131',city:'Miami',state:'Florida',zip:'33131'},
-  {main:'300 NW 2nd Ave, Miami, FL 33128',city:'Miami',state:'Florida',zip:'33128'},
-  {main:'9000 SW 107th Ave, Miami, FL 33176',city:'Miami',state:'Florida',zip:'33176'},
-  {main:'700 NE 2nd Ave, Hialeah, FL 33010',city:'Hialeah',state:'Florida',zip:'33010'},
-  {main:'1500 W 49th St, Hialeah, FL 33012',city:'Hialeah',state:'Florida',zip:'33012'},
-  {main:'8200 NW 33rd St, Doral, FL 33122',city:'Doral',state:'Florida',zip:'33122'},
-  {main:'2000 University Dr, Coral Springs, FL 33071',city:'Coral Springs',state:'Florida',zip:'33071'},
-  {main:'1000 Corporate Dr, Fort Lauderdale, FL 33334',city:'Fort Lauderdale',state:'Florida',zip:'33334'},
-  {main:'350 Fifth Ave, New York, NY 10118',city:'New York',state:'New York',zip:'10118'},
-  {main:'233 S Wacker Dr, Chicago, IL 60606',city:'Chicago',state:'Illinois',zip:'60606'},
-  {main:'500 W Temple St, Los Angeles, CA 90012',city:'Los Angeles',state:'California',zip:'90012'},
-  {main:'1600 Pennsylvania Ave NW, Washington, DC 20500',city:'Washington',state:'District of Columbia',zip:'20500'}
-];
-function setupAC(inputId,listId){
-  var inp=document.getElementById(inputId),list=document.getElementById(listId);
+// ===================== ADDRESS AUTOCOMPLETE (Nominatim / OpenStreetMap) =====================
+var acTimers={};
+var STATE_ABBR={
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+  'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+  'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS',
+  'Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA',
+  'Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT',
+  'Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM',
+  'New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK',
+  'Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+  'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT',
+  'Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY',
+  'District of Columbia':'DC'
+};
+
+function setupAC(inputId, listId, cityId, stateId, zipId){
+  var inp=document.getElementById(inputId);
+  var list=document.getElementById(listId);
   if(!inp||!list)return;
-  var idx=-1;
-  function upd(){
-    var q=inp.value.trim().toLowerCase();list.innerHTML='';idx=-1;
-    if(q.length<2){list.classList.remove('open');return;}
-    var matches=US_ADDR.filter(function(s){return s.main.toLowerCase().includes(q);});
-    var synth=['St','Ave','Blvd','Dr','Rd','Way'].map(function(sx){return{main:q.replace(/\b\w/g,function(c){return c.toUpperCase();})+' '+sx+', Miami, FL',city:'Miami',state:'Florida',zip:'33101'};});
-    var all=matches.concat(synth).slice(0,8);
-    if(!all.length){list.classList.remove('open');return;}
-    all.forEach(function(s){
-      var li=document.createElement('div');li.className='ac-item';
-      li.innerHTML='📍 '+s.main+(s.city?'<small>'+s.city+', '+s.state+'</small>':'');
-      li.onclick=function(){
-        inp.value=s.main;
-        if(s.city){var ci=document.getElementById('ciudad');var st=document.getElementById('estado_dir');var zp=document.getElementById('cp');if(ci&&!ci.value)ci.value=s.city;if(st&&!st.value)st.value=s.state;if(zp&&!zp.value&&s.zip)zp.value=s.zip;}
-        list.classList.remove('open');schedSave();
-      };
-      list.appendChild(li);
-    });
-    list.classList.add('open');
+  var focusIdx=-1;
+
+  function closeList(){list.innerHTML='';list.classList.remove('open');focusIdx=-1;}
+
+  function setFocus(items,n){
+    focusIdx=Math.max(0,Math.min(n,items.length-1));
+    items.forEach(function(el,i){el.classList.toggle('focused',i===focusIdx);});
   }
-  inp.addEventListener('input',upd);
+
+  function doSearch(q){
+    // Show loading indicator
+    list.innerHTML='<div class="ac-item" style="color:var(--text3);font-style:italic">🔍 Buscando...</div>';
+    list.classList.add('open');
+
+    var url='https://nominatim.openstreetmap.org/search'
+      +'?format=json'
+      +'&addressdetails=1'
+      +'&limit=7'
+      +'&countrycodes=us'
+      +'&q='+encodeURIComponent(q);
+
+    fetch(url,{headers:{'Accept-Language':'en-US,en','User-Agent':'InsureProApp/1.0'}})
+      .then(function(r){return r.json();})
+      .then(function(results){
+        list.innerHTML='';focusIdx=-1;
+        if(!results||!results.length){
+          list.innerHTML='<div class="ac-item" style="color:var(--text3);font-style:italic">Sin resultados para "'+q+'"</div>';
+          return;
+        }
+        results.forEach(function(place){
+          var addr=place.address||{};
+          // Build display address
+          var house=addr.house_number||'';
+          var road=addr.road||addr.pedestrian||addr.footway||'';
+          var city=addr.city||addr.town||addr.village||addr.hamlet||addr.county||'';
+          var stateFull=addr.state||'';
+          var stateAbbr=STATE_ABBR[stateFull]||stateFull;
+          var zip=addr.postcode||'';
+          var street=(house?(house+' '):'')+road;
+          var full=street+(city?', '+city:'')+(stateAbbr?', '+stateAbbr:'')+(zip?' '+zip:'');
+          if(!street&&!city)full=place.display_name.split(',').slice(0,3).join(',');
+
+          var li=document.createElement('div');
+          li.className='ac-item';
+          li.innerHTML='📍 <span style="font-weight:600">'+street+'</span>'
+            +(city?'<small>'+city+(stateAbbr?', '+stateAbbr:'')+(zip?' '+zip:'')+'</small>':'');
+
+          li.onclick=function(){
+            inp.value=street||full;
+            // Auto-fill city, state, zip if target fields specified
+            if(cityId){var ce=document.getElementById(cityId);if(ce)ce.value=city;}
+            if(stateId){
+              var se=document.getElementById(stateId);
+              if(se){
+                // Try to match full state name in select options
+                var matched=false;
+                Array.from(se.options).forEach(function(opt){
+                  if(opt.value===stateFull||opt.text===stateFull){se.value=opt.value;matched=true;}
+                });
+                if(!matched)se.value=stateFull;
+              }
+            }
+            if(zipId){var ze=document.getElementById(zipId);if(ze)ze.value=zip;}
+            closeList();
+            schedSave();
+          };
+          list.appendChild(li);
+        });
+        list.classList.add('open');
+      })
+      .catch(function(){
+        list.innerHTML='<div class="ac-item" style="color:var(--danger)">⚠️ Error de conexión — verifica tu internet</div>';
+      });
+  }
+
+  inp.addEventListener('input',function(){
+    var q=inp.value.trim();
+    clearTimeout(acTimers[inputId]);
+    if(q.length<4){closeList();return;}
+    // Debounce 450ms to respect Nominatim usage policy (max 1 req/sec)
+    acTimers[inputId]=setTimeout(function(){doSearch(q);},450);
+  });
+
   inp.addEventListener('keydown',function(e){
     var items=list.querySelectorAll('.ac-item');
-    if(e.key==='ArrowDown'){idx=Math.min(idx+1,items.length-1);items.forEach(function(el,i){el.classList.toggle('focused',i===idx);});e.preventDefault();}
-    else if(e.key==='ArrowUp'){idx=Math.max(idx-1,0);items.forEach(function(el,i){el.classList.toggle('focused',i===idx);});e.preventDefault();}
-    else if(e.key==='Enter'&&idx>=0){items[idx].click();e.preventDefault();}
-    else if(e.key==='Escape')list.classList.remove('open');
+    if(!items.length)return;
+    if(e.key==='ArrowDown'){setFocus(items,focusIdx+1);e.preventDefault();}
+    else if(e.key==='ArrowUp'){setFocus(items,focusIdx-1);e.preventDefault();}
+    else if(e.key==='Enter'&&focusIdx>=0){items[focusIdx].click();e.preventDefault();}
+    else if(e.key==='Escape'){closeList();}
   });
-  document.addEventListener('click',function(e){if(!inp.contains(e.target)&&!list.contains(e.target))list.classList.remove('open');});
+
+  document.addEventListener('click',function(e){
+    if(!inp.contains(e.target)&&!list.contains(e.target))closeList();
+  });
 }
 function handleBancoOtro(){var el=document.getElementById('banco-otro-wrap');var sel=document.getElementById('banco_nombre');if(el&&sel)el.style.display=sel.value==='OTRO'?'flex':'none';}
 
@@ -777,6 +854,7 @@ function goTo(n){
   var p=document.getElementById('prog');if(p)p.style.width=pct+'%';
   var pp=document.getElementById('prog-pct');if(pp)pp.textContent=pct+'%';
   var si=document.getElementById('step-indicator');if(si)si.textContent='Paso '+(n+1)+' de '+TOTAL;
+  if(n===3)syncLicState();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function setNavState(n,cls){
@@ -895,7 +973,7 @@ function collectClientData(){
     medico:{condiciones:getMedRows()},
     doctor:{nombre:v('doc_nombre'),visita:v('doc_visita'),telefono:v('doc_tel'),direccion:v('doc_dir'),padre_vive:v('padre_vive'),padre_edad:v('padre_edad'),padre_causa:v('padre_causa'),madre_vive:v('madre_vive'),madre_edad:v('madre_edad'),madre_causa:v('madre_causa')},
     legal:{criminal:v('criminal'),criminal_det:v('criminal_det'),alcohol:v('alcohol'),dui:v('dui'),dui_fecha:v('dui_fecha'),lic_suspendida:v('lic_suspendida'),corte:v('corte'),bancarrota:v('bancarrota'),ciudadano:v('ciudadano'),residente:v('residente'),res_num:v('res_num'),res_exp:v('res_exp'),permiso:v('permiso'),permiso_num:v('permiso_num'),ssn:v('ssn'),lic_estado:v('lic_estado'),lic_num:v('lic_num'),id_num:v('id_num'),id_pais:v('id_pais')},
-    empleo:{trabaja:v('trabaja'),jubilado:v('jubilado'),deshabilitado:v('deshabilitado'),empleador:v('empleador'),ocupacion:v('ocupacion'),tiempo_empresa:v('tiempo_empresa'),ingreso:v('ingreso'),ingreso_anual:v('ingreso_anual'),ingreso_hogar:v('ingreso_hogar'),gastos:v('gastos'),casa_tipo:v('casa_tipo'),hipoteca:v('hipoteca'),anos_hip:v('anos_hip'),personas_casa:v('personas_casa'),estado_civil:v('estado_civil'),hijos:v('hijos')},
+    empleo:{trabaja:v('trabaja'),jubilado:v('jubilado'),deshabilitado:v('deshabilitado'),empleador:v('empleador'),ocupacion:v('ocupacion'),tiempo_empresa:v('tiempo_empresa'),ingreso:v('ingreso'),ingreso_anual:v('ingreso_anual'),ingreso_hogar:v('ingreso_hogar'),ingreso_hogar_anual:v('ingreso_hogar_anual'),gastos:v('gastos'),gastos_anual:v('gastos_anual'),casa_tipo:v('casa_tipo'),hipoteca:v('hipoteca'),anos_hip:v('anos_hip'),personas_casa:v('personas_casa'),estado_civil:v('estado_civil'),hijos:v('hijos')},
     beneficiarios_p:getBeneData('p'),
     beneficiarios_c:getBeneData('c'),
     seguro:{tiene:v('tiene_seguro'),tipo:v('seg_tipo'),compania:v('seg_compania'),cobertura:v('seg_cobertura'),prima:v('seg_prima')},
@@ -1026,7 +1104,7 @@ function loadClientToForm(idx){
   if(c.medidas){setV('peso',c.medidas.peso);setV('altura',c.medidas.altura);setV('fumador',c.medidas.fumador);setV('cigarros',c.medidas.cigarros);setV('fuma_desde',c.medidas.fuma_desde);}
   if(c.doctor){setV('doc_nombre',c.doctor.nombre);setV('doc_visita',c.doctor.visita);setV('doc_tel',c.doctor.telefono);setV('doc_dir',c.doctor.direccion);setV('padre_vive',c.doctor.padre_vive);setV('padre_edad',c.doctor.padre_edad);setV('padre_causa',c.doctor.padre_causa);setV('madre_vive',c.doctor.madre_vive);setV('madre_edad',c.doctor.madre_edad);setV('madre_causa',c.doctor.madre_causa);handleParent('padre');handleParent('madre');}
   if(c.legal){Object.entries(c.legal).forEach(function(e){setV(e[0],e[1]);});}
-  if(c.empleo){setV('trabaja',c.empleo.trabaja);setV('jubilado',c.empleo.jubilado);setV('deshabilitado',c.empleo.deshabilitado);setV('empleador',c.empleo.empleador);setV('ocupacion',c.empleo.ocupacion);setV('tiempo_empresa',c.empleo.tiempo_empresa);setV('ingreso',c.empleo.ingreso);setV('ingreso_anual',c.empleo.ingreso_anual);setV('ingreso_hogar',c.empleo.ingreso_hogar);setV('gastos',c.empleo.gastos);setV('casa_tipo',c.empleo.casa_tipo);setV('hipoteca',c.empleo.hipoteca);setV('anos_hip',c.empleo.anos_hip);setV('personas_casa',c.empleo.personas_casa);setV('estado_civil',c.empleo.estado_civil);setV('hijos',c.empleo.hijos);}
+  if(c.empleo){setV('trabaja',c.empleo.trabaja);setV('jubilado',c.empleo.jubilado);setV('deshabilitado',c.empleo.deshabilitado);setV('empleador',c.empleo.empleador);setV('ocupacion',c.empleo.ocupacion);setV('tiempo_empresa',c.empleo.tiempo_empresa);setV('ingreso',c.empleo.ingreso);setV('ingreso_anual',c.empleo.ingreso_anual);setV('ingreso_hogar',c.empleo.ingreso_hogar);setV('ingreso_hogar_anual',c.empleo.ingreso_hogar_anual);setV('gastos',c.empleo.gastos);setV('gastos_anual',c.empleo.gastos_anual);setV('casa_tipo',c.empleo.casa_tipo);setV('hipoteca',c.empleo.hipoteca);setV('anos_hip',c.empleo.anos_hip);setV('personas_casa',c.empleo.personas_casa);setV('estado_civil',c.empleo.estado_civil);setV('hijos',c.empleo.hijos);}
   if(c.seguro){setV('tiene_seguro',c.seguro.tiene);setV('seg_tipo',c.seguro.tipo);setV('seg_compania',c.seguro.compania);setV('seg_cobertura',c.seguro.cobertura);setV('seg_prima',c.seguro.prima);}
   if(c.banco){var bn=c.banco.banco||'';var opts=document.querySelectorAll('#banco_nombre option');var found=false;opts.forEach(function(o){if(o.value===bn)found=true;});setV('banco_nombre',found?bn:'OTRO');if(!found)setV('banco_otro',bn);setV('banco_estado',c.banco.estado);setV('banco_ruta',c.banco.ruta);setV('banco_cuenta',c.banco.cuenta);setV('pago1',c.banco.pago1);setV('pago2',c.banco.pago2);handleBancoOtro();}
   // Restore medical conditions
@@ -1105,7 +1183,7 @@ function previewClient(idx){
       (medRows?sec('🩺 Condiciones Médicas',[medRows]):'')+
       sec('🏥 Doctor',[row('Doctor',c.doctor&&c.doctor.nombre),row('Última Visita',fmtDate(c.doctor&&c.doctor.visita)),row('Teléfono',c.doctor&&c.doctor.telefono),row('Padre Vive',c.doctor&&c.doctor.padre_vive),row('Causa Padre',c.doctor&&c.doctor.padre_causa),row('Madre Vive',c.doctor&&c.doctor.madre_vive),row('Causa Madre',c.doctor&&c.doctor.madre_causa)])+
       sec('⚖️ Legal',[row('Criminal',c.legal&&c.legal.criminal),row('Ciudadano',c.legal&&c.legal.ciudadano),row('Residente',c.legal&&c.legal.residente),row('SSN/ITIN',c.legal&&c.legal.ssn),row('DUI',c.legal&&c.legal.dui),row('Lic. #',c.legal&&c.legal.lic_num),row('Venc.Res.',fmtDate(c.legal&&c.legal.res_exp))])+
-      sec('💼 Empleo',[row('Trabaja',c.empleo&&c.empleo.trabaja),row('Empleador',c.empleo&&c.empleo.empleador),row('Ocupación',c.empleo&&c.empleo.ocupacion),row('Ingreso Mensual',c.empleo&&c.empleo.ingreso),row('Ingreso Anual',c.empleo&&c.empleo.ingreso_anual),row('Ingresos Hogar',c.empleo&&c.empleo.ingreso_hogar),row('Estado Civil',c.empleo&&c.empleo.estado_civil),row('Personas Casa',c.empleo&&c.empleo.personas_casa)])+
+      sec('💼 Empleo',[row('Trabaja',c.empleo&&c.empleo.trabaja),row('Empleador',c.empleo&&c.empleo.empleador),row('Ocupación',c.empleo&&c.empleo.ocupacion),row('Ing. Mensual',c.empleo&&c.empleo.ingreso),row('Ing. Anual',c.empleo&&c.empleo.ingreso_anual),row('Hogar Mensual',c.empleo&&c.empleo.ingreso_hogar),row('Hogar Anual',c.empleo&&c.empleo.ingreso_hogar_anual),row('Gasto Mensual',c.empleo&&c.empleo.gastos),row('Gasto Anual',c.empleo&&c.empleo.gastos_anual),row('Estado Civil',c.empleo&&c.empleo.estado_civil),row('Personas Casa',c.empleo&&c.empleo.personas_casa)])+
       ((bpRows||bcRows)?sec('👥 Beneficiarios',[bpRows,bcRows]):'')+
       sec('🛡️ Seguro',[row('Tiene Seguro',c.seguro&&c.seguro.tiene),row('Compañía',c.seguro&&c.seguro.compania),row('Cobertura',c.seguro&&c.seguro.cobertura),row('Prima',c.seguro&&c.seguro.prima)])+
       sec('🏦 Banco',[row('Banco',c.banco&&c.banco.banco),row('# Ruta',c.banco&&c.banco.ruta),row('# Cuenta',c.banco&&c.banco.cuenta),row('1er Pago',fmtDate(c.banco&&c.banco.pago1))])+
@@ -1181,7 +1259,7 @@ function exportPDF(){
   // Legal
   sh('ANTECEDENTES LEGALES & MIGRATORIOS');kv([['Criminal',v('criminal')],['Detalle',v('criminal_det')],['DUI',v('dui')],['Fecha DUI',fmtDate(v('dui_fecha'))],['Lic.Suspendida',v('lic_suspendida')],['Bancarrota',v('bancarrota')],['Ciudadano',v('ciudadano')],['Residente',v('residente')],['# Residencia',v('res_num')],['Venc.Res.',fmtDate(v('res_exp'))],['Permiso',v('permiso')],['SSN/ITIN',v('ssn')],['Lic.#',v('lic_num')],['Estado Lic.',v('lic_estado')],['# ID/Pasap.',v('id_num')],['Pais ID',v('id_pais')]],4);
   // Empleo
-  sh('EMPLEO, FINANZAS & ESTADO CIVIL');kv([['Trabaja',v('trabaja')],['Jubilado',v('jubilado')],['Deshabilitado',v('deshabilitado')],['Empleador',v('empleador')],['Ocupacion',v('ocupacion')],['Tiempo Empresa',v('tiempo_empresa')],['Ingreso Mensual',v('ingreso')],['Ingreso Anual',v('ingreso_anual')],['Ingresos Hogar',v('ingreso_hogar')],['Gastos',v('gastos')],['Casa',v('casa_tipo')],['Hipoteca',v('hipoteca')],['Anos Hip.',v('anos_hip')],['Personas Casa',v('personas_casa')],['Estado Civil',v('estado_civil')],['Hijos <18',v('hijos')]],4);
+  sh('EMPLEO, FINANZAS & ESTADO CIVIL');kv([['Trabaja',v('trabaja')],['Jubilado',v('jubilado')],['Deshabilitado',v('deshabilitado')],['Empleador',v('empleador')],['Ocupacion',v('ocupacion')],['Tiempo Empresa',v('tiempo_empresa')],['Ing. Mensual',v('ingreso')],['Ing. Anual',v('ingreso_anual')],['Hogar Mensual',v('ingreso_hogar')],['Hogar Anual',v('ingreso_hogar_anual')],['Gasto Mensual',v('gastos')],['Gasto Anual',v('gastos_anual')],['Casa',v('casa_tipo')],['Hipoteca',v('hipoteca')],['Anos Hip.',v('anos_hip')],['Personas Casa',v('personas_casa')],['Estado Civil',v('estado_civil')],['Hijos <18',v('hijos')]],4);
   // Beneficiarios
   var bp=getBeneData('p'),bc=getBeneData('c');
   var allB=bp.map(function(b){return['Principal',b.nombre,fmtDate(b.dob),b.relacion,b.telefono,b.porciento];}).concat(bc.map(function(b){return['Contingente',b.nombre,fmtDate(b.dob),b.relacion,b.telefono,b.porciento];}));
@@ -1197,8 +1275,8 @@ function exportPDF(){
 
 // ===================== INIT =====================
 buildMedTable();
-setupAC('direccion','ac-dir');
-setupAC('doc_dir','ac-doc');
+setupAC('direccion','ac-dir','ciudad','estado_dir','cp');
+setupAC('doc_dir','ac-doc',null,null,null);
 addBene('p');
 setupDateMasks();
 var today=new Date();var mm=String(today.getMonth()+1).padStart(2,'0');var dd=String(today.getDate()).padStart(2,'0');var yyyy=today.getFullYear();
