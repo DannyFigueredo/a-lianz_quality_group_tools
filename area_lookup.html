@@ -21538,7 +21538,11 @@
         if (s.name === 'Florida') opt.selected = true;
         sel.appendChild(opt);
       });
-      sel.addEventListener('change', tzRender);
+      sel.addEventListener('change', () => {
+        const selected = document.getElementById('tzBaseState').value;
+        document.getElementById('tzMyZone').textContent = selected || '—';
+        tzRender();
+      });
 
       // Build multi-select chips (0-6 hours)
       const chips = document.getElementById('tzMultiChips');
@@ -21550,10 +21554,8 @@
         </button>`;
       }
 
-      // Detect user's zone
-      const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const myState = US_STATES.find(s => s.tz === myTz) || US_STATES.find(s => s.name === 'Florida');
-      document.getElementById('tzMyZone').textContent = myState ? myState.name : myTz;
+      // Set initial label from the default selected state (Florida)
+      document.getElementById('tzMyZone').textContent = sel.value || '—';
 
       // Load saved view preference from IndexedDB, then render
       idbGet('tzView').then(saved => {
