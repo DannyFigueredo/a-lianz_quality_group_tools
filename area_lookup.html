@@ -1864,8 +1864,6 @@
         <button class="tab-btn active" data-tab="inicio"><i data-lucide="layout-dashboard"></i> Inicio</button>
         <button class="tab-btn" data-tab="clima"><i data-lucide="sun"></i> Clima</button>
         <button class="tab-btn" data-tab="aire"><i data-lucide="wind"></i> Calidad Aire</button>
-
-
         <button class="tab-btn" data-tab="sismos"><i data-lucide="zap"></i> Sismos</button>
         <button class="tab-btn" data-tab="mareas"><i data-lucide="waves"></i> Mareas</button>
         <button class="tab-btn" data-tab="elevacion"><i data-lucide="mountain"></i> Elevación</button>
@@ -1922,10 +1920,6 @@
           </div>
         </div>
       </div>
-
-
-
-
 
       <!-- TAB: SISMOS (USGS) -->
       <div class="tab-panel" id="tab-sismos">
@@ -1999,7 +1993,7 @@
         <!-- HEADER INFO -->
         <div class="tz-header">
           <div class="tz-my-zone">
-            <div class="tz-my-label">Tu zona horaria</div>
+            <div class="tz-my-label">Hora del estado base</div>
             <div class="tz-my-val" id="tzMyZone">—</div>
             <div class="tz-my-time" id="tzMyClock">—</div>
           </div>
@@ -20527,7 +20521,7 @@
       climate: { label: "Clima", icon: "cloud" },
       culture: { label: "Cultura", icon: "drama" }
     };
-    const TZ_OFF = { ET: -5, CT: -6, MT: -7, PT: -8, AKT: -9, HT: -10 }; // kept for diff display fallback
+    const TZ_OFF = { ET: -5, CT: -6, MT: -7, PT: -8, AKT: -9, HT: -10 };
     const TZ_IANA = { ET: "America/New_York", CT: "America/Chicago", MT: "America/Denver", PT: "America/Los_Angeles", AKT: "America/Anchorage", HT: "Pacific/Honolulu" };
     const TZ_NAME = { ET: "Eastern", CT: "Central", MT: "Mountain", PT: "Pacific", AKT: "Alaska", HT: "Hawaii" };
     const WMOI = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌧️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 71: "🌨️", 75: "❄️", 80: "🌦️", 81: "🌧️", 95: "⛈️" };
@@ -20536,12 +20530,8 @@
     let clockTimer, currentData = null;
     let myOff = null;
     (() => {
-      // Use Intl to get the real current offset (respects DST automatically)
       const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const now = new Date();
-      const utcMs = now.getTime();
-      const localStr = new Intl.DateTimeFormat('en-US', { timeZone: myTz, hour: 'numeric', hour12: false, timeZoneName: 'short' }).format(now);
-      // Calculate offset by comparing UTC parts vs local parts
       const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
       const parts = new Intl.DateTimeFormat('en-US', { timeZone: myTz, hour: 'numeric', hour12: false, minute: 'numeric' }).formatToParts(now);
       const lH = parseInt(parts.find(p => p.type === 'hour').value);
@@ -20604,14 +20594,12 @@
       loadWeatherPill(d.lat, d.lon);
       buildInicio(d);
 
-      // Reset API panels
       ['clima', 'aire', 'sismos', 'mareas', 'elevacion', 'osm', 'mapa', 'biodiversidad', 'transito'].forEach(id => {
         const panel = document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1));
         if (panel) panel.innerHTML = '<div class="api-card"><div class="api-loading"><i data-lucide="loader"></i> Listo para cargar…</div></div>';
       });
       document.getElementById('panelClima').innerHTML = '<div class="api-card"><div class="api-loading"><i data-lucide="loader"></i> Listo para cargar…</div></div>';
 
-      // Switch to inicio tab
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelector('[data-tab="inicio"]').classList.add('active');
@@ -20848,7 +20836,6 @@
       const el = document.getElementById('panelElevacion');
       el.innerHTML = loading();
       try {
-        // Sample a 3x3 grid around the point
         const pts = [];
         for (let dlat = -0.05; dlat <= 0.05; dlat += 0.05)
           for (let dlon = -0.05; dlon <= 0.05; dlon += 0.05)
@@ -20965,7 +20952,6 @@
           hotel: { emoji: '🏨', label: 'Hoteles', group: 'Turismo' },
         };
 
-        // Enrich and store all elements by type
         const byType = {};
         elements.forEach(e => {
           const type = e.tags?.amenity || e.tags?.shop || e.tags?.leisure || e.tags?.tourism;
@@ -20974,7 +20960,6 @@
           byType[type].push(e);
         });
 
-        // Count & group
         const counts = {};
         Object.entries(byType).forEach(([t, arr]) => counts[t] = arr.length);
         const groups = {};
@@ -20984,7 +20969,6 @@
           groups[cat.group].push({ type, count, ...cat });
         });
 
-        // Profile tags
         const totalPOIs = Object.values(counts).reduce((a, b) => a + b, 0);
         const profileTags = [];
         if ((counts.university || 0) + (counts.college || 0) > 0) profileTags.push('🎓 Zona universitaria');
@@ -20996,7 +20980,6 @@
         if ((counts.supermarket || 0) > 3) profileTags.push('🛒 Zona comercial');
         if (!profileTags.length) profileTags.push('🏘️ Área residencial tranquila');
 
-        // Save to global state for table rendering
         OSM_STATE.byType = byType;
         OSM_STATE.POI_CATS = POI_CATS;
 
@@ -21038,7 +21021,6 @@
       } catch (e) { el.innerHTML = `<div class="api-card"><div class="api-err">⚠️ Error cargando Overpass API: ${e.message}<br><button class="retry-btn" onclick="retryOSM()"><i data-lucide="rotate-ccw"></i> Reintentar</button></div></div>`; lucide.createIcons(); }
     }
 
-    /* ── OSM SELECT TYPE → show table ── */
     function osmSelectType(type, chipEl) {
       const cat = OSM_STATE.POI_CATS[type];
       const rows = OSM_STATE.byType[type] || [];
@@ -21047,7 +21029,6 @@
       const wrap = document.getElementById(tableId);
       if (!wrap) return;
 
-      // Toggle active chip
       const card = chipEl.closest('.api-card');
       card.querySelectorAll('.poi-chip').forEach(c => c.classList.remove('poi-active'));
       const alreadyOpen = wrap.dataset.type === type && wrap.style.display !== 'none';
@@ -21055,7 +21036,6 @@
       chipEl.classList.add('poi-active');
       wrap.dataset.type = type;
 
-      // Recalc card-body height after table renders
       const cardBody = wrap.closest('.card-body');
 
       OSM_STATE[tableId] = { rows, page: 1, perPage: 10, search: '', type, cat };
@@ -21063,7 +21043,6 @@
       renderOSMTable(tableId, cardBody);
     }
 
-    /* ── RENDER OSM TABLE with pagination ── */
     function renderOSMTable(tableId, cardBody) {
       const wrap = document.getElementById(tableId);
       const state = OSM_STATE[tableId];
@@ -21082,7 +21061,6 @@
       const start = (curPage - 1) * perPage;
       const pageRows = filtered.slice(start, start + perPage);
 
-      // Column config per type
       const colDefs = {
         restaurant: ['Nombre', 'Cocina', 'Dirección', 'Teléfono', 'Web', 'Horario', 'Accesible'],
         bar: ['Nombre', 'Nombre alt.', 'Dirección', 'Teléfono', 'Web', 'Horario'],
@@ -21182,7 +21160,6 @@
       </div>
     </div>`;
 
-      // Expand card-body to fit
       if (cardBody) cardBody.style.maxHeight = 'none';
     }
 
@@ -21218,7 +21195,6 @@
         const j = await r.json();
         const results = j.results || [];
 
-        // Group by species
         const speciesMap = {};
         results.forEach(obs => {
           const key = obs.species || obs.genericName || 'Desconocido';
@@ -21257,18 +21233,15 @@
       } catch (e) { el.innerHTML = err('Error cargando GBIF: ' + e.message); }
     }
 
-    /* ── 11. TRÁNSITO (GTFS Realtime) ── */
+    /* ── 11. TRÁNSITO (GTFS) ── */
     async function loadTransito(d) {
       const el = document.getElementById('panelTransito');
       el.innerHTML = loading();
 
-      // Try 511 SF Bay if applicable, otherwise use transit.land for nearby agencies
       try {
         const r = await fetch(`https://transit.land/api/v2/rest/agencies?lon=${d.lon}&lat=${d.lat}&radius=50000&per_page=10&api_key=`);
-        // transit.land needs an API key, so we'll show nearby agency info differently
         throw new Error('no_key');
       } catch {
-        // Fallback: use Overpass to find transit stops
         try {
           const rad = 0.05;
           const query = `[out:json][timeout:15];
@@ -21349,7 +21322,6 @@
       }
     }
 
-    /* ── TOGGLE COLLAPSIBLE ── */
     function startClock(tz) {
       clearInterval(clockTimer);
       const ianaZone = TZ_IANA[tz] || "America/New_York";
@@ -21364,7 +21336,6 @@
         if (h >= 8 && h < 18) { b.classList.add('green'); bt.textContent = 'Buen momento'; }
         else if ((h >= 7 && h < 8) || (h >= 18 && h < 20)) { b.classList.add('yellow'); bt.textContent = 'Puede llamar'; }
         else { b.classList.add('red'); bt.textContent = 'Evitar llamar'; }
-        // Calculate real current offset for target zone (respects DST)
         const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
         const parts = new Intl.DateTimeFormat('en-US', { timeZone: ianaZone, hour: 'numeric', hour12: false, minute: 'numeric' }).formatToParts(now);
         const tH = parseInt(parts.find(p => p.type === 'hour').value);
@@ -21407,7 +21378,6 @@
     });
 
     /* ══ TIMEZONE MODULE ══ */
-    // Full US states with their IANA timezone(s) and display abbreviations
     const US_STATES = [
       { name: "Alabama",            postal: "AL", tz: "America/Chicago",        abbr: ["CT"],  codes: ["205","251","334","938"] },
       { name: "Alaska",             postal: "AK", tz: "America/Anchorage",      abbr: ["AKT"], codes: ["907"] },
@@ -21462,7 +21432,6 @@
       { name: "Wyoming",            postal: "WY", tz: "America/Denver",         abbr: ["MT"],  codes: ["307"] },
     ];
 
-    // Get real current UTC offset for any IANA zone (handles DST)
     function getRealOffset(ianaZone) {
       const now = new Date();
       const parts = new Intl.DateTimeFormat('en-US', {
@@ -21538,9 +21507,13 @@
         if (s.name === 'Florida') opt.selected = true;
         sel.appendChild(opt);
       });
+
+      // ── FIX: on change, update clock to use the selected state's timezone ──
       sel.addEventListener('change', () => {
-        const selected = document.getElementById('tzBaseState').value;
+        const selected = sel.value;
         document.getElementById('tzMyZone').textContent = selected || '—';
+        const state = US_STATES.find(s => s.name === selected);
+        if (state) tzStartClock(state.tz);
         tzRender();
       });
 
@@ -21566,17 +21539,20 @@
               .classList.toggle('active', v === saved);
           });
         }
-        tzStartClock();
+        // ── FIX: start clock with the initial state's timezone (Florida by default) ──
+        const initState = US_STATES.find(s => s.name === (sel.value || 'Florida'));
+        tzStartClock(initState?.tz);
         tzRender();
         lucide.createIcons();
       });
     }
 
-    function tzStartClock() {
+    // ── FIX: tzStartClock now accepts an optional ianaZone parameter ──
+    function tzStartClock(ianaZone) {
       clearInterval(tzClockInterval);
-      const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const zone = ianaZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
       function tickTz() {
-        document.getElementById('tzMyClock').textContent = getTimeInZone(myTz);
+        document.getElementById('tzMyClock').textContent = getTimeInZone(zone);
       }
       tickTz();
       tzClockInterval = setInterval(tickTz, 1000);
@@ -21611,7 +21587,7 @@
         document.getElementById('tzView' + v.charAt(0).toUpperCase() + v.slice(1))
           .classList.toggle('active', v === view);
       });
-      idbSet('tzView', view); // persist to IndexedDB
+      idbSet('tzView', view);
       tzRender();
     }
 
@@ -21629,7 +21605,6 @@
       const baseState = US_STATES.find(s => s.name === baseStateName);
       const baseOffset = getRealOffset(baseState.tz);
 
-      // Determine which diffs to filter
       let targetDiffs = [];
       if (tzMode === 'exact') {
         const v = parseInt(document.getElementById('tzDiffVal').value) || 0;
@@ -21644,7 +21619,6 @@
         }
       }
 
-      // Group states by diff
       const grouped = {};
       US_STATES.forEach(s => {
         const off = getRealOffset(s.tz);
@@ -21664,7 +21638,6 @@
         return;
       }
 
-      // Show toolbar
       toolbar.style.display = 'flex';
       document.getElementById('tzResultsCount').textContent =
         `${totalCount} estado${totalCount !== 1 ? 's' : ''} · Base: ${baseStateName} (${baseOffset >= 0 ? '+' : ''}${baseOffset}h UTC)`;
@@ -21677,7 +21650,6 @@
 
       let html = '';
 
-      /* ── CARDS VIEW ── */
       if (tzView === 'cards') {
         sortedDiffs.forEach(diff => {
           const states = grouped[diff];
@@ -21709,7 +21681,6 @@
           </div>`;
         });
 
-      /* ── LIST VIEW ── */
       } else if (tzView === 'list') {
         sortedDiffs.forEach(diff => {
           const states = grouped[diff];
@@ -21733,7 +21704,6 @@
           </div>`;
         });
 
-      /* ── TABLE VIEW ── */
       } else if (tzView === 'table') {
         html += `<div class="tz-table-wrap"><table class="tz-table">
           <thead><tr>
@@ -21771,7 +21741,6 @@
       el.innerHTML = html;
       lucide.createIcons();
 
-      // Live clocks
       clearInterval(window._tzCardTimer);
       window._tzCardTimer = setInterval(() => {
         allStates.forEach(s => {
