@@ -1501,6 +1501,321 @@
       height: 13px;
       stroke-width: 2.5;
     }
+    /* ── VIEW SWITCHER ── */
+    .view-switcher {
+      display: flex;
+      gap: 3px;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .view-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+    .view-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .view-btn:not(.active):hover {
+      background: var(--white);
+      color: var(--sub);
+    }
+
+    /* ── TIMEZONE MODULE ── */
+    .tz-module {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: up .3s ease;
+    }
+    .tz-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 24px;
+      box-shadow: 0 1px 5px rgba(0,0,0,.06);
+      flex-wrap: wrap;
+    }
+    .tz-my-zone { display: flex; flex-direction: column; gap: 5px; }
+    .tz-my-label { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: var(--muted2); }
+    .tz-my-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem; font-weight: 900; color: var(--accent); letter-spacing: .04em;
+    }
+    .tz-my-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem; font-weight: 700; color: var(--sub); letter-spacing: .03em;
+    }
+    .tz-arrow { margin: 0 4px; }
+    .tz-select {
+      height: 38px;
+      padding: 0 12px;
+      border: 1.5px solid var(--border2);
+      border-radius: 9px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .83rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--white);
+      outline: none;
+      cursor: pointer;
+      min-width: 220px;
+      transition: border-color .2s;
+    }
+    .tz-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(69,64,221,.1); }
+
+    .tz-controls {
+      display: flex;
+      gap: 14px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 16px 20px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .tz-ctrl-group { display: flex; flex-direction: column; gap: 8px; }
+    .tz-ctrl-label {
+      display: flex; align-items: center; gap: 5px;
+      font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; color: var(--muted);
+    }
+    .tz-mode-btns { display: flex; gap: 4px; }
+    .tz-mode-btn {
+      padding: 6px 16px; border-radius: 8px; border: 1.5px solid var(--border2);
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: .75rem; font-weight: 700;
+      color: var(--muted); background: var(--bg); cursor: pointer; transition: all .15s;
+    }
+    .tz-mode-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .tz-mode-btn:not(.active):hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    .tz-diff-input-wrap { display: flex; align-items: center; gap: 6px; }
+    .tz-diff-btn {
+      width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border2);
+      background: var(--bg); font-size: 1.1rem; font-weight: 700; color: var(--sub);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .15s; line-height: 1;
+    }
+    .tz-diff-btn:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+    .tz-diff-input {
+      width: 64px; height: 32px; text-align: center;
+      border: 1.5px solid var(--border2); border-radius: 8px;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 900;
+      color: var(--accent); background: var(--accent-light); outline: none;
+      transition: border-color .2s;
+    }
+    .tz-diff-input:focus { border-color: var(--accent); }
+
+    .tz-multi-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tz-mchip {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--border2);
+      background: var(--bg); cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif; font-size: .95rem; font-weight: 700;
+      color: var(--muted); transition: all .15s; white-space: nowrap;
+    }
+    .tz-mchip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .tz-mchip.tmc-on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* VIEW TOGGLE */
+    .tz-view-toggle-wrap {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tz-view-label {
+      font-size: .6rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .13em; color: var(--muted2); white-space: nowrap;
+    }
+    .tz-view-toggle {
+      display: flex; gap: 3px;
+      background: var(--bg); border: 1.5px solid var(--border2);
+      border-radius: 9px; padding: 3px;
+    }
+    .tz-vbtn {
+      display: flex; align-items: center; gap: 5px;
+      height: 30px; padding: 0 12px;
+      border-radius: 6px; border: none;
+      background: transparent; cursor: pointer; color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .72rem; font-weight: 700;
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+    .tz-vbtn:hover { background: var(--white); color: var(--sub); }
+    .tz-vbtn.active { background: var(--accent); color: #fff; }
+    .tz-vbtn.active svg { stroke: #fff; }
+
+    /* LIST VIEW */
+    .tz-list-view { display: flex; flex-direction: column; gap: 6px; }
+    .tz-list-item {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 11px; padding: 11px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+      transition: box-shadow .15s, transform .12s;
+      animation: up .25s ease both;
+    }
+    .tz-list-item:hover { box-shadow: 0 3px 10px rgba(0,0,0,.09); transform: translateX(2px); }
+    .tz-list-postal {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem; font-weight: 900; letter-spacing: .06em;
+      color: var(--accent); background: var(--accent-light);
+      border: 1.5px solid var(--bd-iconic); border-radius: 7px;
+      padding: 1px 9px; line-height: 1.3; flex-shrink: 0; min-width: 52px; text-align: center;
+    }
+    .tz-list-name { font-size: .92rem; font-weight: 900; color: var(--text); flex: 1; }
+    .tz-list-sub { font-size: .7rem; font-weight: 600; color: var(--muted); margin-top: 2px; }
+    .tz-list-clock {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.15rem; font-weight: 900; color: var(--accent);
+      letter-spacing: .03em; white-space: nowrap;
+    }
+    .tz-list-diff { flex-shrink: 0; }
+
+    /* TABLE VIEW */
+    .tz-table-wrap {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 13px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .tz-table {
+      width: 100%; border-collapse: collapse; font-size: .8rem;
+    }
+    .tz-table thead tr { background: var(--bg); }
+    .tz-table th {
+      padding: 10px 14px; text-align: left;
+      font-size: .58rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .13em; color: var(--muted);
+      border-bottom: 1.5px solid var(--border); white-space: nowrap;
+    }
+    .tz-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      color: var(--sub); font-weight: 500; vertical-align: middle;
+    }
+    .tz-table tr:last-child td { border-bottom: none; }
+    .tz-table tr:hover td { background: var(--accent-light); }
+    .tz-table td:first-child { font-weight: 800; color: var(--text); }
+    .tz-table tr.tz-even td { background: #f9fafc; }
+    .tz-table tr.tz-even:hover td { background: var(--accent-light); }
+    .tz-tbl-postal {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem; font-weight: 900; letter-spacing: .05em;
+      color: var(--accent); background: var(--accent-light);
+      border: 1.5px solid var(--bd-iconic); border-radius: 6px;
+      padding: 1px 8px; display: inline-block; line-height: 1.3;
+    }
+    .tz-tbl-clock {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem; font-weight: 900; color: var(--accent); letter-spacing: .02em;
+    }
+    .tz-tbl-group-row td {
+      background: var(--bg) !important;
+      font-size: .6rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .13em; color: var(--muted); padding: 7px 14px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    @media(max-width:600px) {
+      .tz-table th:nth-child(4), .tz-table td:nth-child(4),
+      .tz-table th:nth-child(5), .tz-table td:nth-child(5) { display: none; }
+    }
+
+    /* RESULTS */
+    .tz-results-wrap { display: flex; flex-direction: column; gap: 12px; }
+    .tz-empty {
+      padding: 36px; text-align: center; color: var(--muted2);
+      font-size: .85rem; font-weight: 600;
+      background: var(--white); border: 1.5px dashed var(--border2); border-radius: 13px;
+    }
+    .tz-section-title {
+      font-size: .58rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .16em; color: var(--muted); display: flex; align-items: center; gap: 7px;
+      margin-bottom: 2px;
+    }
+    .tz-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+    .tz-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .tz-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      display: flex; flex-direction: column; gap: 6px;
+      animation: up .3s ease both;
+      transition: box-shadow .18s, transform .15s;
+    }
+    .tz-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .tz-card-top { display: flex; align-items: center; justify-content: space-between; }
+    .tz-card-state { font-size: .95rem; font-weight: 900; color: var(--text); }
+    .tz-card-postal {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: 1.5px solid var(--bd-iconic);
+      border-radius: 8px;
+      padding: 1px 10px;
+      line-height: 1.3;
+      flex-shrink: 0;
+    }
+    .tz-card-diff {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .85rem; font-weight: 900; padding: 2px 9px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .tz-card-diff.neg { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bd); }
+    .tz-card-diff.pos { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
+    .tz-card-diff.zero { background: var(--accent-light); color: var(--accent); border: 1px solid var(--bd-iconic); }
+    .tz-card-tz { font-size: .72rem; font-weight: 700; color: var(--muted); }
+    .tz-card-clock {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.25rem; font-weight: 900; color: var(--accent);
+      letter-spacing: .03em; border-top: 1px solid var(--border); padding-top: 7px; margin-top: 2px;
+    }
+    .tz-card-abbrs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
+    .tz-abbr-tag {
+      font-size: .6rem; font-weight: 700; padding: 1px 7px; border-radius: 5px;
+      background: var(--bg); border: 1px solid var(--border2); color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif; letter-spacing: .05em;
+    }
+    .tz-no-results {
+      padding: 28px; text-align: center; color: var(--muted);
+      font-size: .85rem; font-weight: 600; background: var(--white);
+      border: 1.5px solid var(--border); border-radius: 13px;
+    }
+    .tz-summary-bar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 16px; background: var(--accent-light);
+      border: 1.5px solid var(--bd-iconic); border-radius: 10px;
+      font-size: .78rem; font-weight: 700; color: var(--accent);
+    }
+    .tz-summary-bar strong { font-size: .9rem; }
+
+    @media(max-width:720px) {
+      .tz-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .tz-arrow { display: none; }
+      .view-switcher { order: -1; }
+    }
   </style>
 </head>
 
@@ -1509,7 +1824,12 @@
 
     <div class="topbar">
       <div class="brand">Call Brief</div>
-      <div class="search-wrap">
+      <!-- TOP-LEVEL VIEW SWITCHER -->
+      <div class="view-switcher">
+        <button class="view-btn active" data-view="lookup"><i data-lucide="search" style="width:13px;height:13px;stroke-width:2.3;"></i> Búsqueda</button>
+        <button class="view-btn" data-view="zonas"><i data-lucide="clock" style="width:13px;height:13px;stroke-width:2.3;"></i> Zonas Horarias</button>
+      </div>
+      <div class="search-wrap" id="searchWrap">
         <input type="text" id="inp" placeholder="Código de área…" maxlength="3" autocomplete="off" inputmode="numeric">
         <div id="zipMatches" style="display:none; align-items:center; gap:6px; flex-wrap:wrap;"></div>
         <span class="sico"><i data-lucide="search"
@@ -1671,6 +1991,87 @@
       </div>
 
     </div><!-- /result -->
+
+    <!-- ══ VIEW: ZONAS HORARIAS ══ -->
+    <div id="view-zonas" style="display:none;">
+      <div class="tz-module">
+
+        <!-- HEADER INFO -->
+        <div class="tz-header">
+          <div class="tz-my-zone">
+            <div class="tz-my-label">Tu zona horaria</div>
+            <div class="tz-my-val" id="tzMyZone">—</div>
+            <div class="tz-my-time" id="tzMyClock">—</div>
+          </div>
+          <div class="tz-arrow"><i data-lucide="arrow-right-left" style="width:20px;height:20px;stroke:var(--muted2);stroke-width:2;"></i></div>
+          <div class="tz-my-zone">
+            <div class="tz-my-label">Selecciona tu estado base</div>
+            <select id="tzBaseState" class="tz-select">
+              <option value="">— Elige tu estado —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- FILTER CONTROLS -->
+        <div class="tz-controls">
+          <div class="tz-ctrl-group">
+            <label class="tz-ctrl-label"><i data-lucide="sliders-horizontal" style="width:12px;height:12px;stroke-width:2.5;"></i> Modo de filtro</label>
+            <div class="tz-mode-btns">
+              <button class="tz-mode-btn active" id="tzModeExact" onclick="tzSetMode('exact')">Exacto</button>
+              <button class="tz-mode-btn" id="tzModeMulti" onclick="tzSetMode('multi')">Multi-selección</button>
+            </div>
+          </div>
+
+          <!-- EXACT MODE -->
+          <div class="tz-ctrl-group" id="tzExactGroup">
+            <label class="tz-ctrl-label"><i data-lucide="minus-circle" style="width:12px;height:12px;stroke-width:2.5;"></i> Horas de diferencia</label>
+            <div class="tz-diff-input-wrap">
+              <button class="tz-diff-btn" onclick="tzNudge(-1)">−</button>
+              <input type="number" id="tzDiffVal" class="tz-diff-input" value="3" min="0" max="6" step="1" oninput="tzRender()">
+              <button class="tz-diff-btn" onclick="tzNudge(1)">+</button>
+            </div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:5px;">Estados con exactamente <span id="tzDiffLabel">3</span>h menos que tu estado</div>
+          </div>
+
+          <!-- MULTI MODE -->
+          <div class="tz-ctrl-group" id="tzMultiGroup" style="display:none;">
+            <label class="tz-ctrl-label"><i data-lucide="layers" style="width:12px;height:12px;stroke-width:2.5;"></i> Selecciona las diferencias que quieres ver</label>
+            <div class="tz-multi-chips" id="tzMultiChips">
+              <!-- generated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS TOOLBAR -->
+        <div id="tzResultsToolbar" style="display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <div style="font-size:.72rem;font-weight:700;color:var(--muted);" id="tzResultsCount"></div>
+          <div class="tz-view-toggle-wrap">
+            <span class="tz-view-label">Vista</span>
+            <div class="tz-view-toggle">
+              <button class="tz-vbtn active" id="tzViewCards" onclick="tzSetView('cards')">
+                <i data-lucide="layout-grid" style="width:13px;height:13px;stroke-width:2.2;"></i>
+                Tarjetas
+              </button>
+              <button class="tz-vbtn" id="tzViewList" onclick="tzSetView('list')">
+                <i data-lucide="layout-list" style="width:13px;height:13px;stroke-width:2.2;"></i>
+                Lista
+              </button>
+              <button class="tz-vbtn" id="tzViewTable" onclick="tzSetView('table')">
+                <i data-lucide="table" style="width:13px;height:13px;stroke-width:2.2;"></i>
+                Tabla
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="tzResults" class="tz-results-wrap">
+          <div class="tz-empty">Selecciona tu estado base para comenzar</div>
+        </div>
+
+      </div>
+    </div>
+
   </div><!-- /shell -->
 
   <script>
@@ -20126,7 +20527,8 @@
       climate: { label: "Clima", icon: "cloud" },
       culture: { label: "Cultura", icon: "drama" }
     };
-    const TZ_OFF = { ET: -5, CT: -6, MT: -7, PT: -8, AKT: -9, HT: -10 };
+    const TZ_OFF = { ET: -5, CT: -6, MT: -7, PT: -8, AKT: -9, HT: -10 }; // kept for diff display fallback
+    const TZ_IANA = { ET: "America/New_York", CT: "America/Chicago", MT: "America/Denver", PT: "America/Los_Angeles", AKT: "America/Anchorage", HT: "Pacific/Honolulu" };
     const TZ_NAME = { ET: "Eastern", CT: "Central", MT: "Mountain", PT: "Pacific", AKT: "Alaska", HT: "Hawaii" };
     const WMOI = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌧️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 71: "🌨️", 75: "❄️", 80: "🌦️", 81: "🌧️", 95: "⛈️" };
     const WMOD = { 0: "Despejado", 1: "Mayormente despejado", 2: "Parcialmente nublado", 3: "Nublado", 45: "Niebla", 51: "Llovizna ligera", 53: "Llovizna", 55: "Llovizna densa", 61: "Lluvia ligera", 63: "Lluvia moderada", 65: "Lluvia fuerte", 71: "Nieve ligera", 75: "Nieve fuerte", 80: "Chubascos", 81: "Chubascos mod.", 95: "Tormenta" };
@@ -20134,8 +20536,20 @@
     let clockTimer, currentData = null;
     let myOff = null;
     (() => {
-      const m = { "America/New_York": -5, "America/Detroit": -5, "America/Indiana/Indianapolis": -5, "America/Chicago": -6, "America/Denver": -7, "America/Phoenix": -7, "America/Los_Angeles": -8, "America/Anchorage": -9, "Pacific/Honolulu": -10 };
-      myOff = m[Intl.DateTimeFormat().resolvedOptions().timeZone] ?? null;
+      // Use Intl to get the real current offset (respects DST automatically)
+      const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const now = new Date();
+      const utcMs = now.getTime();
+      const localStr = new Intl.DateTimeFormat('en-US', { timeZone: myTz, hour: 'numeric', hour12: false, timeZoneName: 'short' }).format(now);
+      // Calculate offset by comparing UTC parts vs local parts
+      const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: myTz, hour: 'numeric', hour12: false, minute: 'numeric' }).formatToParts(now);
+      const lH = parseInt(parts.find(p => p.type === 'hour').value);
+      const lM = parseInt(parts.find(p => p.type === 'minute').value);
+      let diff = (lH + lM / 60) - utcH;
+      if (diff > 12) diff -= 24;
+      if (diff < -12) diff += 24;
+      myOff = Math.round(diff);
     })();
 
     /* ── TABS ── */
@@ -20938,18 +21352,28 @@
     /* ── TOGGLE COLLAPSIBLE ── */
     function startClock(tz) {
       clearInterval(clockTimer);
-      const off = TZ_OFF[tz];
+      const ianaZone = TZ_IANA[tz] || "America/New_York";
+      const fmt = new Intl.DateTimeFormat('en-US', { timeZone: ianaZone, hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+      const fmtH = new Intl.DateTimeFormat('en-US', { timeZone: ianaZone, hour: 'numeric', hour12: false });
       function tick() {
-        const now = new Date(), utc = now.getTime() + now.getTimezoneOffset() * 60000;
-        const t = new Date(utc + 3600000 * off);
-        const h = t.getHours(), m = t.getMinutes(), s = t.getSeconds();
-        document.getElementById('hClock').textContent = `${h % 12 || 12}:${p(m)}:${p(s)} ${h >= 12 ? 'PM' : 'AM'}`;
+        const now = new Date();
+        document.getElementById('hClock').textContent = fmt.format(now);
+        const h = parseInt(fmtH.format(now));
         const b = document.getElementById('hBadge'), bt = document.getElementById('hBadgeTxt');
         b.className = 'badge';
         if (h >= 8 && h < 18) { b.classList.add('green'); bt.textContent = 'Buen momento'; }
         else if ((h >= 7 && h < 8) || (h >= 18 && h < 20)) { b.classList.add('yellow'); bt.textContent = 'Puede llamar'; }
         else { b.classList.add('red'); bt.textContent = 'Evitar llamar'; }
-        const diff = off - (myOff ?? off);
+        // Calculate real current offset for target zone (respects DST)
+        const utcH = now.getUTCHours() + now.getUTCMinutes() / 60;
+        const parts = new Intl.DateTimeFormat('en-US', { timeZone: ianaZone, hour: 'numeric', hour12: false, minute: 'numeric' }).formatToParts(now);
+        const tH = parseInt(parts.find(p => p.type === 'hour').value);
+        const tM = parseInt(parts.find(p => p.type === 'minute').value);
+        let tzOff = (tH + tM / 60) - utcH;
+        if (tzOff > 12) tzOff -= 24;
+        if (tzOff < -12) tzOff += 24;
+        tzOff = Math.round(tzOff);
+        const diff = tzOff - (myOff ?? tzOff);
         document.getElementById('fDiff').textContent = diff === 0 ? 'Misma zona' : diff > 0 ? `+${diff}h vs ti` : `${diff}h vs ti`;
       }
       tick(); clockTimer = setInterval(tick, 1000);
@@ -20966,6 +21390,394 @@
     function noData(msg) { return `<div class="api-card"><div class="no-data">📭 ${msg}</div></div>`; }
     function showErr(m) { const e = document.getElementById('error'); e.textContent = m; e.classList.add('show'); }
     function p(n) { return String(n).padStart(2, '0'); }
+
+    /* ══ TOP-LEVEL VIEW SWITCHER ══ */
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const v = btn.dataset.view;
+        document.getElementById('searchWrap').style.display = v === 'lookup' ? '' : 'none';
+        document.getElementById('error').style.display = v === 'lookup' ? '' : 'none';
+        document.getElementById('result').style.display = v === 'lookup' ? '' : 'none';
+        document.getElementById('view-zonas').style.display = v === 'zonas' ? '' : 'none';
+        if (v === 'zonas') tzInit();
+        lucide.createIcons();
+      });
+    });
+
+    /* ══ TIMEZONE MODULE ══ */
+    // Full US states with their IANA timezone(s) and display abbreviations
+    const US_STATES = [
+      { name: "Alabama",            postal: "AL", tz: "America/Chicago",        abbr: ["CT"],  codes: ["205","251","334","938"] },
+      { name: "Alaska",             postal: "AK", tz: "America/Anchorage",      abbr: ["AKT"], codes: ["907"] },
+      { name: "Arizona",            postal: "AZ", tz: "America/Phoenix",        abbr: ["MT"],  codes: ["480","520","602","623","928"] },
+      { name: "Arkansas",           postal: "AR", tz: "America/Chicago",        abbr: ["CT"],  codes: ["479","501","870"] },
+      { name: "California",         postal: "CA", tz: "America/Los_Angeles",    abbr: ["PT"],  codes: ["209","213","310","408","415","424","442","510","530","559","562","619","626","650","657","661","669","707","714","747","760","805","818","831","858","909","916","925","949","951"] },
+      { name: "Colorado",           postal: "CO", tz: "America/Denver",         abbr: ["MT"],  codes: ["303","719","720","970"] },
+      { name: "Connecticut",        postal: "CT", tz: "America/New_York",       abbr: ["ET"],  codes: ["203","475","860","959"] },
+      { name: "Delaware",           postal: "DE", tz: "America/New_York",       abbr: ["ET"],  codes: ["302"] },
+      { name: "Florida",            postal: "FL", tz: "America/New_York",       abbr: ["ET"],  codes: ["239","305","321","352","386","407","561","727","754","772","786","813","850","863","904","941","954"] },
+      { name: "Georgia",            postal: "GA", tz: "America/New_York",       abbr: ["ET"],  codes: ["229","404","470","478","678","706","762","770","912"] },
+      { name: "Hawaii",             postal: "HI", tz: "Pacific/Honolulu",       abbr: ["HT"],  codes: ["808"] },
+      { name: "Idaho",              postal: "ID", tz: "America/Boise",          abbr: ["MT"],  codes: ["208","986"] },
+      { name: "Illinois",           postal: "IL", tz: "America/Chicago",        abbr: ["CT"],  codes: ["217","224","309","312","331","618","630","708","773","779","815","847","872"] },
+      { name: "Indiana",            postal: "IN", tz: "America/Indiana/Indianapolis", abbr: ["ET"], codes: ["219","260","317","463","574","765","812","930"] },
+      { name: "Iowa",               postal: "IA", tz: "America/Chicago",        abbr: ["CT"],  codes: ["319","515","563","641","712"] },
+      { name: "Kansas",             postal: "KS", tz: "America/Chicago",        abbr: ["CT"],  codes: ["316","620","785","913"] },
+      { name: "Kentucky",           postal: "KY", tz: "America/New_York",       abbr: ["ET"],  codes: ["270","364","502","606","859"] },
+      { name: "Louisiana",          postal: "LA", tz: "America/Chicago",        abbr: ["CT"],  codes: ["225","318","337","504","985"] },
+      { name: "Maine",              postal: "ME", tz: "America/New_York",       abbr: ["ET"],  codes: ["207"] },
+      { name: "Maryland",           postal: "MD", tz: "America/New_York",       abbr: ["ET"],  codes: ["240","301","410","443","667"] },
+      { name: "Massachusetts",      postal: "MA", tz: "America/New_York",       abbr: ["ET"],  codes: ["339","351","413","508","617","774","781","857","978"] },
+      { name: "Michigan",           postal: "MI", tz: "America/Detroit",        abbr: ["ET"],  codes: ["231","248","269","313","517","586","616","734","810","906","947","989"] },
+      { name: "Minnesota",          postal: "MN", tz: "America/Chicago",        abbr: ["CT"],  codes: ["218","320","507","612","651","763","952"] },
+      { name: "Mississippi",        postal: "MS", tz: "America/Chicago",        abbr: ["CT"],  codes: ["228","601","662","769"] },
+      { name: "Missouri",           postal: "MO", tz: "America/Chicago",        abbr: ["CT"],  codes: ["314","417","573","636","660","816"] },
+      { name: "Montana",            postal: "MT", tz: "America/Denver",         abbr: ["MT"],  codes: ["406"] },
+      { name: "Nebraska",           postal: "NE", tz: "America/Chicago",        abbr: ["CT"],  codes: ["308","402","531"] },
+      { name: "Nevada",             postal: "NV", tz: "America/Los_Angeles",    abbr: ["PT"],  codes: ["702","725","775"] },
+      { name: "New Hampshire",      postal: "NH", tz: "America/New_York",       abbr: ["ET"],  codes: ["603"] },
+      { name: "New Jersey",         postal: "NJ", tz: "America/New_York",       abbr: ["ET"],  codes: ["201","551","609","732","848","856","862","908","973"] },
+      { name: "New Mexico",         postal: "NM", tz: "America/Denver",         abbr: ["MT"],  codes: ["505","575"] },
+      { name: "New York",           postal: "NY", tz: "America/New_York",       abbr: ["ET"],  codes: ["212","315","332","347","516","518","585","607","631","646","680","716","718","838","845","914","917","929","934"] },
+      { name: "North Carolina",     postal: "NC", tz: "America/New_York",       abbr: ["ET"],  codes: ["252","336","704","743","828","910","919","980","984"] },
+      { name: "North Dakota",       postal: "ND", tz: "America/Chicago",        abbr: ["CT"],  codes: ["701"] },
+      { name: "Ohio",               postal: "OH", tz: "America/New_York",       abbr: ["ET"],  codes: ["216","220","234","330","380","419","440","513","567","614","740","937"] },
+      { name: "Oklahoma",           postal: "OK", tz: "America/Chicago",        abbr: ["CT"],  codes: ["405","539","580","918"] },
+      { name: "Oregon",             postal: "OR", tz: "America/Los_Angeles",    abbr: ["PT"],  codes: ["458","503","541","971"] },
+      { name: "Pennsylvania",       postal: "PA", tz: "America/New_York",       abbr: ["ET"],  codes: ["215","223","267","272","412","484","570","610","717","724","814","835","878"] },
+      { name: "Rhode Island",       postal: "RI", tz: "America/New_York",       abbr: ["ET"],  codes: ["401"] },
+      { name: "South Carolina",     postal: "SC", tz: "America/New_York",       abbr: ["ET"],  codes: ["803","843","854","864"] },
+      { name: "South Dakota",       postal: "SD", tz: "America/Chicago",        abbr: ["CT"],  codes: ["605"] },
+      { name: "Tennessee",          postal: "TN", tz: "America/Chicago",        abbr: ["CT"],  codes: ["423","615","629","731","865","901","931"] },
+      { name: "Texas",              postal: "TX", tz: "America/Chicago",        abbr: ["CT"],  codes: ["210","214","254","281","325","346","361","409","430","432","469","512","682","713","726","737","806","817","830","832","903","915","936","940","956","972","979"] },
+      { name: "Utah",               postal: "UT", tz: "America/Denver",         abbr: ["MT"],  codes: ["385","435","801"] },
+      { name: "Vermont",            postal: "VT", tz: "America/New_York",       abbr: ["ET"],  codes: ["802"] },
+      { name: "Virginia",           postal: "VA", tz: "America/New_York",       abbr: ["ET"],  codes: ["276","434","540","571","703","757","804"] },
+      { name: "Washington",         postal: "WA", tz: "America/Los_Angeles",    abbr: ["PT"],  codes: ["206","253","360","425","509","564"] },
+      { name: "Washington D.C.",    postal: "DC", tz: "America/New_York",       abbr: ["ET"],  codes: ["202"] },
+      { name: "West Virginia",      postal: "WV", tz: "America/New_York",       abbr: ["ET"],  codes: ["304","681"] },
+      { name: "Wisconsin",          postal: "WI", tz: "America/Chicago",        abbr: ["CT"],  codes: ["262","414","534","608","715","920"] },
+      { name: "Wyoming",            postal: "WY", tz: "America/Denver",         abbr: ["MT"],  codes: ["307"] },
+    ];
+
+    // Get real current UTC offset for any IANA zone (handles DST)
+    function getRealOffset(ianaZone) {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: ianaZone, hour: 'numeric', hour12: false, minute: 'numeric'
+      }).formatToParts(now);
+      const h = parseInt(parts.find(p => p.type === 'hour').value);
+      const m = parseInt(parts.find(p => p.type === 'minute').value);
+      let diff = (h + m / 60) - (now.getUTCHours() + now.getUTCMinutes() / 60);
+      if (diff > 12) diff -= 24;
+      if (diff < -12) diff += 24;
+      return Math.round(diff);
+    }
+
+    function getTimeInZone(ianaZone) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: ianaZone, hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true
+      }).format(new Date());
+    }
+
+    let tzMode = 'exact';
+    let tzView = 'cards';
+    let tzMultiSelected = new Set([3]);
+    let tzClockInterval = null;
+    let tzInitialized = false;
+
+    /* ── IndexedDB helpers ── */
+    const IDB_NAME = 'callbrief', IDB_STORE = 'prefs', IDB_VER = 1;
+    let _idb = null;
+
+    function idbOpen() {
+      return new Promise((res, rej) => {
+        if (_idb) return res(_idb);
+        const req = indexedDB.open(IDB_NAME, IDB_VER);
+        req.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+        req.onsuccess = e => { _idb = e.target.result; res(_idb); };
+        req.onerror = () => rej(req.error);
+      });
+    }
+
+    async function idbSet(key, value) {
+      try {
+        const db = await idbOpen();
+        return new Promise((res, rej) => {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          tx.objectStore(IDB_STORE).put(value, key);
+          tx.oncomplete = () => res();
+          tx.onerror = () => rej(tx.error);
+        });
+      } catch(e) { console.warn('idbSet error', e); }
+    }
+
+    async function idbGet(key) {
+      try {
+        const db = await idbOpen();
+        return new Promise((res, rej) => {
+          const req = db.transaction(IDB_STORE, 'readonly').objectStore(IDB_STORE).get(key);
+          req.onsuccess = () => res(req.result);
+          req.onerror = () => rej(req.error);
+        });
+      } catch(e) { return null; }
+    }
+
+    function tzInit() {
+      if (tzInitialized) { tzStartClock(); return; }
+      tzInitialized = true;
+
+      // Populate base state select
+      const sel = document.getElementById('tzBaseState');
+      US_STATES.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.name;
+        opt.textContent = s.name;
+        if (s.name === 'Florida') opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', tzRender);
+
+      // Build multi-select chips (0-6 hours)
+      const chips = document.getElementById('tzMultiChips');
+      chips.innerHTML = '';
+      for (let i = 0; i <= 6; i++) {
+        const active = tzMultiSelected.has(i) ? 'tmc-on' : '';
+        chips.innerHTML += `<button class="tz-mchip ${active}" data-h="${i}" onclick="tzToggleMulti(${i},this)">
+          ${i === 0 ? 'Misma hora' : `−${i}h`}
+        </button>`;
+      }
+
+      // Detect user's zone
+      const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const myState = US_STATES.find(s => s.tz === myTz) || US_STATES.find(s => s.name === 'Florida');
+      document.getElementById('tzMyZone').textContent = myState ? myState.name : myTz;
+
+      // Load saved view preference from IndexedDB, then render
+      idbGet('tzView').then(saved => {
+        if (saved && ['cards','list','table'].includes(saved)) {
+          tzView = saved;
+          ['cards','list','table'].forEach(v => {
+            document.getElementById('tzView' + v.charAt(0).toUpperCase() + v.slice(1))
+              .classList.toggle('active', v === saved);
+          });
+        }
+        tzStartClock();
+        tzRender();
+        lucide.createIcons();
+      });
+    }
+
+    function tzStartClock() {
+      clearInterval(tzClockInterval);
+      const myTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      function tickTz() {
+        document.getElementById('tzMyClock').textContent = getTimeInZone(myTz);
+      }
+      tickTz();
+      tzClockInterval = setInterval(tickTz, 1000);
+    }
+
+    function tzSetMode(mode) {
+      tzMode = mode;
+      document.getElementById('tzModeExact').classList.toggle('active', mode === 'exact');
+      document.getElementById('tzModeMulti').classList.toggle('active', mode === 'multi');
+      document.getElementById('tzExactGroup').style.display = mode === 'exact' ? '' : 'none';
+      document.getElementById('tzMultiGroup').style.display = mode === 'multi' ? '' : 'none';
+      tzRender();
+    }
+
+    function tzNudge(delta) {
+      const inp = document.getElementById('tzDiffVal');
+      let v = parseInt(inp.value) + delta;
+      v = Math.max(0, Math.min(6, v));
+      inp.value = v;
+      tzRender();
+    }
+
+    function tzToggleMulti(h, btn) {
+      if (tzMultiSelected.has(h)) { tzMultiSelected.delete(h); btn.classList.remove('tmc-on'); }
+      else { tzMultiSelected.add(h); btn.classList.add('tmc-on'); }
+      tzRender();
+    }
+
+    function tzSetView(view) {
+      tzView = view;
+      ['cards','list','table'].forEach(v => {
+        document.getElementById('tzView' + v.charAt(0).toUpperCase() + v.slice(1))
+          .classList.toggle('active', v === view);
+      });
+      idbSet('tzView', view); // persist to IndexedDB
+      tzRender();
+    }
+
+    function tzRender() {
+      const baseStateName = document.getElementById('tzBaseState').value;
+      const el = document.getElementById('tzResults');
+      const toolbar = document.getElementById('tzResultsToolbar');
+
+      if (!baseStateName) {
+        toolbar.style.display = 'none';
+        el.innerHTML = '<div class="tz-empty">Selecciona tu estado base para comenzar</div>';
+        return;
+      }
+
+      const baseState = US_STATES.find(s => s.name === baseStateName);
+      const baseOffset = getRealOffset(baseState.tz);
+
+      // Determine which diffs to filter
+      let targetDiffs = [];
+      if (tzMode === 'exact') {
+        const v = parseInt(document.getElementById('tzDiffVal').value) || 0;
+        document.getElementById('tzDiffLabel').textContent = v;
+        targetDiffs = [v];
+      } else {
+        targetDiffs = Array.from(tzMultiSelected).sort((a,b) => a - b);
+        if (targetDiffs.length === 0) {
+          toolbar.style.display = 'none';
+          el.innerHTML = '<div class="tz-no-results">Selecciona al menos una diferencia horaria</div>';
+          return;
+        }
+      }
+
+      // Group states by diff
+      const grouped = {};
+      US_STATES.forEach(s => {
+        const off = getRealOffset(s.tz);
+        const diff = baseOffset - off;
+        if (targetDiffs.includes(diff)) {
+          if (!grouped[diff]) grouped[diff] = [];
+          grouped[diff].push({ ...s, offset: off, diff });
+        }
+      });
+
+      const allStates = Object.values(grouped).flat();
+      const totalCount = allStates.length;
+
+      if (totalCount === 0) {
+        toolbar.style.display = 'none';
+        el.innerHTML = `<div class="tz-no-results">Ningún estado tiene esa diferencia horaria con ${baseStateName} en este momento (considerando DST)</div>`;
+        return;
+      }
+
+      // Show toolbar
+      toolbar.style.display = 'flex';
+      document.getElementById('tzResultsCount').textContent =
+        `${totalCount} estado${totalCount !== 1 ? 's' : ''} · Base: ${baseStateName} (${baseOffset >= 0 ? '+' : ''}${baseOffset}h UTC)`;
+
+      const sortedDiffs = Object.keys(grouped).map(Number).sort((a,b) => a - b);
+
+      const diffTag = (diff) => diff === 0
+        ? `<span class="tz-card-diff zero">= Igual</span>`
+        : `<span class="tz-card-diff neg">−${diff}h</span>`;
+
+      let html = '';
+
+      /* ── CARDS VIEW ── */
+      if (tzView === 'cards') {
+        sortedDiffs.forEach(diff => {
+          const states = grouped[diff];
+          const label = diff === 0 ? 'Misma zona horaria' : `${diff}h menos que ${baseStateName}`;
+          html += `<div>
+            <div class="tz-section-title">${label} · ${states.length} estado${states.length !== 1 ? 's' : ''}</div>
+            <div class="tz-cards-grid">
+              ${states.map((s, i) => {
+                const codesStr = s.codes.slice(0, 4).join(', ') + (s.codes.length > 4 ? '…' : '');
+                return `<div class="tz-card" style="animation-delay:${i * 40}ms">
+                  <div class="tz-card-top">
+                    <div>
+                      <div class="tz-card-state">${s.name}</div>
+                      <div class="tz-card-tz">${s.tz.replace('America/', '').replace(/_/g,' ')}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                      <div class="tz-card-postal">${s.postal}</div>
+                      ${diffTag(diff)}
+                    </div>
+                  </div>
+                  <div class="tz-card-clock" id="tzcard-${s.name.replace(/\s/g,'_')}">${getTimeInZone(s.tz)}</div>
+                  <div class="tz-card-abbrs">
+                    ${s.abbr.map(a => `<span class="tz-abbr-tag">${a}</span>`).join('')}
+                    <span class="tz-abbr-tag" style="color:var(--muted2)">${codesStr}</span>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        });
+
+      /* ── LIST VIEW ── */
+      } else if (tzView === 'list') {
+        sortedDiffs.forEach(diff => {
+          const states = grouped[diff];
+          const label = diff === 0 ? 'Misma zona horaria' : `${diff}h menos que ${baseStateName}`;
+          html += `<div>
+            <div class="tz-section-title">${label} · ${states.length} estado${states.length !== 1 ? 's' : ''}</div>
+            <div class="tz-list-view">
+              ${states.map((s, i) => {
+                const codesStr = s.codes.slice(0, 5).join(', ') + (s.codes.length > 5 ? '…' : '');
+                return `<div class="tz-list-item" style="animation-delay:${i * 30}ms">
+                  <div class="tz-list-postal">${s.postal}</div>
+                  <div style="flex:1;min-width:0;">
+                    <div class="tz-list-name">${s.name}</div>
+                    <div class="tz-list-sub">${s.tz.replace('America/', '').replace(/_/g,' ')} · ${s.abbr.join(', ')} · ${codesStr}</div>
+                  </div>
+                  <div class="tz-list-clock" id="tzcard-${s.name.replace(/\s/g,'_')}">${getTimeInZone(s.tz)}</div>
+                  <div class="tz-list-diff">${diffTag(diff)}</div>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>`;
+        });
+
+      /* ── TABLE VIEW ── */
+      } else if (tzView === 'table') {
+        html += `<div class="tz-table-wrap"><table class="tz-table">
+          <thead><tr>
+            <th>Abr.</th>
+            <th>Estado</th>
+            <th>Hora actual</th>
+            <th>Zona horaria</th>
+            <th>Códigos de área</th>
+            <th>Diferencia</th>
+          </tr></thead>
+          <tbody>`;
+
+        let rowIdx = 0;
+        sortedDiffs.forEach(diff => {
+          const states = grouped[diff];
+          const label = diff === 0 ? 'Misma zona horaria' : `${diff}h menos que ${baseStateName}`;
+          html += `<tr class="tz-tbl-group-row"><td colspan="6">${label} · ${states.length} estado${states.length !== 1 ? 's' : ''}</td></tr>`;
+          states.forEach(s => {
+            const codesStr = s.codes.slice(0, 6).join(', ') + (s.codes.length > 6 ? '…' : '');
+            const even = rowIdx++ % 2 === 0 ? 'tz-even' : '';
+            html += `<tr class="${even}">
+              <td><span class="tz-tbl-postal">${s.postal}</span></td>
+              <td>${s.name}</td>
+              <td><span class="tz-tbl-clock" id="tzcard-${s.name.replace(/\s/g,'_')}">${getTimeInZone(s.tz)}</span></td>
+              <td>${s.tz.replace('America/', '').replace(/_/g,' ')}</td>
+              <td style="font-size:.72rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;">${codesStr}</td>
+              <td>${diffTag(diff)}</td>
+            </tr>`;
+          });
+        });
+
+        html += `</tbody></table></div>`;
+      }
+
+      el.innerHTML = html;
+      lucide.createIcons();
+
+      // Live clocks
+      clearInterval(window._tzCardTimer);
+      window._tzCardTimer = setInterval(() => {
+        allStates.forEach(s => {
+          const cel = document.getElementById('tzcard-' + s.name.replace(/\s/g,'_'));
+          if (cel) cel.textContent = getTimeInZone(s.tz);
+        });
+      }, 1000);
+    }
 
     lucide.createIcons();
   </script>
