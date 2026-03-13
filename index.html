@@ -251,7 +251,6 @@
     overflow: hidden;
   }
 
-  /* Animated shimmer sweep on hover */
   .home-card::before {
     content: '';
     position: absolute;
@@ -263,7 +262,6 @@
   }
   .home-card:hover::before { left: 160%; }
 
-  /* Top accent line */
   .home-card::after {
     content: '';
     position: absolute;
@@ -279,7 +277,6 @@
   .home-card.blue::after  { background: linear-gradient(90deg, var(--blue), transparent); }
   .home-card:hover::after { opacity: 1; transform: scaleX(1); }
 
-  /* Inner glow layer */
   .home-card .card-glow {
     position: absolute;
     inset: 0;
@@ -293,14 +290,12 @@
   .home-card.blue .card-glow  { background: radial-gradient(ellipse at 25% 25%, rgba(59,130,246,0.1) 0%, transparent 65%); }
   .home-card:hover .card-glow { opacity: 1; }
 
-  /* Icon bounce */
   .hc-icon {
     display: inline-block;
     transition: transform 0.45s cubic-bezier(.34,1.56,.64,1);
   }
   .home-card:hover .hc-icon { transform: scale(1.18) rotate(-6deg); }
 
-  /* Button slide */
   .hc-btn {
     transition: transform 0.35s cubic-bezier(.22,1,.36,1), filter 0.3s ease;
   }
@@ -366,7 +361,7 @@
     border: none;
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
-    pointer-events: none; /* card handles click */
+    pointer-events: none;
   }
   .home-card.gold .hc-btn { background: linear-gradient(135deg, var(--gold), #c8881a); color: #1a0f00; }
   .home-card.blue .hc-btn  { background: linear-gradient(135deg, var(--blue), #1d4ed8); color: #fff; }
@@ -404,7 +399,6 @@
     .tab-btn span:not(.tab-icon) { display: none; }
   }
 
-  /* Entrance animation */
   .home-inner > * { opacity: 0; transform: translateY(10px); animation: rise 0.5s forwards; }
   .home-eyebrow { animation-delay: 0.05s; }
   .home-title   { animation-delay: 0.12s; }
@@ -455,14 +449,6 @@
 <script>
 // ═══════════════════════════════════════════════════════
 //  ✏️  AGREGA O EDITA TUS HERRAMIENTAS AQUÍ
-//  Campos:
-//    id      → identificador único (sin espacios)
-//    archivo → nombre del archivo html en la misma carpeta
-//    icono   → emoji que aparece en la card y el tab
-//    color   → "gold" | "blue" | "green" | "red" | "purple"
-//    tag     → categoría pequeña arriba del título
-//    titulo  → nombre de la herramienta
-//    desc    → descripción corta
 // ═══════════════════════════════════════════════════════
 var TOOLS = [
   {
@@ -501,16 +487,6 @@ var TOOLS = [
     titulo:  'Control de Polizas y Underwriting',
     desc:    'Herramienta hecha para el Tracking de las polizas y en desarrollo las Compañias disponibles por enfermedades del cliente.'
   }
-  // ── Para agregar una nueva tool, copia uno de los bloques de arriba ──
-  // ,{
-  //   id:      'mi-tool',
-  //   archivo: 'mi-tool.html',
-  //   icono:   '🔧',
-  //   color:   'green',
-  //   tag:     'Mi Categoría',
-  //   titulo:  'Mi Nueva Herramienta',
-  //   desc:    'Descripción de lo que hace esta herramienta.'
-  // }
 ];
 
 // ── Colores disponibles ──
@@ -542,15 +518,14 @@ function injectColorStyles() {
 
 // ── Construir nav tabs ──
 function buildNav() {
-  var nav      = document.getElementById('nav-tabs');
-  var divider  = document.getElementById('nav-divider');
+  var nav = document.getElementById('nav-tabs');
   nav.innerHTML = '';
   TOOLS.forEach(function(tool) {
     var btn = document.createElement('button');
-    btn.className   = 'tab-btn';
-    btn.id          = 'tab-' + tool.id;
-    btn.innerHTML   = '<span class="tab-icon">' + tool.icono + '</span><span>' + tool.titulo + '</span>';
-    btn.onclick     = function() { cargar(tool); };
+    btn.className = 'tab-btn';
+    btn.id        = 'tab-' + tool.id;
+    btn.innerHTML = '<span class="tab-icon">' + tool.icono + '</span><span>' + tool.titulo + '</span>';
+    btn.onclick   = function() { cargar(tool); };
     nav.appendChild(btn);
   });
 }
@@ -577,21 +552,25 @@ function buildCards() {
 // ── Cargar tool en iframe ──
 var tabActivo = null;
 
-function cargar(tool) {
-  var frame  = document.getElementById('frame');
-  var loader = document.getElementById('loader');
+function cargar(tool, sinGuardar) {
+  var frame      = document.getElementById('frame');
+  var loader     = document.getElementById('loader');
   var loaderText = document.getElementById('loader-text');
-  var home   = document.getElementById('home-screen');
+  var home       = document.getElementById('home-screen');
 
   if (tabActivo === tool.id) return;
   tabActivo = tool.id;
+
+  // 💾 Guardar la tool activa en localStorage
+  if (!sinGuardar) {
+    localStorage.setItem('alianz_tool_activa', tool.id);
+  }
 
   home.classList.add('hidden');
   loader.classList.add('show');
   loaderText.textContent = 'Cargando ' + tool.titulo + '...';
   frame.classList.remove('visible');
 
-  // Limpiar todos los tabs activos
   document.querySelectorAll('.tab-btn').forEach(function(b) {
     b.className = 'tab-btn';
   });
@@ -611,6 +590,10 @@ function irHome() {
   var home   = document.getElementById('home-screen');
 
   tabActivo = null;
+
+  // 🗑️ Limpiar tool guardada al ir al inicio manualmente
+  localStorage.removeItem('alianz_tool_activa');
+
   frame.classList.remove('visible');
   loader.classList.remove('show');
   frame.src = 'about:blank';
@@ -621,10 +604,22 @@ function irHome() {
   });
 }
 
+// ── 🔄 Restaurar última tool al recargar la página ──
+function restaurarUltimaTool() {
+  var idGuardado = localStorage.getItem('alianz_tool_activa');
+  if (!idGuardado) return; // si no hay nada guardado, mostrar home normal
+
+  var tool = TOOLS.find(function(t) { return t.id === idGuardado; });
+  if (tool) {
+    cargar(tool, true); // true = no re-guardar en localStorage (ya está guardado)
+  }
+}
+
 // ── Init ──
 injectColorStyles();
 buildNav();
 buildCards();
+restaurarUltimaTool(); // ← restaurar vista al recargar
 </script>
 
 </body>
