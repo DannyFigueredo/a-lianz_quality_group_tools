@@ -256,6 +256,38 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .minor-alert{display:flex;align-items:center;gap:8px;padding:9px 13px;background:#fff8e1;border:1.5px solid var(--warn);border-radius:var(--rs);font-size:.77rem;font-weight:700;color:#92600a;margin-bottom:10px}
 /* INCOME GROUP LABELS */
 .income-group-lbl{font-size:.63rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:2px 0 6px;border-bottom:2px solid var(--border2);margin-bottom:2px}
+.ssn-error{font-size:.7rem;font-weight:600;color:var(--danger);margin-top:4px;min-height:14px}
+/* SSN/ITIN TOOLTIP */
+.ssn-tooltip{
+  display:none;position:absolute;top:calc(100% + 10px);left:0;
+  background:#fffbeb;border:1.5px solid #f59e0b;border-radius:var(--rs);
+  padding:9px 13px;font-size:.76rem;font-weight:500;color:#78350f;
+  white-space:normal;width:280px;z-index:700;
+  box-shadow:0 4px 14px rgba(245,158,11,.2);
+  animation:fadeUp .18s ease;
+  line-height:1.5;
+}
+.ssn-tooltip::after{
+  content:'';position:absolute;bottom:100%;left:18px;
+  border:7px solid transparent;border-bottom-color:#f59e0b;
+}
+.ssn-tooltip::before{
+  content:'';position:absolute;bottom:100%;left:19px;
+  border:6px solid transparent;border-bottom-color:#fffbeb;
+  z-index:1;
+}
+.ssn-tooltip.visible{display:block}
+/* SSN/ITIN RADIO PILL */
+.id-type-selector{display:flex;gap:0;border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden;margin-bottom:6px;flex-shrink:0}
+.id-type-opt{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 10px;cursor:pointer;font-size:.75rem;font-weight:700;color:var(--text2);transition:all .18s;user-select:none;background:var(--surface2)}
+.id-type-opt:not(:last-child){border-right:1.5px solid var(--border)}
+.id-type-opt input[type=radio]{display:none}
+.id-type-opt.selected{background:var(--primary);color:white}
+.id-type-dot{width:7px;height:7px;border-radius:50%;border:2px solid currentColor;transition:background .18s}
+.id-type-opt.selected .id-type-dot{background:white;border-color:white}
+/* APT FIELD */
+.dir-apt-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+.dir-apt-row .apt-field{width:110px}
 /* MED MODE TOGGLE */
 .med-toggle{width:38px;height:20px;border-radius:100px;background:var(--c1);cursor:pointer;position:relative;transition:background .25s;flex-shrink:0;box-shadow:inset 0 1px 3px rgba(0,0,0,.2)}
 .med-toggle.flat{background:var(--border)}
@@ -429,7 +461,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           <div class="card">
             <div class="card-hdr"><div class="card-ico">🏠</div><div class="card-title">Dirección</div></div>
             <div class="grid c2" style="margin-bottom:12px">
-              <div class="field" style="grid-column:1/-1"><label>DIRECCIÓN</label><input type="text" id="direccion" placeholder="Empiece a escribir..." autocomplete="off"><div class="ac-list" id="ac-dir"></div></div>
+              <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 130px;gap:10px">
+                <div class="field">
+                  <label>DIRECCIÓN</label>
+                  <div style="position:relative"><input type="text" id="direccion" placeholder="Empiece a escribir..." autocomplete="off"><div class="ac-list" id="ac-dir"></div></div>
+                </div>
+                <div class="field">
+                  <label>APT / SUITE</label>
+                  <input type="text" id="apt" placeholder="Apt, Suite...">
+                </div>
+              </div>
               <div class="field"><label>CIUDAD</label><input type="text" id="ciudad" placeholder="Ciudad"></div>
               <div class="field"><label>ESTADO</label><select id="estado_dir"><option value="">— Seleccionar —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
             </div>
@@ -548,20 +589,72 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           <div class="card">
             <div class="card-hdr"><div class="card-ico">📄</div><div class="card-title">Estatus Migratorio</div></div>
             <div class="grid c3" style="margin-bottom:12px">
-              <div class="field"><label>CIUDADANO</label><select id="ciudadano"><option value="">—</option><option>Sí</option><option>No</option></select></div>
-              <div class="field"><label>RESIDENTE</label><select id="residente"><option value="">—</option><option>Sí</option><option>No</option></select></div>
-              <div class="field"><label># RESIDENTE</label><input type="text" id="res_num" placeholder="#"></div>
+              <div class="field" style="grid-column:span 2">
+                <label>ESTATUS MIGRATORIO</label>
+                <div class="id-type-selector">
+                  <label class="id-type-opt" id="opt-mig-ciu" onclick="selectMigStatus('Ciudadano')">
+                    <input type="radio" name="mig_status" value="Ciudadano"><span class="id-type-dot"></span> Ciudadano
+                  </label>
+                  <label class="id-type-opt" id="opt-mig-res" onclick="selectMigStatus('Residente')">
+                    <input type="radio" name="mig_status" value="Residente"><span class="id-type-dot"></span> Residente
+                  </label>
+                  <label class="id-type-opt" id="opt-mig-nin" onclick="selectMigStatus('Ninguno')">
+                    <input type="radio" name="mig_status" value="Ninguno"><span class="id-type-dot"></span> Ninguno
+                  </label>
+                </div>
+                <input type="hidden" id="ciudadano" value="">
+                <input type="hidden" id="residente" value="">
+                <input type="hidden" id="mig_status" value="">
+              </div>
+              <div class="field" style="position:relative">
+                <label id="res_num_label"># RESIDENTE</label>
+                <input type="text" id="res_num" placeholder="#" autocomplete="off"
+                  onfocus="showResTooltip()" oninput="clearResError()" onblur="hideResTooltip();validateResNum()">
+                <div class="ssn-tooltip" id="res-tooltip" style="width:260px">
+                  📋 <strong>Identificaciones válidas:</strong><br>
+                  Pasaporte · ID Consular · Visa · Visa de Trabajo · # de Licencia · State ID
+                </div>
+                <div class="ssn-error" id="res-error"></div>
+              </div>
               <div class="field"><label>VENC. RESIDENCIA</label><input type="text" class="date-inp" id="res_exp" placeholder="mm/dd/yyyy" maxlength="10"></div>
               <div class="field"><label>PERMISO TRABAJO</label><select id="permiso"><option value="">—</option><option>Sí</option><option>No</option></select></div>
               <div class="field"><label># PERMISO</label><input type="text" id="permiso_num" placeholder="#"></div>
             </div>
             <div class="grid c2">
-              <div class="field"><label>SSN / ITIN #</label><input type="text" id="ssn" placeholder="000-00-0000"></div>
-              <div class="field"></div>
-              <div class="field"><label>LICENCIA #</label><input type="text" id="lic_num" placeholder="Número"></div>
-              <div class="field"><label>ESTADO DE LA LICENCIA</label><select id="lic_estado"><option value="">— Estado —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
+              <div class="field" style="grid-column:span 2">
+                <label>NÚMERO DE IDENTIFICACIÓN</label>
+                <div class="id-type-selector">
+                  <label class="id-type-opt selected" id="opt-ssn" onclick="selectIdType('ssn')">
+                    <input type="radio" name="id_tipo" value="SSN" id="radio-ssn" checked>
+                    <span class="id-type-dot"></span> SSN
+                  </label>
+                  <label class="id-type-opt" id="opt-itin" onclick="selectIdType('itin')">
+                    <input type="radio" name="id_tipo" value="ITIN" id="radio-itin">
+                    <span class="id-type-dot"></span> ITIN
+                  </label>
+                </div>
+                <div style="position:relative">
+                  <input type="password" id="ssn" placeholder="000000000" autocomplete="off" maxlength="9" onfocus="showSsnTooltip()" onblur="hideSsnTooltip();validateSSN()" oninput="sanitizeSSN()">
+                  <div class="ssn-error" id="ssn-error"></div>
+                  <div class="ssn-tooltip" id="ssn-tooltip">⚠️ Verifica que hayas seleccionado el tipo de identificación correcto: <strong>SSN</strong> o <strong>ITIN</strong></div>
+                </div>
+              </div>
+              <input type="hidden" id="id_tipo" value="SSN">
+            </div>
+            <hr class="divider">
+            <div class="grid c3" style="margin-bottom:10px">
+              <div class="field">
+                <label>LICENCIA #</label>
+                <input type="text" id="lic_num" placeholder="Número" oninput="clearLicError()" onblur="validateLic()">
+                <div class="ssn-error" id="lic-error"></div>
+              </div>
+              <div class="field"><label>ESTADO DE LA LICENCIA</label><select id="lic_estado" onchange="validateLic()"><option value="">— Estado —</option><option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option><option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option><option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option><option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option><option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option><option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option><option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option><option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option><option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option><option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option><option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option><option>Vermont</option><option>Virginia</option><option>Washington</option><option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option></select></div>
+              <div class="field"><label>VENC. LICENCIA</label><input type="text" class="date-inp" id="lic_exp" placeholder="mm/dd/yyyy" maxlength="10"></div>
+            </div>
+            <div class="grid c3">
               <div class="field"><label># ID / PASAPORTE</label><input type="text" id="id_num" placeholder="Número"></div>
-              <div class="field"><label>PAÍS (ID)</label><input type="text" id="id_pais" placeholder="País emisor"></div>
+              <div class="field"><label>PAÍS EMISOR</label><input type="text" id="id_pais" placeholder="País emisor"></div>
+              <div class="field"><label>VENC. PASAPORTE</label><input type="text" class="date-inp" id="pasaporte_exp" placeholder="mm/dd/yyyy" maxlength="10"></div>
             </div>
           </div>
           <div class="nav-btns"><button class="btn btn-ghost" onclick="goTo(2)">← Anterior</button><button class="btn btn-primary" onclick="goTo(4)">Siguiente →</button></div>
@@ -740,7 +833,7 @@ var MED_GROUPS=[
   {label:'🫁 Respiratorio / Autoinmune',conds:[7,8,10,11,12]},
   {label:'⚕️ Otros',conds:[17,18,19]}
 ];
-var medGrouped=false; // default: grouped by category
+var medGrouped=true; // default: grouped by category
 function toggleMedMode(){
   medGrouped=!medGrouped;
   var tog=document.getElementById('med-toggle');
@@ -822,6 +915,209 @@ function calcHogarMensual(fromId){var a=parseMoney(document.getElementById('ingr
 function calcGastoAnual(fromId){var m=parseMoney(document.getElementById('gastos').value);var el=document.getElementById('gastos_anual');if(m&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(m*12);}
 function calcGastoMensual(fromId){var a=parseMoney(document.getElementById('gastos_anual').value);var el=document.getElementById('gastos');if(a&&el&&document.activeElement===document.getElementById(fromId))el.value=fmtMoney(a/12);}
 // Auto-fill license state from datos generales state when user enters sec-3
+// ── LICENSE FORMAT VALIDATION ────────────────────────────────────────────────
+var LIC_FORMATS={
+  'Alabama':        {re:/^[0-9]{1,8}$/,           hint:'1–8 dígitos'},
+  'Alaska':         {re:/^[0-9]{1,7}$/,            hint:'1–7 dígitos'},
+  'Arizona':        {re:/^[A-Z][0-9]{8}$|^[0-9]{9}$/,hint:'1 letra + 8 dígitos, o 9 dígitos'},
+  'Arkansas':       {re:/^[0-9]{4,9}$/,            hint:'4–9 dígitos'},
+  'California':     {re:/^[A-Z][0-9]{7}$/,         hint:'1 letra + 7 dígitos'},
+  'Colorado':       {re:/^[0-9]{9}$|^[A-Z][0-9]{3,6}$|^[A-Z]{2}[0-9]{2,5}$/,hint:'9 dígitos o letra(s) + dígitos'},
+  'Connecticut':    {re:/^[0-9]{9}$/,              hint:'9 dígitos'},
+  'Delaware':       {re:/^[0-9]{1,7}$/,            hint:'1–7 dígitos'},
+  'Florida':        {re:/^[A-Z][0-9]{12}$/,        hint:'1 letra + 12 dígitos'},
+  'Georgia':        {re:/^[0-9]{7,9}$/,            hint:'7–9 dígitos'},
+  'Hawaii':         {re:/^H[0-9]{8}$|^[0-9]{9}$/, hint:'H + 8 dígitos o 9 dígitos'},
+  'Idaho':          {re:/^[A-Z]{2}[0-9]{6}[A-Z]$|^[0-9]{9}$/,hint:'2 letras + 6 dígitos + 1 letra, o 9 dígitos'},
+  'Illinois':       {re:/^[A-Z][0-9]{11,12}$/,     hint:'1 letra + 11–12 dígitos'},
+  'Indiana':        {re:/^[A-Z][0-9]{9}$|^[0-9]{9,10}$/,hint:'1 letra + 9 dígitos o 9–10 dígitos'},
+  'Iowa':           {re:/^[0-9]{3}[A-Z]{2}[0-9]{4}$|^[0-9]{9}$/,hint:'3 dígitos + 2 letras + 4 dígitos'},
+  'Kansas':         {re:/^[A-Z][0-9]{8}$|^[0-9]{9}$/,hint:'1 letra + 8 dígitos o 9 dígitos'},
+  'Kentucky':       {re:/^[A-Z][0-9]{8,9}$/,       hint:'1 letra + 8–9 dígitos'},
+  'Louisiana':      {re:/^[0-9]{1,9}$/,            hint:'1–9 dígitos'},
+  'Maine':          {re:/^[0-9]{7}$|^[0-9]{7}[A-Z]$/,hint:'7 dígitos (+ letra opcional)'},
+  'Maryland':       {re:/^[A-Z][0-9]{12}$/,        hint:'1 letra + 12 dígitos'},
+  'Massachusetts':  {re:/^S[0-9]{8}$|^[0-9]{9}$/,  hint:'S + 8 dígitos o 9 dígitos'},
+  'Michigan':       {re:/^[A-Z][0-9]{10}$|^[A-Z][0-9]{12}$/,hint:'1 letra + 10 o 12 dígitos'},
+  'Minnesota':      {re:/^[A-Z][0-9]{12}$/,        hint:'1 letra + 12 dígitos'},
+  'Mississippi':    {re:/^[0-9]{9}$/,              hint:'9 dígitos'},
+  'Missouri':       {re:/^[A-Z][0-9]{5,9}$|^[0-9]{9}$|^[0-9]{8}[A-Z]{2}$/,hint:'1 letra + 5–9 dígitos o 9 dígitos'},
+  'Montana':        {re:/^[0-9]{9}$|^[A-Z]{2}[0-9]{8}[A-Z]$/,hint:'9 dígitos o 2 letras + 8 dígitos + letra'},
+  'Nebraska':       {re:/^[A-Z][0-9]{6,8}$/,       hint:'1 letra + 6–8 dígitos'},
+  'Nevada':         {re:/^[0-9]{9,10}$|^[0-9]{12}$/,hint:'9–10 o 12 dígitos'},
+  'New Hampshire':  {re:/^[0-9]{2}[A-Z]{3}[0-9]{5}$/,hint:'2 dígitos + 3 letras + 5 dígitos'},
+  'New Jersey':     {re:/^[A-Z][0-9]{14}$/,        hint:'1 letra + 14 dígitos'},
+  'New Mexico':     {re:/^[0-9]{8,9}$/,            hint:'8–9 dígitos'},
+  'New York':       {re:/^[A-Z][0-9]{7}$|^[A-Z][0-9]{18}$|^[0-9]{8,9}$|^[0-9]{16}$/,hint:'Varios formatos válidos'},
+  'North Carolina': {re:/^[0-9]{1,12}$/,           hint:'1–12 dígitos'},
+  'North Dakota':   {re:/^[A-Z]{3}[0-9]{6}$|^[0-9]{9}$/,hint:'3 letras + 6 dígitos o 9 dígitos'},
+  'Ohio':           {re:/^[A-Z]{2}[0-9]{6}$|^[A-Z][0-9]{4,8}$/,hint:'2 letras + 6 dígitos o letra + 4–8 dígitos'},
+  'Oklahoma':       {re:/^[A-Z][0-9]{9}$|^[0-9]{9}$/,hint:'1 letra + 9 dígitos o 9 dígitos'},
+  'Oregon':         {re:/^[0-9]{1,9}$/,            hint:'1–9 dígitos'},
+  'Pennsylvania':   {re:/^[0-9]{8}$/,              hint:'8 dígitos'},
+  'Rhode Island':   {re:/^[0-9]{7}$|^V[0-9]{6}$/,  hint:'7 dígitos o V + 6 dígitos'},
+  'South Carolina': {re:/^[0-9]{5,11}$/,           hint:'5–11 dígitos'},
+  'South Dakota':   {re:/^[0-9]{6,10}$/,           hint:'6–10 dígitos'},
+  'Tennessee':      {re:/^[0-9]{7,9}$/,            hint:'7–9 dígitos'},
+  'Texas':          {re:/^[0-9]{7,8}$/,            hint:'7–8 dígitos'},
+  'Utah':           {re:/^[0-9]{4,10}$/,           hint:'4–10 dígitos'},
+  'Vermont':        {re:/^[0-9]{8}$|^[0-9]{7}[A-Z]$/,hint:'8 dígitos o 7 dígitos + letra'},
+  'Virginia':       {re:/^[A-Z][0-9]{8,11}$|^[0-9]{9}$/,hint:'1 letra + 8–11 dígitos o 9 dígitos'},
+  'Washington':     {re:/^[A-Z]{1,7}[0-9]{3}[A-Z0-9]{2}[0-9]$/,hint:'Letras + dígitos (formato WA)'},
+  'West Virginia':  {re:/^[A-Z]{1,2}[0-9]{5,6}$/,  hint:'1–2 letras + 5–6 dígitos'},
+  'Wisconsin':      {re:/^[A-Z][0-9]{13}$/,        hint:'1 letra + 13 dígitos'},
+  'Wyoming':        {re:/^[0-9]{9,10}$/,           hint:'9–10 dígitos'}
+};
+function clearLicError(){
+  var err=document.getElementById('lic-error');
+  var inp=document.getElementById('lic_num');
+  if(err)err.textContent='';
+  if(inp)inp.style.borderColor='';
+}
+function validateLic(){
+  var inp=document.getElementById('lic_num');
+  var sel=document.getElementById('lic_estado');
+  var err=document.getElementById('lic-error');
+  if(!inp||!sel||!err)return;
+  var num=inp.value.trim().toUpperCase();
+  var state=sel.value;
+  if(!num||!state){err.textContent='';inp.style.borderColor='';return;}
+  var fmt=LIC_FORMATS[state];
+  if(!fmt){err.textContent='';inp.style.borderColor='';return;}
+  if(fmt.re.test(num)){
+    err.textContent='';
+    inp.style.borderColor='var(--accent)';
+  } else {
+    err.textContent='⚠ Formato inválido para '+state+'. Esperado: '+fmt.hint;
+    inp.style.borderColor='var(--danger)';
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+function sanitizeSSN(){
+  var el=document.getElementById('ssn');
+  if(!el)return;
+  // Only digits allowed, max 9
+  var clean=el.value.replace(/[^0-9]/g,'');
+  if(clean.length>9)clean=clean.slice(0,9);
+  if(el.value!==clean)el.value=clean;
+  var err=document.getElementById('ssn-error');
+  if(err)err.textContent='';
+  el.style.borderColor='';
+}
+function validateSSN(){
+  var el=document.getElementById('ssn');
+  var err=document.getElementById('ssn-error');
+  if(!el||!err)return;
+  var val=el.value.trim();
+  if(!val){err.textContent='';el.style.borderColor='';return;}
+  if(val.length!==9){
+    err.textContent='⚠ Debe contener exactamente 9 dígitos';
+    el.style.borderColor='var(--danger)';
+  } else {
+    err.textContent='';
+    el.style.borderColor='var(--accent)';
+  }
+}
+function showSsnTooltip(){var t=document.getElementById('ssn-tooltip');if(t)t.classList.add('visible');}
+function hideSsnTooltip(){var t=document.getElementById('ssn-tooltip');if(t)t.classList.remove('visible');}
+var RADIO_PILL_MAP={
+  'ciudadano': {si:'opt-ciu-si', no:'opt-ciu-no'},
+  'residente': {si:'opt-res-si', no:'opt-res-no'}
+};
+// ── RESIDENT NUMBER VALIDATION ───────────────────────────────────────────────
+// US Green Card (Permanent Resident Card): A + 9 digits (e.g. A123456789)
+// Also accepts older formats: 3 letters + 10 digits
+var RES_NUM_FORMAT=/^A[0-9]{9}$|^[A-Z]{3}[0-9]{10}$/;
+function clearResError(){
+  var err=document.getElementById('res-error');
+  var inp=document.getElementById('res_num');
+  if(err)err.textContent='';
+  if(inp)inp.style.borderColor='';
+}
+function validateResNum(){
+  var mig=document.getElementById('mig_status');
+  var inp=document.getElementById('res_num');
+  var err=document.getElementById('res-error');
+  if(!mig||!inp||!err)return;
+  var val=inp.value.trim().toUpperCase();
+  // Only validate format when Residente is selected
+  if(mig.value==='Residente'){
+    if(!val){
+      err.textContent='⚠ El número de residente es requerido';
+      inp.style.borderColor='var(--danger)';
+      return;
+    }
+    if(!RES_NUM_FORMAT.test(val)){
+      err.textContent='⚠ Formato inválido. Esperado: A + 9 dígitos (ej. A123456789)';
+      inp.style.borderColor='var(--danger)';
+    } else {
+      err.textContent='';
+      inp.style.borderColor='var(--accent)';
+      inp.value=val; // normalize to uppercase
+    }
+  } else {
+    err.textContent='';
+    inp.style.borderColor='';
+  }
+}
+function showResTooltip(){
+  var mig=document.getElementById('mig_status');
+  if(mig&&mig.value==='Ninguno'){
+    var t=document.getElementById('res-tooltip');if(t)t.classList.add('visible');
+  }
+}
+function hideResTooltip(){var t=document.getElementById('res-tooltip');if(t)t.classList.remove('visible');}
+function selectMigStatus(val){
+  ['opt-mig-ciu','opt-mig-res','opt-mig-nin'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.classList.remove('selected');
+  });
+  var map={'Ciudadano':'opt-mig-ciu','Residente':'opt-mig-res','Ninguno':'opt-mig-nin'};
+  var el=document.getElementById(map[val]);if(el)el.classList.add('selected');
+  document.getElementById('mig_status').value=val;
+  document.getElementById('ciudadano').value=(val==='Ciudadano')?'Sí':'No';
+  document.getElementById('residente').value=(val==='Residente')?'Sí':'No';
+  // Update label and placeholder
+  var lbl=document.getElementById('res_num_label');
+  var inp=document.getElementById('res_num');
+  if(val==='Ninguno'){
+    if(lbl)lbl.textContent='NÚMERO DE IDENTIFICACIÓN';
+    if(inp)inp.placeholder='Pasaporte, ID Consular, State ID...';
+  } else if(val==='Residente'){
+    if(lbl)lbl.textContent='# RESIDENTE';
+    if(inp)inp.placeholder='#';
+  } else {
+    if(lbl)lbl.textContent='# RESIDENTE';
+    if(inp)inp.placeholder='#';
+  }
+  // Hide tooltip if no longer Ninguno
+  if(val!=='Ninguno')hideResTooltip();
+  // Re-validate res_num if needed
+  var inp=document.getElementById('res_num');
+  if(inp&&inp.value)validateResNum();
+}
+function selectRadioPill(field, val){
+  var m=RADIO_PILL_MAP[field]; if(!m)return;
+  var isSi=val==='Sí';
+  var siEl=document.getElementById(m.si);
+  var noEl=document.getElementById(m.no);
+  if(siEl)siEl.classList.toggle('selected', isSi);
+  if(noEl)noEl.classList.toggle('selected', !isSi);
+  var hid=document.getElementById(field);
+  if(hid)hid.value=val;
+}
+function restoreRadioPill(field, val){
+  if(!val)return;
+  selectRadioPill(field, val);
+}
+function selectIdType(type){
+  var isSSN = type === 'ssn';
+  document.getElementById('radio-ssn').checked = isSSN;
+  document.getElementById('radio-itin').checked = !isSSN;
+  document.getElementById('opt-ssn').classList.toggle('selected', isSSN);
+  document.getElementById('opt-itin').classList.toggle('selected', !isSSN);
+  document.getElementById('id_tipo').value = isSSN ? 'SSN' : 'ITIN';
+  document.getElementById('ssn').placeholder = isSSN ? '000000000' : '900000000';
+}
 function syncLicState(){var edo=document.getElementById('estado_dir');var lic=document.getElementById('lic_estado');if(edo&&lic&&edo.value&&!lic.value)lic.value=edo.value;}
 function handleParent(which){
   var sel=document.getElementById(which+'_vive');
@@ -1078,7 +1374,7 @@ function openDB(){return new Promise(function(res,rej){var r=indexedDB.open(DB_N
 function getAllEls(){return Array.from(document.querySelectorAll('input[id],select[id],textarea[id]'));}
 function collectForm(){var d={id:KEY,customConds:customConds,theme:curTheme,bpC:bpC,bcC:bcC};getAllEls().forEach(function(el){d[el.id]=el.type==='checkbox'?el.checked:el.value;});return d;}
 // Date IDs that need mm/dd/yyyy format
-var DATE_IDS=['fecha','dob','fuma_desde','owner_dob','doc_visita','dui_fecha','res_exp','pago1','pago2'];
+var DATE_IDS=['fecha','dob','fuma_desde','owner_dob','doc_visita','dui_fecha','res_exp','pago1','pago2','lic_exp','pasaporte_exp'];
 function normDateVal(val){
   if(!val)return val;
   // Convert yyyy-mm-dd → mm/dd/yyyy
@@ -1161,11 +1457,11 @@ function collectClientData(){
     pol_config:{tipo:v('pol_tipo'),aseguradora:v('pol_aseguradora'),monto:v('pol_monto'),cobertura:v('pol_cobertura'),config:v('pol_config'),death_benefit:v('pol_death_benefit'),notas:v('pol_notas')},
     personal:{nombre:v('nombre'),email:v('email'),telefono:v('telefono'),dob:v('dob'),edad:v('edad'),genero:v('genero')},
     propietario:{activo:ownerChk&&ownerChk.checked?'Si':'',nombre:v('owner_nombre'),relacion:v('owner_relacion'),dob:v('owner_dob'),ssn:v('owner_ssn'),lic:v('owner_lic'),dir:v('owner_dir'),ciudad:v('owner_ciudad'),estado:v('owner_estado')},
-    direccion:{direccion:v('direccion'),ciudad:v('ciudad'),estado:v('estado_dir'),cp:v('cp'),nacimiento:v('nacimiento'),tiempo_pais:v('tiempo_pais')},
+    direccion:{direccion:v('direccion'),apt:v('apt'),ciudad:v('ciudad'),estado:v('estado_dir'),cp:v('cp'),nacimiento:v('nacimiento'),tiempo_pais:v('tiempo_pais')},
     medidas:{peso:v('peso'),altura:v('altura'),fumador:v('fumador'),cigarros:v('cigarros'),fuma_desde:v('fuma_desde')},
     medico:{condiciones:getMedRows()},
     doctor:{nombre:v('doc_nombre'),visita:v('doc_visita'),telefono:v('doc_tel'),direccion:v('doc_dir'),padre_vive:v('padre_vive'),padre_edad:v('padre_edad'),padre_causa:v('padre_causa'),madre_vive:v('madre_vive'),madre_edad:v('madre_edad'),madre_causa:v('madre_causa')},
-    legal:{criminal:v('criminal'),criminal_det:v('criminal_det'),alcohol:v('alcohol'),dui:v('dui'),dui_fecha:v('dui_fecha'),lic_suspendida:v('lic_suspendida'),corte:v('corte'),bancarrota:v('bancarrota'),ciudadano:v('ciudadano'),residente:v('residente'),res_num:v('res_num'),res_exp:v('res_exp'),permiso:v('permiso'),permiso_num:v('permiso_num'),ssn:v('ssn'),lic_estado:v('lic_estado'),lic_num:v('lic_num'),id_num:v('id_num'),id_pais:v('id_pais')},
+    legal:{criminal:v('criminal'),criminal_det:v('criminal_det'),alcohol:v('alcohol'),dui:v('dui'),dui_fecha:v('dui_fecha'),lic_suspendida:v('lic_suspendida'),corte:v('corte'),bancarrota:v('bancarrota'),ciudadano:v('ciudadano'),residente:v('residente'),mig_status:v('mig_status'),res_num:v('res_num'),res_exp:v('res_exp'),permiso:v('permiso'),permiso_num:v('permiso_num'),id_tipo:v('id_tipo'),ssn:v('ssn'),lic_estado:v('lic_estado'),lic_num:v('lic_num'),lic_exp:v('lic_exp'),id_num:v('id_num'),id_pais:v('id_pais'),pasaporte_exp:v('pasaporte_exp')},
     empleo:{trabaja:v('trabaja'),jubilado:v('jubilado'),deshabilitado:v('deshabilitado'),empleador:v('empleador'),ocupacion:v('ocupacion'),tiempo_empresa:v('tiempo_empresa'),ingreso:v('ingreso'),ingreso_anual:v('ingreso_anual'),ingreso_hogar:v('ingreso_hogar'),ingreso_hogar_anual:v('ingreso_hogar_anual'),gastos:v('gastos'),gastos_anual:v('gastos_anual'),casa_tipo:v('casa_tipo'),hipoteca:v('hipoteca'),anos_hip:v('anos_hip'),personas_casa:v('personas_casa'),estado_civil:v('estado_civil'),hijos:v('hijos')},
     beneficiarios_p:getBeneData('p'),
     beneficiarios_c:getBeneData('c'),
@@ -1293,10 +1589,13 @@ function loadClientToForm(idx){
   if(c.pol_config){setV('pol_tipo',c.pol_config.tipo);setV('pol_aseguradora',c.pol_config.aseguradora);setV('pol_monto',c.pol_config.monto);setV('pol_cobertura',c.pol_config.cobertura);setV('pol_config',c.pol_config.config);setV('pol_death_benefit',c.pol_config.death_benefit);setV('pol_notas',c.pol_config.notas);}
   if(c.personal){setV('nombre',c.personal.nombre);setV('email',c.personal.email);setV('telefono',c.personal.telefono);setV('dob',c.personal.dob);setV('edad',c.personal.edad);setV('genero',c.personal.genero);checkMinor();}
   if(c.propietario&&c.propietario.activo==='Si'){var oc=document.getElementById('tiene_propietario');if(oc){oc.checked=true;toggleOwner();}setV('owner_nombre',c.propietario.nombre);setV('owner_relacion',c.propietario.relacion);setV('owner_dob',c.propietario.dob);setV('owner_ssn',c.propietario.ssn);setV('owner_lic',c.propietario.lic);setV('owner_dir',c.propietario.dir);setV('owner_ciudad',c.propietario.ciudad);setV('owner_estado',c.propietario.estado);}
-  if(c.direccion){setV('direccion',c.direccion.direccion);setV('ciudad',c.direccion.ciudad);setV('estado_dir',c.direccion.estado);setV('cp',c.direccion.cp);setV('nacimiento',c.direccion.nacimiento);setV('tiempo_pais',c.direccion.tiempo_pais);}
+  if(c.direccion){setV('direccion',c.direccion.direccion);setV('apt',c.direccion.apt);setV('ciudad',c.direccion.ciudad);setV('estado_dir',c.direccion.estado);setV('cp',c.direccion.cp);setV('nacimiento',c.direccion.nacimiento);setV('tiempo_pais',c.direccion.tiempo_pais);}
   if(c.medidas){setV('peso',c.medidas.peso);setV('altura',c.medidas.altura);setV('fumador',c.medidas.fumador);setV('cigarros',c.medidas.cigarros);setV('fuma_desde',c.medidas.fuma_desde);}
   if(c.doctor){setV('doc_nombre',c.doctor.nombre);setV('doc_visita',c.doctor.visita);setV('doc_tel',c.doctor.telefono);setV('doc_dir',c.doctor.direccion);setV('padre_vive',c.doctor.padre_vive);setV('padre_edad',c.doctor.padre_edad);setV('padre_causa',c.doctor.padre_causa);setV('madre_vive',c.doctor.madre_vive);setV('madre_edad',c.doctor.madre_edad);setV('madre_causa',c.doctor.madre_causa);handleParent('padre');handleParent('madre');}
-  if(c.legal){Object.entries(c.legal).forEach(function(e){setV(e[0],e[1]);});}
+  if(c.legal){Object.entries(c.legal).forEach(function(e){setV(e[0],e[1]);});
+    var ms=c.legal.mig_status||(c.legal.ciudadano==='Sí'?'Ciudadano':c.legal.residente==='Sí'?'Residente':'');
+    if(ms)selectMigStatus(ms);
+    restoreRadioPill('ciudadano',c.legal.ciudadano);restoreRadioPill('residente',c.legal.residente);}
   if(c.empleo){setV('trabaja',c.empleo.trabaja);setV('jubilado',c.empleo.jubilado);setV('deshabilitado',c.empleo.deshabilitado);setV('empleador',c.empleo.empleador);setV('ocupacion',c.empleo.ocupacion);setV('tiempo_empresa',c.empleo.tiempo_empresa);setV('ingreso',c.empleo.ingreso);setV('ingreso_anual',c.empleo.ingreso_anual);setV('ingreso_hogar',c.empleo.ingreso_hogar);setV('ingreso_hogar_anual',c.empleo.ingreso_hogar_anual);setV('gastos',c.empleo.gastos);setV('gastos_anual',c.empleo.gastos_anual);setV('casa_tipo',c.empleo.casa_tipo);setV('hipoteca',c.empleo.hipoteca);setV('anos_hip',c.empleo.anos_hip);setV('personas_casa',c.empleo.personas_casa);setV('estado_civil',c.empleo.estado_civil);setV('hijos',c.empleo.hijos);}
   if(c.seguro){setV('tiene_seguro',c.seguro.tiene);setV('seg_tipo',c.seguro.tipo);setV('seg_compania',c.seguro.compania);setV('seg_cobertura',c.seguro.cobertura);setV('seg_prima',c.seguro.prima);}
   if(c.banco){var bn=c.banco.banco||'';var opts=document.querySelectorAll('#banco_nombre option');var found=false;opts.forEach(function(o){if(o.value===bn)found=true;});setV('banco_nombre',found?bn:'OTRO');if(!found)setV('banco_otro',bn);setV('banco_estado',c.banco.estado);setV('banco_ruta',c.banco.ruta);setV('banco_cuenta',c.banco.cuenta);setV('pago1',c.banco.pago1);setV('pago2',c.banco.pago2);handleBancoOtro();}
@@ -1371,7 +1670,7 @@ function previewClient(idx){
       sec('🛡️ Póliza',[row('# Póliza',c.poliza),row('Fecha',fmtDate(c.fecha)),row('Tipo',c.pol_config&&c.pol_config.tipo),row('Aseguradora',c.pol_config&&c.pol_config.aseguradora),row('Monto/mes',c.pol_config&&c.pol_config.monto),row('Cobertura Ideal',c.pol_config&&c.pol_config.cobertura),row('Config.',c.pol_config&&c.pol_config.config),row('Death Benefit',c.pol_config&&c.pol_config.death_benefit)])+
       sec('👤 Personal',[row('Nombre',c.personal&&c.personal.nombre),row('Teléfono',c.personal&&c.personal.telefono),row('Correo',c.personal&&c.personal.email),row('Nacimiento',fmtDate(c.personal&&c.personal.dob)),row('Edad',c.personal&&c.personal.edad),row('Género',c.personal&&c.personal.genero)])+
       ownerSec+
-      sec('🏠 Dirección',[row('Dirección',c.direccion&&c.direccion.direccion),row('Ciudad',c.direccion&&c.direccion.ciudad),row('Estado',c.direccion&&c.direccion.estado),row('CP',c.direccion&&c.direccion.cp),row('Nació en',c.direccion&&c.direccion.nacimiento)])+
+      sec('🏠 Dirección',[row('Dirección',(c.direccion&&c.direccion.direccion||'')+(c.direccion&&c.direccion.apt?', '+c.direccion.apt:'')),row('Ciudad',c.direccion&&c.direccion.ciudad),row('Estado',c.direccion&&c.direccion.estado),row('CP',c.direccion&&c.direccion.cp),row('Nació en',c.direccion&&c.direccion.nacimiento)])+
       sec('📏 Medidas',[row('Peso',c.medidas&&c.medidas.peso),row('Altura',c.medidas&&c.medidas.altura),row('Fumador',c.medidas&&c.medidas.fumador),row('Cigarros/día',c.medidas&&c.medidas.cigarros),row('Fuma desde',fmtDate(c.medidas&&c.medidas.fuma_desde))])+
       (medRows?sec('🩺 Condiciones Médicas',[medRows]):'')+
       sec('🏥 Doctor',[row('Doctor',c.doctor&&c.doctor.nombre),row('Última Visita',fmtDate(c.doctor&&c.doctor.visita)),row('Teléfono',c.doctor&&c.doctor.telefono),row('Padre Vive',c.doctor&&c.doctor.padre_vive),row('Causa Padre',c.doctor&&c.doctor.padre_causa),row('Madre Vive',c.doctor&&c.doctor.madre_vive),row('Causa Madre',c.doctor&&c.doctor.madre_causa)])+
@@ -1430,7 +1729,7 @@ function exportPDF(){
   if(v('pol_notas')){if(y+9>PH-14){doc.addPage();doc.setFillColor(248,251,255);doc.rect(0,0,PW,PH,'F');y=14;}doc.setFillColor(CL[0],CL[1],CL[2]);doc.roundedRect(ML+.3,y,UW-.6,9,.8,.8,'F');doc.setFont('helvetica','bold');doc.setFontSize(5.2);doc.setTextColor(CG[0],CG[1],CG[2]);doc.text('NOTAS',ML+2,y+2.8);doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(CD[0],CD[1],CD[2]);var notaLines=doc.splitTextToSize(v('pol_notas'),UW-6);doc.text(notaLines[0],ML+2,y+5.8);y+=11;}
   // Section: Datos Personales
   sh('DATOS PERSONALES');
-  kv([['Nombre',v('nombre')],['Telefono',v('telefono')],['Correo',v('email')],['Genero',v('genero')],['Nacimiento',fmtDate(v('dob'))],['Edad',v('edad')],['Lugar Nac.',v('nacimiento')],['Tiempo Pais',v('tiempo_pais')],['Direccion',v('direccion')],['Ciudad',v('ciudad')],['Estado',v('estado_dir')],['CP',v('cp')],['Peso',v('peso')],['Altura',v('altura')],['Fumador',v('fumador')],['Cigarros/dia',v('cigarros')]],4);
+  var dirFull=v('direccion')+(v('apt')?', '+v('apt'):'');kv([['Nombre',v('nombre')],['Telefono',v('telefono')],['Correo',v('email')],['Genero',v('genero')],['Nacimiento',fmtDate(v('dob'))],['Edad',v('edad')],['Lugar Nac.',v('nacimiento')],['Tiempo Pais',v('tiempo_pais')],['Direccion',dirFull],['Ciudad',v('ciudad')],['Estado',v('estado_dir')],['CP',v('cp')],['Peso',v('peso')],['Altura',v('altura')],['Fumador',v('fumador')],['Cigarros/dia',v('cigarros')]],4);
   // Section: Propietario
   var ownerChk=document.getElementById('tiene_propietario');
   if(ownerChk&&ownerChk.checked&&v('owner_nombre')){
@@ -1450,7 +1749,7 @@ function exportPDF(){
   if(madreVive==='No — Fallecida')docPairs.push(['Causa Madre',v('madre_causa')]);
   kv(docPairs,4);
   // Legal
-  sh('ANTECEDENTES LEGALES & MIGRATORIOS');kv([['Criminal',v('criminal')],['Detalle',v('criminal_det')],['DUI',v('dui')],['Fecha DUI',fmtDate(v('dui_fecha'))],['Lic.Suspendida',v('lic_suspendida')],['Bancarrota',v('bancarrota')],['Ciudadano',v('ciudadano')],['Residente',v('residente')],['# Residencia',v('res_num')],['Venc.Res.',fmtDate(v('res_exp'))],['Permiso',v('permiso')],['SSN/ITIN',v('ssn')],['Lic.#',v('lic_num')],['Estado Lic.',v('lic_estado')],['# ID/Pasap.',v('id_num')],['Pais ID',v('id_pais')]],4);
+  sh('ANTECEDENTES LEGALES & MIGRATORIOS');var idLabel=v('id_tipo')||'SSN';kv([['Criminal',v('criminal')],['Detalle',v('criminal_det')],['DUI',v('dui')],['Fecha DUI',fmtDate(v('dui_fecha'))],['Lic.Suspendida',v('lic_suspendida')],['Bancarrota',v('bancarrota')],['Estatus Mig.',v('mig_status')||v('ciudadano')],['Residente',v('residente')],['# Residencia',v('res_num')],['Venc.Res.',fmtDate(v('res_exp'))],['Permiso',v('permiso')],[idLabel+' #',v('ssn')],['Lic.#',v('lic_num')],['Estado Lic.',v('lic_estado')],['Venc.Lic.',fmtDate(v('lic_exp'))],['# ID/Pasap.',v('id_num')],['Pais ID',v('id_pais')],['Venc.Pasap.',fmtDate(v('pasaporte_exp'))],['','']],4);
   // Empleo
   sh('EMPLEO, FINANZAS & ESTADO CIVIL');kv([['Trabaja',v('trabaja')],['Jubilado',v('jubilado')],['Deshabilitado',v('deshabilitado')],['Empleador',v('empleador')],['Ocupacion',v('ocupacion')],['Tiempo Empresa',v('tiempo_empresa')],['Ing. Mensual',v('ingreso')],['Ing. Anual',v('ingreso_anual')],['Hogar Mensual',v('ingreso_hogar')],['Hogar Anual',v('ingreso_hogar_anual')],['Gasto Mensual',v('gastos')],['Gasto Anual',v('gastos_anual')],['Casa',v('casa_tipo')],['Hipoteca',v('hipoteca')],['Anos Hip.',v('anos_hip')],['Personas Casa',v('personas_casa')],['Estado Civil',v('estado_civil')],['Hijos <18',v('hijos')]],4);
   // Beneficiarios
