@@ -229,7 +229,7 @@
             const mm = String(now.getMonth() + 1).padStart(2, '0');
             const yy = String(now.getFullYear()).slice(-2);
             const last4 = phone ? phone.replace(/\D/g, '').slice(-4) : "0000";
-            return `IUL-${mm}${yy}-${last4}`;
+            return `${mm}${yy}-${last4}`;
         }
 
         function processData(shouldSave = true) {
