@@ -87,9 +87,18 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.15);
         }
 
+        .v-folio {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
         .client-name {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 3.5rem; line-height: 1.1; margin-bottom: 10px;
+            font-size: 3.5rem; line-height: 0.9; margin-bottom: 15px;
             color: var(--text-main);
         }
 
@@ -154,6 +163,7 @@
             <div class="visual-container">
                 <div class="visual-card" id="screenshot-area">
                     <div id="v-state-box"></div>
+                    <div class="v-folio" id="v-folio-display">FOLIO: ---</div>
                     <div class="client-name" id="v-name">SOLICITANTE</div>
                     <div id="v-rows-container"></div>
                     
@@ -181,22 +191,54 @@
     <script>
         const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 
-        function toggleTheme() {
+        // INICIALIZACIÓN
+        window.onload = () => {
+            // Cargar Tema
+            const savedTheme = localStorage.getItem('iul-theme') || 'dark';
+            setTheme(savedTheme);
+
+            // Cargar Último Dato
+            const lastData = localStorage.getItem('iul-last-raw');
+            if (lastData) {
+                document.getElementById('rawInput').value = lastData;
+                processData(false); // Procesar sin volver a guardar (evita bucles)
+            }
+        };
+
+        function setTheme(theme) {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
             const text = document.getElementById('theme-text');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
+            
+            html.setAttribute('data-theme', theme);
+            if (theme === 'light') {
                 icon.textContent = '☀️'; text.textContent = 'Modo Claro';
             } else {
-                html.setAttribute('data-theme', 'dark');
                 icon.textContent = '🌙'; text.textContent = 'Modo Oscuro';
             }
+            localStorage.setItem('iul-theme', theme);
         }
 
-        function processData() {
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        function generateFolio(phone) {
+            const now = new Date();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yy = String(now.getFullYear()).slice(-2);
+            const last4 = phone ? phone.replace(/\D/g, '').slice(-4) : "0000";
+            return `IUL-${mm}${yy}-${last4}`;
+        }
+
+        function processData(shouldSave = true) {
             let raw = document.getElementById('rawInput').value.trim();
             if (!raw) return;
+
+            if (shouldSave) {
+                localStorage.setItem('iul-last-raw', raw);
+            }
 
             let tokens = [];
             if (raw.includes('\t')) {
@@ -208,76 +250,57 @@
                     .replace(/(\b[A-Z]{2}\b)/g, ' $1 ')
                     .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $1 ')
                     .replace(/(\$|mas_|menos_|más_|máss_)/gi, ' $1')
-                    .replace(/-/g, ' - '); // Ayuda a separar rangos
+                    .replace(/-/g, ' - ');
                 tokens = spaced.split(/\s+/).filter(t => t.trim().length > 0);
             }
 
             let res = { name: [], phone: "", age: "", email: "", state: "", amount: "", interest: "" };
-
-            // Regex para detectar rangos de edad (ej: 31-40, 31 a 40)
             const rangeRegex = /\b\d{2}\s*(-|a|to)\s*\d{2}\b/i;
 
             tokens.forEach((t, index) => {
                 let token = t.trim();
                 let lowerToken = token.toLowerCase();
-                
-                // 1. Omitir "Español"
                 if (lowerToken === 'español' || lowerToken === 'espanol') return;
-
                 let cleanNum = token.replace(/\D/g, '');
 
-                // Teléfono
                 if (!res.phone && cleanNum.length >= 10) {
                     let n = cleanNum; if (n.length > 10 && n.startsWith('1')) n = n.substring(1);
                     res.phone = `+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
                     return;
                 }
-                // Email
                 if (!res.email && token.includes('@') && token.includes('.')) { res.email = token.toLowerCase(); return; }
-                // Monto
                 if (!res.amount && (token.includes('$') || lowerToken.includes('de_'))) {
                     res.amount = token.replace(/_/g, ' ').replace(/\bmas\b/gi, 'Más').replace(/\bmenos\b/gi, 'Menos');
                     return;
                 }
-                // Estado
                 if (!res.state && token.length === 2 && US_STATES.includes(token.toUpperCase())) { res.state = token.toUpperCase(); return; }
-                // Interés
                 if (!res.interest && token.includes('_')) {
                     res.interest = token.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
                     return;
                 }
-                
-                // EDAD MEJORADA (Rango o 2 dígitos)
                 if (!res.age) {
-                    // Intento detectar rango uniendo tokens si es necesario (ej: 31 - 40)
                     let possibleRange = token;
                     if (tokens[index+1] === '-' || tokens[index+1] === 'a') {
                         possibleRange = `${token} ${tokens[index+1]} ${tokens[index+2]}`;
                     }
-                    
-                    if (rangeRegex.test(possibleRange)) {
-                        res.age = possibleRange.replace(/\s+/g, ' ') + " Años";
-                        return;
-                    } else if (/^\d{2}$/.test(token)) {
-                        let a = parseInt(token); 
-                        if (a >= 18 && a <= 99) { res.age = a + " Años"; return; }
+                    if (rangeRegex.test(possibleRange)) { res.age = possibleRange.replace(/\s+/g, ' ') + " Años"; return; }
+                    else if (/^\d{2}$/.test(token)) {
+                        let a = parseInt(token); if (a >= 18 && a <= 99) { res.age = a + " Años"; return; }
                     }
                 }
-
-                // Nombre (si no es nada de lo anterior y es texto puro)
-                if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(token) && token.length > 1 && !res.age) { 
-                    res.name.push(token); 
-                }
+                if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(token) && token.length > 1 && !res.age) { res.name.push(token); }
             });
 
-            // RENDER VISUAL
-            const rowsContainer = document.getElementById('v-rows-container');
-            const stateBox = document.getElementById('v-state-box');
-            rowsContainer.innerHTML = '';
-            stateBox.innerHTML = res.state ? `<div class="state-tag">${res.state}</div>` : '';
-            
-            document.getElementById('v-name').textContent = res.name.join(' ').toUpperCase() || "SOLICITANTE";
+            const folio = generateFolio(res.phone);
 
+            document.getElementById('v-folio-display').textContent = `FOLIO: ${folio}`;
+            document.getElementById('v-name').textContent = res.name.join(' ').toUpperCase() || "SOLICITANTE";
+            
+            const stateBox = document.getElementById('v-state-box');
+            stateBox.innerHTML = res.state ? `<div class="state-tag">${res.state}</div>` : '';
+
+            const rowsContainer = document.getElementById('v-rows-container');
+            rowsContainer.innerHTML = '';
             const visualFields = [
                 { label: "Phone Number", val: res.phone },
                 { label: "Email Address", val: res.email },
@@ -287,13 +310,11 @@
             ];
 
             visualFields.forEach(f => {
-                if(f.val) {
-                    rowsContainer.innerHTML += `<div class="v-row"><span class="v-label">${f.label}</span><span class="v-value">${f.val}</span></div>`;
-                }
+                if(f.val) rowsContainer.innerHTML += `<div class="v-row"><span class="v-label">${f.label}</span><span class="v-value">${f.val}</span></div>`;
             });
 
-            // RENDER TEXTO ESTRUCTURADO
             let summary = `📋 DATOS DEL SOLICITANTE\n------------------------\n`;
+            summary += `🆔 FOLIO DE ASIGNACIÓN: ${folio}\n`;
             summary += `👤 NOMBRE: ${res.name.join(' ').toUpperCase() || 'NO DETECTADO'}\n`;
             if(res.state) summary += `📍 ESTADO: ${res.state}\n`;
             if(res.phone) summary += `📞 TEL: ${res.phone}\n`;
@@ -317,7 +338,6 @@
             const area = document.getElementById('screenshot-area');
             const btnText = btn.querySelector('.btn-text');
             btnText.textContent = "Generando Imagen...";
-
             const solidBg = getComputedStyle(document.documentElement).getPropertyValue('--solid-capture').trim();
 
             try {
@@ -327,7 +347,6 @@
                     useCORS: true,
                     logging: false,
                 });
-
                 canvas.toBlob(async (blob) => {
                     const item = new ClipboardItem({ "image/png": blob });
                     await navigator.clipboard.write([item]);
@@ -344,11 +363,9 @@
             const iconSpan = btn.querySelector('.btn-icon');
             const originalText = (message === "¡Imagen Copiada!") ? "Copiar Tarjeta (Imagen)" : "Copiar Resumen (Texto)";
             const originalIcon = (message === "¡Imagen Copiada!") ? "📸" : "📋";
-
             btn.classList.add('success');
             textSpan.textContent = message;
             iconSpan.textContent = "✅";
-
             setTimeout(() => {
                 btn.classList.remove('success');
                 textSpan.textContent = originalText;
