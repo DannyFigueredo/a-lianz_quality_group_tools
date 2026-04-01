@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IUL Lead Studio Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111111;
+            --accent: #00c878;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --border: #222;
+            --input-bg: #000;
+            --v-card-grad: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            --solid-capture: #1a1a1a;
+        }
+
+        [data-theme="light"] {
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --accent: #00a862;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --border: #dddddd;
+            --input-bg: #f9f9f9;
+            --v-card-grad: linear-gradient(145deg, #ffffff, #f0f0f0);
+            --solid-capture: #ffffff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { width: 100%; max-width: 1100px; position: relative; }
+
+        .theme-switch {
+            position: absolute; top: -10px; right: 0;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; background: var(--card-bg);
+            padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border);
+            font-size: 0.8rem; font-weight: 600; z-index: 10;
+        }
+
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 2px; color: var(--accent); }
+        .subtitle { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; }
+
+        .input-section {
+            background: var(--card-bg);
+            padding: 20px; border-radius: 16px; border: 1px solid var(--border);
+            margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        textarea {
+            width: 100%; height: 80px; background: var(--input-bg); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--accent); padding: 15px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; resize: none; margin-bottom: 15px;
+        }
+        .main-btn {
+            width: 100%; padding: 16px; background: var(--accent); border: none;
+            border-radius: 12px; color: #fff; font-weight: 800; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .display-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px; display: none; margin-top: 20px;
+        }
+
+        .visual-container { display: flex; flex-direction: column; gap: 15px; }
+        
+        .visual-card {
+            background: var(--v-card-grad);
+            border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px; position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .client-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem; line-height: 1.1; margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .state-tag {
+            display: inline-block; background: var(--accent); color: #fff;
+            padding: 4px 12px; border-radius: 4px; font-weight: 800;
+            font-size: 0.9rem; margin-bottom: 25px;
+        }
+
+        .v-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 0; border-bottom: 1px solid var(--border);
+        }
+        .v-row:last-of-type { border-bottom: none; }
+        .v-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; }
+        .v-value { font-size: 1.1rem; color: var(--text-main); font-weight: 500; text-align: right; }
+
+        .data-card {
+            background: var(--card-bg); border: 1px dashed var(--border);
+            border-radius: 24px; padding: 30px; display: flex; flex-direction: column;
+        }
+        pre {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-main);
+            line-height: 1.6; background: var(--input-bg); padding: 20px; border-radius: 12px;
+            flex-grow: 1; margin-bottom: 20px; white-space: pre-wrap; border: 1px solid var(--border);
+        }
+
+        .action-btn {
+            padding: 14px; background: transparent; border: 1px solid var(--border);
+            color: var(--text-main); border-radius: 10px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-family: 'Outfit'; transition: 0.2s; font-size: 0.9rem; font-weight: 600;
+        }
+        .action-btn:hover { border-color: var(--accent); background: rgba(0, 200, 120, 0.05); }
+        .action-btn.success { border-color: var(--accent); background: rgba(0, 200, 120, 0.1); color: var(--accent); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .display-grid { animation: fadeIn 0.5s ease-out forwards; }
+
+        @media (max-width: 900px) { .display-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="theme-switch" onclick="toggleTheme()">
+            <span id="theme-icon">🌙</span>
+            <span id="theme-text">Modo Oscuro</span>
+        </div>
+
+        <header>
+            <h1>IUL LEAD STUDIO</h1>
+            <p class="subtitle">Insurance Data Intelligence</p>
+        </header>
+
+        <section class="input-section">
+            <textarea id="rawInput" placeholder="Pega la información aquí..."></textarea>
+            <button class="main-btn" onclick="processData()">Generar Dashboard</button>
+        </section>
+
+        <div class="display-grid" id="displayGrid">
+            <div class="visual-container">
+                <div class="visual-card" id="screenshot-area">
+                    <div id="v-state-box"></div>
+                    <div class="client-name" id="v-name">SOLICITANTE</div>
+                    <div id="v-rows-container"></div>
+                    
+                    <div style="margin-top: 30px; font-size: 0.65rem; color: var(--text-dim); font-family: 'JetBrains Mono'; opacity: 0.7;">
+                        CONFIDENTIAL • IUL PRE-QUALIFICATION SUMMARY
+                    </div>
+                </div>
+                <button class="action-btn" onclick="copyImage(this)">
+                    <span class="btn-text">Copiar Tarjeta (Imagen)</span>
+                    <span class="btn-icon">📸</span>
+                </button>
+            </div>
+
+            <div class="data-card">
+                <div style="font-family: 'JetBrains Mono'; color: var(--accent); font-size: 0.7rem; margin-bottom: 10px; letter-spacing: 1px;">// EXTRACTED_DATA_OUTPUT</div>
+                <pre id="structuredText"></pre>
+                <button class="action-btn" onclick="copyText(this)">
+                    <span class="btn-text">Copiar Resumen (Texto)</span>
+                    <span class="btn-icon">📋</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️'; text.textContent = 'Modo Claro';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.textContent = '🌙'; text.textContent = 'Modo Oscuro';
+            }
+        }
+
+        function processData() {
+            let raw = document.getElementById('rawInput').value.trim();
+            if (!raw) return;
+
+            let tokens = [];
+            if (raw.includes('\t')) {
+                tokens = raw.split('\t');
+            } else {
+                let spaced = raw
+                    .replace(/([a-z])([A-Z])/g, '$1 $2')
+                    .replace(/(\d{10,})/g, ' $1 ')
+                    .replace(/(\b[A-Z]{2}\b)/g, ' $1 ')
+                    .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $1 ')
+                    .replace(/(\$|mas_|menos_|más_|máss_)/gi, ' $1')
+                    .replace(/-/g, ' - '); // Ayuda a separar rangos
+                tokens = spaced.split(/\s+/).filter(t => t.trim().length > 0);
+            }
+
+            let res = { name: [], phone: "", age: "", email: "", state: "", amount: "", interest: "" };
+
+            // Regex para detectar rangos de edad (ej: 31-40, 31 a 40)
+            const rangeRegex = /\b\d{2}\s*(-|a|to)\s*\d{2}\b/i;
+
+            tokens.forEach((t, index) => {
+                let token = t.trim();
+                let lowerToken = token.toLowerCase();
+                
+                // 1. Omitir "Español"
+                if (lowerToken === 'español' || lowerToken === 'espanol') return;
+
+                let cleanNum = token.replace(/\D/g, '');
+
+                // Teléfono
+                if (!res.phone && cleanNum.length >= 10) {
+                    let n = cleanNum; if (n.length > 10 && n.startsWith('1')) n = n.substring(1);
+                    res.phone = `+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
+                    return;
+                }
+                // Email
+                if (!res.email && token.includes('@') && token.includes('.')) { res.email = token.toLowerCase(); return; }
+                // Monto
+                if (!res.amount && (token.includes('$') || lowerToken.includes('de_'))) {
+                    res.amount = token.replace(/_/g, ' ').replace(/\bmas\b/gi, 'Más').replace(/\bmenos\b/gi, 'Menos');
+                    return;
+                }
+                // Estado
+                if (!res.state && token.length === 2 && US_STATES.includes(token.toUpperCase())) { res.state = token.toUpperCase(); return; }
+                // Interés
+                if (!res.interest && token.includes('_')) {
+                    res.interest = token.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+                    return;
+                }
+                
+                // EDAD MEJORADA (Rango o 2 dígitos)
+                if (!res.age) {
+                    // Intento detectar rango uniendo tokens si es necesario (ej: 31 - 40)
+                    let possibleRange = token;
+                    if (tokens[index+1] === '-' || tokens[index+1] === 'a') {
+                        possibleRange = `${token} ${tokens[index+1]} ${tokens[index+2]}`;
+                    }
+                    
+                    if (rangeRegex.test(possibleRange)) {
+                        res.age = possibleRange.replace(/\s+/g, ' ') + " Años";
+                        return;
+                    } else if (/^\d{2}$/.test(token)) {
+                        let a = parseInt(token); 
+                        if (a >= 18 && a <= 99) { res.age = a + " Años"; return; }
+                    }
+                }
+
+                // Nombre (si no es nada de lo anterior y es texto puro)
+                if (/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(token) && token.length > 1 && !res.age) { 
+                    res.name.push(token); 
+                }
+            });
+
+            // RENDER VISUAL
+            const rowsContainer = document.getElementById('v-rows-container');
+            const stateBox = document.getElementById('v-state-box');
+            rowsContainer.innerHTML = '';
+            stateBox.innerHTML = res.state ? `<div class="state-tag">${res.state}</div>` : '';
+            
+            document.getElementById('v-name').textContent = res.name.join(' ').toUpperCase() || "SOLICITANTE";
+
+            const visualFields = [
+                { label: "Phone Number", val: res.phone },
+                { label: "Email Address", val: res.email },
+                { label: "Client Age", val: res.age },
+                { label: "Monthly Contribution", val: res.amount },
+                { label: "Primary Goal", val: res.interest }
+            ];
+
+            visualFields.forEach(f => {
+                if(f.val) {
+                    rowsContainer.innerHTML += `<div class="v-row"><span class="v-label">${f.label}</span><span class="v-value">${f.val}</span></div>`;
+                }
+            });
+
+            // RENDER TEXTO ESTRUCTURADO
+            let summary = `📋 DATOS DEL SOLICITANTE\n------------------------\n`;
+            summary += `👤 NOMBRE: ${res.name.join(' ').toUpperCase() || 'NO DETECTADO'}\n`;
+            if(res.state) summary += `📍 ESTADO: ${res.state}\n`;
+            if(res.phone) summary += `📞 TEL: ${res.phone}\n`;
+            if(res.email) summary += `📧 EMAIL: ${res.email}\n`;
+            if(res.age) summary += `🎂 EDAD: ${res.age}\n`;
+            if(res.amount) summary += `💰 APORTE: ${res.amount}\n`;
+            if(res.interest) summary += `🎯 INTERÉS: ${res.interest}\n`;
+            summary += `------------------------`;
+            
+            document.getElementById('structuredText').textContent = summary;
+            document.getElementById('displayGrid').style.display = 'grid';
+        }
+
+        async function copyText(btn) {
+            const text = document.getElementById('structuredText').textContent;
+            await navigator.clipboard.writeText(text);
+            feedback(btn);
+        }
+
+        async function copyImage(btn) {
+            const area = document.getElementById('screenshot-area');
+            const btnText = btn.querySelector('.btn-text');
+            btnText.textContent = "Generando Imagen...";
+
+            const solidBg = getComputedStyle(document.documentElement).getPropertyValue('--solid-capture').trim();
+
+            try {
+                const canvas = await html2canvas(area, {
+                    backgroundColor: solidBg,
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                });
+
+                canvas.toBlob(async (blob) => {
+                    const item = new ClipboardItem({ "image/png": blob });
+                    await navigator.clipboard.write([item]);
+                    feedback(btn, "¡Imagen Copiada!");
+                });
+            } catch (err) {
+                console.error(err);
+                btnText.textContent = "Error al copiar";
+            }
+        }
+
+        function feedback(btn, message = "¡LISTO!") {
+            const textSpan = btn.querySelector('.btn-text');
+            const iconSpan = btn.querySelector('.btn-icon');
+            const originalText = (message === "¡Imagen Copiada!") ? "Copiar Tarjeta (Imagen)" : "Copiar Resumen (Texto)";
+            const originalIcon = (message === "¡Imagen Copiada!") ? "📸" : "📋";
+
+            btn.classList.add('success');
+            textSpan.textContent = message;
+            iconSpan.textContent = "✅";
+
+            setTimeout(() => {
+                btn.classList.remove('success');
+                textSpan.textContent = originalText;
+                iconSpan.textContent = originalIcon;
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
