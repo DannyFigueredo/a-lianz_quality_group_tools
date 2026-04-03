@@ -3,57 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IUL Lead Studio Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;600&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <title>IUL Lead Studio Pro + QR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;600&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Montserrat:wght@400;700&family=Exo+2:ital,wght@1,700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
+        /* VARIABLES DE ESTILO */
         :root {
             --bg: #1a1a1a; --card-bg: #fdfcf8; --accent: #947a3a; --text-main: #1d1d1d;
             --text-dim: #555555; --border: #d4af37; --font-header: 'Cinzel', serif;
-            --font-main: 'Outfit', sans-serif; --input-bg: #000;
-            --watermark-color: rgba(0, 0, 0, 0.03); 
+            --font-main: 'Outfit', sans-serif; --input-bg: #2a2a2a; --input-text: #ffffff;
+            --watermark-color: rgba(0, 0, 0, 0.12); 
         }
 
         [data-style="cyber"] {
             --bg: #050505; --card-bg: #111111; --accent: #00c878; --text-main: #ffffff; 
             --text-dim: #888888; --border: #00c878; --font-header: 'Bebas Neue', sans-serif;
-            --input-bg: #000; --watermark-color: rgba(0, 200, 120, 0.05);
+            --input-bg: #111; --input-text: #ffffff; --watermark-color: rgba(0, 200, 120, 0.15);
         }
 
         [data-style="modern"] {
             --bg: #f0f4f8; --card-bg: #ffffff; --accent: #1a365d; --text-main: #2d3748;
             --text-dim: #718096; --border: #cbd5e0; --font-header: 'Outfit', sans-serif;
-            --input-bg: #ffffff; --watermark-color: rgba(0, 0, 0, 0.02);
+            --input-bg: #ffffff; --input-text: #2d3748; --watermark-color: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-style="emerald"] {
+            --bg: #062c26; --card-bg: #fdfcf8; --accent: #164a41; --text-main: #062c26;
+            --text-dim: #4d6d6a; --border: #c5a059; --font-header: 'Playfair Display', serif;
+            --input-bg: #0a3d35; --input-text: #ffffff; --watermark-color: rgba(6, 44, 38, 0.12);
+        }
+
+        [data-style="blueprint"] {
+            --bg: #0a192f; --card-bg: #0a192f; --accent: #64ffda; --text-main: #ccd6f6;
+            --text-dim: #8892b0; --border: #64ffda; --font-header: 'JetBrains Mono', monospace;
+            --input-bg: #112240; --input-text: #64ffda; --watermark-color: rgba(100, 255, 218, 0.15);
+        }
+
+        [data-style="minimal"] {
+            --bg: #ffffff; --card-bg: #ffffff; --accent: #2d3436; --text-main: #2d3436;
+            --text-dim: #636e72; --border: #dfe6e9; --font-header: 'Montserrat', sans-serif;
+            --input-bg: #f0f0f0; --input-text: #2d3436; --watermark-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-style="carbon"] {
+            --bg: #111; --card-bg: #1a1a1a; --accent: #d63031; --text-main: #eee;
+            --text-dim: #888; --border: #444; --font-header: 'Exo 2', sans-serif;
+            --input-bg: #222; --input-text: #ffffff; --watermark-color: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.2s; }
         body { background-color: var(--bg); color: var(--text-main); font-family: var(--font-main); padding: 40px 20px; }
         .container { max-width: 1100px; margin: 0 auto; position: relative; }
 
-        /* CONFIG */
-        .config-menu { position: absolute; top: -10px; right: 0; z-index: 100; }
-        .config-btn { background: #333; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
-        .config-panel { position: absolute; top: 40px; right: 0; background: #222; padding: 15px; border-radius: 8px; display: none; width: 220px; border: 1px solid #444; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .config-panel.active { display: block; }
-        .config-panel label { color: #aaa; font-size: 0.6rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        select { width: 100%; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 4px; }
-
-        header { text-align: center; margin-bottom: 25px; }
-        header h1 { font-family: var(--font-header); color: var(--accent); font-size: 2.2rem; }
-
-        /* SECCIÓN DE ENTRADA */
-        .input-section { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .extra-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-section { background: rgba(128,128,128,0.1); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(128,128,128,0.2); }
+        .extra-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .input-group label { display: block; font-size: 0.65rem; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px; }
-        .extra-inputs input { width: 100%; padding: 12px; background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; font-family: 'Outfit'; }
-        
-        textarea { width: 100%; height: 90px; background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border); padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono'; margin-bottom: 15px; resize: none; }
+        .extra-inputs input, textarea { width: 100%; padding: 12px; background: var(--input-bg) !important; color: var(--input-text) !important; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
+        textarea { height: 90px; font-family: 'JetBrains Mono'; margin-bottom: 15px; resize: none; }
         .main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
         .display-grid { display: grid; grid-template-columns: 1fr 400px; gap: 30px; display: none; margin-top: 20px;}
 
-        /* DISEÑO DEL VOUCHER */
-        .visual-card { background-color: var(--card-bg); border: 3px double var(--border); padding: 45px; position: relative; color: var(--text-main); box-shadow: 0 25px 50px rgba(0,0,0,0.3); overflow: hidden; }
+        /* VOUCHER */
+        .visual-card { background-color: var(--card-bg); border: 3px double var(--border); padding: 45px; position: relative; color: var(--text-main); box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
         .visual-card::before { content: "DOCUMENTO OFICIAL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); font-size: 5rem; color: var(--watermark-color); font-weight: 900; pointer-events: none; width: 160%; text-align: center; font-family: var(--font-header); }
 
         .coupon-header { border-bottom: 2px solid var(--border); padding-bottom: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
@@ -62,33 +76,25 @@
 
         .client-name { position: relative; z-index: 2; font-family: var(--font-header); font-size: 2.6rem; line-height: 1; margin: 20px 0; color: var(--text-main); text-transform: uppercase; border-left: 6px solid var(--accent); padding-left: 18px; }
 
-        .v-row { position: relative; z-index: 2; display: flex; border-bottom: 1px solid var(--border); padding: 14px 0; justify-content: space-between; align-items: center; }
+        .v-row { position: relative; z-index: 2; display: flex; border-bottom: 1px solid var(--border); padding: 18px 0; justify-content: space-between; align-items: center; }
         .v-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 1.2px; }
         .v-value { font-size: 1.05rem; color: var(--text-main); font-weight: 600; text-align: right; }
 
-.stamp { 
-    position: absolute; 
-    bottom: 25px; 
-    right: 25px; 
-    width: 85px; 
-    height: 85px; 
-    border: 3px double var(--accent); 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 0.55rem; 
-    text-align: center; 
-    font-weight: 800; 
-    color: var(--accent); 
-    transform: rotate(-12deg); 
-    opacity: 0.35; 
-    text-transform: uppercase; 
-    z-index: 2; 
-    line-height: 1.4; /* Separación entre las líneas de texto dentro del sello */
-}
+        /* QR POSICION */
+        .qr-container { position: absolute; bottom: 30px; right: 30px; z-index: 3; background: white; padding: 5px; border: 1px solid var(--border); display: none; }
+        
+        .stamp { 
+            position: absolute; bottom: 35px; right: 135px; width: 85px; height: 85px; border: 3px double var(--accent); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 0.55rem; text-align: center; font-weight: 800; 
+            color: var(--accent); transform: rotate(22deg); opacity: 0.25; text-transform: uppercase; z-index: 2; line-height: 1.4; 
+        }
 
-        /* PANEL DERECHA (TEXTO) */
+        .config-menu { position: absolute; top: -10px; right: 0; z-index: 100; }
+        .config-btn { background: #333; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
+        .config-panel { position: absolute; top: 40px; right: 0; background: #222; padding: 15px; border-radius: 8px; display: none; width: 220px; border: 1px solid #444; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .config-panel.active { display: block; }
+        select { width: 100%; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 4px; }
+
         .data-card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px dashed var(--border); }
         pre { color: var(--text-main); background: rgba(0,0,0,0.05); font-family: 'JetBrains Mono'; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px; padding: 15px; border-radius: 8px; border: 1px solid var(--border);}
         .action-btn { width: 100%; padding: 14px; border: 1px solid var(--border); background: transparent; color: var(--text-main); cursor: pointer; border-radius: 8px; margin-top: 10px; font-weight: 700; text-transform: uppercase; }
@@ -102,11 +108,15 @@
         <div class="config-menu">
             <button class="config-btn" onclick="toggleConfig()">⚙️ CONFIGURACIÓN</button>
             <div class="config-panel" id="configPanel">
-                <label>Estilo de Interfaz</label>
+                <label style="color:#aaa; font-size:0.6rem; text-transform:uppercase;">Estilo</label>
                 <select id="styleSelect" onchange="updateStyle(this.value)">
                     <option value="gold">Voucher Oficial Gold</option>
                     <option value="cyber">Protocolo Cyber Neón</option>
                     <option value="modern">Modern Corporativo</option>
+                    <option value="emerald">Deep Emerald (Prestigio)</option>
+                    <option value="blueprint">Midnight Blueprint</option>
+                    <option value="minimal">Minimalist Slate</option>
+                    <option value="carbon">Carbon Fiber Luxury</option>
                 </select>
                 <button onclick="localStorage.clear(); location.reload();" style="margin-top: 15px; background: none; border: none; color: #ff4444; font-size: 0.6rem; cursor: pointer; text-decoration: underline;">Reiniciar Aplicación</button>
             </div>
@@ -118,11 +128,15 @@
             <div class="extra-inputs">
                 <div class="input-group">
                     <label>Profesional Financiero</label>
-                    <input type="text" id="inputAgent" placeholder="Tu Nombre Completo" oninput="saveManualFields()">
+                    <input type="text" id="inputAgent" placeholder="Tu nombre..." oninput="saveManualFields()">
                 </div>
                 <div class="input-group">
                     <label>Compañía / Agencia</label>
-                    <input type="text" id="inputCompany" placeholder="Nombre de tu Firma" oninput="saveManualFields()">
+                    <input type="text" id="inputCompany" placeholder="Tu firma..." oninput="saveManualFields()">
+                </div>
+                <div class="input-group">
+                    <label>URL de Verificación (QR)</label>
+                    <input type="text" id="inputQR" placeholder="https://..." oninput="saveManualFields()">
                 </div>
             </div>
             <textarea id="rawInput" placeholder="Pega los datos del lead aquí..."></textarea>
@@ -142,11 +156,13 @@
                     <div id="v-rows-container"></div>
                     <div id="manual-fields-container"></div>
 
-                    <div style="margin-top: 30px; font-size: 0.6rem; color: var(--text-dim); font-family: 'JetBrains Mono'; line-height: 1.4; font-size: 0.7rem">
-                        Este documento autoriza una consulta privada para el diseño de estrategias de acumulación y protección. Favor de referenciar el Folio indicado arriba.
+                    <div style="margin-top: 30px; font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono'; line-height: 1.4; width: 70%;">
+                        Este documento autoriza una consulta privada para el diseño de estrategias de acumulación y protección. Favor de referenciar el Folio indicado arriba. Escanee el QR para validar credenciales.
                     </div>
 
                     <div class="stamp">Validado<br>Asesoramiento<br>Seguro</div>
+                    
+                    <div id="qrcode" class="qr-container"></div>
                 </div>
                 <button class="action-btn" onclick="copyImage(this)">Copiar Cupón (Imagen) 📸</button>
             </div>
@@ -161,15 +177,15 @@
 
     <script>
         const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+        let qrcodeInstance = null;
 
         window.onload = () => {
             const savedStyle = localStorage.getItem('iul-style-vfinal') || 'gold';
             updateStyle(savedStyle);
-            
-            // Cargar campos manuales persistentes
             document.getElementById('inputAgent').value = localStorage.getItem('iul-manual-agent-vfinal') || "";
             document.getElementById('inputCompany').value = localStorage.getItem('iul-manual-company-vfinal') || "";
-
+            document.getElementById('inputQR').value = localStorage.getItem('iul-manual-qr-vfinal') || "";
+            
             const lastData = localStorage.getItem('iul-last-raw-vfinal');
             if (lastData) {
                 document.getElementById('rawInput').value = lastData;
@@ -188,6 +204,7 @@
         function saveManualFields() {
             localStorage.setItem('iul-manual-agent-vfinal', document.getElementById('inputAgent').value);
             localStorage.setItem('iul-manual-company-vfinal', document.getElementById('inputCompany').value);
+            localStorage.setItem('iul-manual-qr-vfinal', document.getElementById('inputQR').value);
         }
 
         function cleanString(str) { return str ? str.replace(/_/g, ' ').trim() : ""; }
@@ -212,7 +229,6 @@
                 let token = t.trim();
                 if(token.toLowerCase() === 'español' || token.length < 1) return;
                 let cleanNum = token.replace(/\D/g, '');
-
                 if(!res.phone && cleanNum.length >= 10) {
                     let n = cleanNum; if(n.length > 10 && n.startsWith('1')) n = n.substring(1);
                     res.phone = `+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
@@ -228,12 +244,12 @@
             const folio = generateFolio(res.phone);
             const agent = document.getElementById('inputAgent').value.trim();
             const company = document.getElementById('inputCompany').value.trim();
+            const qrUrl = document.getElementById('inputQR').value.trim();
 
             document.getElementById('v-folio-display').textContent = `FOLIO: ${folio}`;
             document.getElementById('v-name').textContent = res.name.join(' ').toUpperCase();
             document.getElementById('v-state-box').innerHTML = res.state ? `<span style="background:var(--accent); color:white; padding:2px 10px; font-weight:800; font-size:0.75rem; border-radius:3px;">ESTADO: ${res.state}</span>` : '';
 
-            // Renderizado Lead Principal
             const rows = document.getElementById('v-rows-container');
             rows.innerHTML = '';
             const fields = [
@@ -245,13 +261,21 @@
             ];
             fields.forEach(f => { if(f.v) rows.innerHTML += `<div class="v-row"><span class="v-label">${f.l}</span><span class="v-value">${f.v}</span></div>`; });
 
-            // Renderizado Campos Manuales (Si existen)
             const manualRows = document.getElementById('manual-fields-container');
             manualRows.innerHTML = '';
             if(agent) manualRows.innerHTML += `<div class="v-row" style="border-color:var(--accent); border-bottom-width:2px;"><span class="v-label" style="color:var(--accent); font-weight:900;">Profesional Asignado</span><span class="v-value" style="color:var(--accent);">${agent}</span></div>`;
             if(company) manualRows.innerHTML += `<div class="v-row" style="border-color:var(--accent); border-bottom-width:2px;"><span class="v-label" style="color:var(--accent); font-weight:900;">Firma de Asesoría</span><span class="v-value" style="color:var(--accent);">${company}</span></div>`;
 
-            // Texto Estructurado Unificado
+            // Lógica del QR
+            const qrBox = document.getElementById('qrcode');
+            if(qrUrl) {
+                qrBox.innerHTML = "";
+                qrBox.style.display = "block";
+                new QRCode(qrBox, { text: qrUrl, width: 80, height: 80, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+            } else {
+                qrBox.style.display = "none";
+            }
+
             let txt = `🆔 FOLIO: ${folio}\n👤 CLIENTE: ${res.name.join(' ').toUpperCase()}\n`;
             if(res.phone) txt += `📞 TEL: ${res.phone}\n`;
             if(res.age) txt += `🎂 EDAD: ${res.age}\n`;
@@ -270,7 +294,7 @@
 
         async function copyImage(btn) {
             const area = document.getElementById('screenshot-area');
-            const canvas = await html2canvas(area, { scale: 2, backgroundColor: null });
+            const canvas = await html2canvas(area, { scale: 2, backgroundColor: null, useCORS: true });
             canvas.toBlob(async (blob) => {
                 const item = new ClipboardItem({ "image/png": blob });
                 await navigator.clipboard.write([item]);
