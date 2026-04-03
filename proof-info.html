@@ -1,306 +1,619 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark" data-style="gold">
+<html lang="es" data-style="gold">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IUL Lead Studio Pro + QR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;600&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Montserrat:wght@400;700&family=Exo+2:ital,wght@1,700&display=swap" rel="stylesheet">
+    <title>IUL Lead Studio Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=Exo+2:ital,wght@1,700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+
     <style>
-        /* VARIABLES DE ESTILO */
+        /* ══════════════════════════════════════
+           VARIABLES POR ESTILO
+        ══════════════════════════════════════ */
         :root {
-            --bg: #1a1a1a; --card-bg: #fdfcf8; --accent: #947a3a; --text-main: #1d1d1d;
-            --text-dim: #555555; --border: #d4af37; --font-header: 'Cinzel', serif;
-            --font-main: 'Outfit', sans-serif; --input-bg: #2a2a2a; --input-text: #ffffff;
-            --watermark-color: rgba(0, 0, 0, 0.12); 
+            --bg:#1a1a1a; --card-bg:#fdfcf8; --accent:#947a3a; --text-main:#1d1d1d;
+            --text-dim:#666; --border:#d4af37; --font-header:'Cinzel',serif;
+            --font-main:'Outfit',sans-serif; --input-bg:#2a2a2a; --input-text:#fff;
+            --wm-color:rgba(148,122,58,0.06); --wm-size:3.5rem;
+        }
+        [data-style="cyber"]{
+            --bg:#050505;--card-bg:#111111;--accent:#00c878;--text-main:#ffffff;
+            --text-dim:#888888;--border:#00c878;--font-header:'Bebas Neue',sans-serif;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#111;--input-text:#fff;--wm-color:rgba(0,200,120,0.06);--wm-size:3.5rem;
+        }
+        [data-style="modern"]{
+            --bg:#eef2f7;--card-bg:#ffffff;--accent:#1a365d;--text-main:#1a2740;
+            --text-dim:#7a8fa8;--border:#b8c9e0;--font-header:'Montserrat',sans-serif;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#fff;--input-text:#1a2740;--wm-color:rgba(26,54,93,0.05);--wm-size:3.5rem;
+        }
+        [data-style="emerald"]{
+            --bg:#062c26;--card-bg:#fdfcf8;--accent:#164a41;--text-main:#062c26;
+            --text-dim:#4d6d6a;--border:#c5a059;--font-header:'Playfair Display',serif;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#0a3d35;--input-text:#fff;--wm-color:rgba(6,44,38,0.06);--wm-size:3.5rem;
+        }
+        [data-style="blueprint"]{
+            --bg:#0a192f;--card-bg:#0a192f;--accent:#64ffda;--text-main:#ccd6f6;
+            --text-dim:#8892b0;--border:#64ffda;--font-header:'JetBrains Mono',monospace;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#112240;--input-text:#64ffda;--wm-color:rgba(100,255,218,0.05);--wm-size:3.5rem;
+        }
+        [data-style="minimal"]{
+            --bg:#ffffff;--card-bg:#ffffff;--accent:#2d3436;--text-main:#2d3436;
+            --text-dim:#636e72;--border:#dfe6e9;--font-header:'Montserrat',sans-serif;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#f0f0f0;--input-text:#2d3436;--wm-color:rgba(0,0,0,0.04);--wm-size:3.5rem;
+        }
+        [data-style="carbon"]{
+            --bg:#111;--card-bg:#1a1a1a;--accent:#d63031;--text-main:#eee;
+            --text-dim:#888;--border:#444;--font-header:'Exo 2',sans-serif;
+            --font-main:'Outfit',sans-serif;
+            --input-bg:#222;--input-text:#fff;--wm-color:rgba(214,48,49,0.06);--wm-size:3.5rem;
         }
 
-        [data-style="cyber"] {
-            --bg: #050505; --card-bg: #111111; --accent: #00c878; --text-main: #ffffff; 
-            --text-dim: #888888; --border: #00c878; --font-header: 'Bebas Neue', sans-serif;
-            --input-bg: #111; --input-text: #ffffff; --watermark-color: rgba(0, 200, 120, 0.15);
+        /* ══════════════════════════════════════
+           RESET & BASE
+        ══════════════════════════════════════ */
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            background:var(--bg);color:var(--text-main);font-family:var(--font-main);
+            padding:20px;min-height:100vh;transition:background .3s,color .2s;
+        }
+        .container{max-width:1200px;margin:0 auto;position:relative;}
+
+        /* ══════════════════════════════════════
+           HEADER
+        ══════════════════════════════════════ */
+        header{margin-bottom:16px;}
+        header h1{font-family:var(--font-header);font-size:1.4rem;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
+        header p{font-size:0.65rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+
+        /* ══════════════════════════════════════
+           LAYOUT PRINCIPAL: 3/4 form | 1/4 voucher
+        ══════════════════════════════════════ */
+        .main-layout{
+            display:grid;
+            grid-template-columns:3fr 1fr;
+            gap:20px;
+            align-items:start;
         }
 
-        [data-style="modern"] {
-            --bg: #f0f4f8; --card-bg: #ffffff; --accent: #1a365d; --text-main: #2d3748;
-            --text-dim: #718096; --border: #cbd5e0; --font-header: 'Outfit', sans-serif;
-            --input-bg: #ffffff; --input-text: #2d3748; --watermark-color: rgba(0, 0, 0, 0.08);
+        /* ══════════════════════════════════════
+           COLUMNA IZQUIERDA — FORMULARIO
+        ══════════════════════════════════════ */
+        .form-col{display:flex;flex-direction:column;gap:14px;}
+
+        .input-section{
+            background:rgba(128,128,128,.08);
+            padding:20px;border-radius:12px;
+            border:1px solid rgba(128,128,128,.18);
         }
 
-        [data-style="emerald"] {
-            --bg: #062c26; --card-bg: #fdfcf8; --accent: #164a41; --text-main: #062c26;
-            --text-dim: #4d6d6a; --border: #c5a059; --font-header: 'Playfair Display', serif;
-            --input-bg: #0a3d35; --input-text: #ffffff; --watermark-color: rgba(6, 44, 38, 0.12);
+        /* Grid interno: 2 columnas de inputs */
+        .form-inputs-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px;
+            margin-bottom:14px;
+        }
+        .input-col{display:flex;flex-direction:column;gap:12px;}
+
+        .input-group label{
+            display:block;font-size:0.6rem;color:var(--accent);
+            text-transform:uppercase;margin-bottom:4px;
+            font-weight:800;letter-spacing:1.2px;
+        }
+        .input-group input{
+            width:100%;padding:10px 13px;
+            background:var(--input-bg)!important;color:var(--input-text)!important;
+            border:1px solid var(--border);border-radius:8px;
+            font-family:inherit;font-size:0.88rem;
+            outline:none;transition:border .2s;
+        }
+        .input-group input:focus{border-color:var(--accent);}
+
+        textarea{
+            width:100%;padding:11px 14px;height:90px;
+            background:var(--input-bg)!important;color:var(--input-text)!important;
+            border:1px solid var(--border);border-radius:8px;
+            font-family:'JetBrains Mono';font-size:0.88rem;
+            outline:none;transition:border .2s;
+            resize:none;margin-bottom:12px;
+        }
+        textarea:focus{border-color:var(--accent);}
+
+        .main-btn{
+            width:100%;padding:14px;background:var(--accent);color:#fff;border:none;
+            border-radius:8px;cursor:pointer;font-weight:700;text-transform:uppercase;
+            letter-spacing:1.5px;font-size:0.85rem;transition:opacity .2s;
+        }
+        .main-btn:hover{opacity:.88;}
+
+        /* ── Data card (debajo del form) ── */
+        .data-card{
+            background:var(--card-bg);padding:18px;border-radius:12px;
+            border:1px dashed var(--border);
+        }
+        .data-card-title{font-size:0.6rem;color:var(--accent);margin-bottom:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+        pre{
+            color:var(--text-main);background:rgba(0,0,0,.04);
+            font-family:'JetBrains Mono';font-size:0.8rem;line-height:1.6;
+            white-space:pre-wrap;margin-bottom:12px;padding:12px;
+            border-radius:8px;border:1px solid var(--border);
+            max-height:220px;overflow-y:auto;
+        }
+        .action-btn{
+            width:100%;padding:11px;border:1px solid var(--border);
+            background:transparent;color:var(--text-main);cursor:pointer;
+            border-radius:8px;margin-top:6px;font-weight:700;
+            text-transform:uppercase;font-size:0.75rem;letter-spacing:.8px;
+            transition:background .2s,color .2s;
+        }
+        .action-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+        /* ══════════════════════════════════════
+           COLUMNA DERECHA — VOUCHER PREVIEW
+        ══════════════════════════════════════ */
+        .voucher-col{
+            display:flex;flex-direction:column;
+            align-items:flex-start;
+            position:sticky;top:20px;
         }
 
-        [data-style="blueprint"] {
-            --bg: #0a192f; --card-bg: #0a192f; --accent: #64ffda; --text-main: #ccd6f6;
-            --text-dim: #8892b0; --border: #64ffda; --font-header: 'JetBrains Mono', monospace;
-            --input-bg: #112240; --input-text: #64ffda; --watermark-color: rgba(100, 255, 218, 0.15);
+        /* Contenedor que ocupa el espacio visual del voucher escalado */
+        .voucher-preview-outer{
+            position:relative;
+            width:calc(405px * 0.69);
+            height:calc(720px * 0.69);
+            flex-shrink:0;
+        }
+        /* Wrapper que aplica la escala (el visual-card adentro NO tiene transform) */
+        .voucher-scale{
+            position:absolute;
+            top:0;left:0;
+            transform:scale(0.69);
+            transform-origin:top left;
+            width:405px;
+            height:720px;
+        }
+        /* Estado "capturando": quita la escala para html2canvas */
+        .voucher-scale.capturing{transform:none;transform-origin:initial;}
+        .voucher-preview-outer.capturing{width:405px;height:720px;}
+
+        .copy-voucher-btn{
+            margin-top:8px;
+            width:calc(405px * 0.69);
         }
 
-        [data-style="minimal"] {
-            --bg: #ffffff; --card-bg: #ffffff; --accent: #2d3436; --text-main: #2d3436;
-            --text-dim: #636e72; --border: #dfe6e9; --font-header: 'Montserrat', sans-serif;
-            --input-bg: #f0f0f0; --input-text: #2d3436; --watermark-color: rgba(0, 0, 0, 0.05);
+        /* ══════════════════════════════════════
+           CUPÓN VISUAL — FORMATO MÓVIL 9:16
+        ══════════════════════════════════════ */
+        .visual-card{
+            width:405px;
+            height:720px;
+            background:var(--card-bg);
+            border:3px double var(--border);
+            border-radius:6px;
+            padding:28px 28px 160px;
+            position:relative;
+            color:var(--text-main);
+            box-shadow:0 25px 60px rgba(0,0,0,.25);
+            overflow:hidden;
+            display:flex;
+            flex-direction:column;
+            flex-shrink:0;
         }
 
-        [data-style="carbon"] {
-            --bg: #111; --card-bg: #1a1a1a; --accent: #d63031; --text-main: #eee;
-            --text-dim: #888; --border: #444; --font-header: 'Exo 2', sans-serif;
-            --input-bg: #222; --input-text: #ffffff; --watermark-color: rgba(255, 255, 255, 0.08);
+        /* ── Marca de agua ── */
+        .visual-card::before{
+            content:"OFICIAL VOUCHER";
+            position:absolute;
+            top:50%;left:30%;
+            transform:translate(-50%,-50%) rotate(-53deg);
+            font-size:5rem;
+            color:var(--wm-color);
+            font-weight:900;
+            pointer-events:none;
+            width:100%;
+            text-align:center;
+            font-family:var(--font-header);
+            letter-spacing:5px;
+            white-space:nowrap;
+            z-index:1;
+            opacity:0.39;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.2s; }
-        body { background-color: var(--bg); color: var(--text-main); font-family: var(--font-main); padding: 40px 20px; }
-        .container { max-width: 1100px; margin: 0 auto; position: relative; }
-
-        .input-section { background: rgba(128,128,128,0.1); padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(128,128,128,0.2); }
-        .extra-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 0.65rem; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px; }
-        .extra-inputs input, textarea { width: 100%; padding: 12px; background: var(--input-bg) !important; color: var(--input-text) !important; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
-        textarea { height: 90px; font-family: 'JetBrains Mono'; margin-bottom: 15px; resize: none; }
-        .main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-        .display-grid { display: grid; grid-template-columns: 1fr 400px; gap: 30px; display: none; margin-top: 20px;}
-
-        /* VOUCHER */
-        .visual-card { background-color: var(--card-bg); border: 3px double var(--border); padding: 45px; position: relative; color: var(--text-main); box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden; }
-        .visual-card::before { content: "DOCUMENTO OFICIAL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg); font-size: 5rem; color: var(--watermark-color); font-weight: 900; pointer-events: none; width: 160%; text-align: center; font-family: var(--font-header); }
-
-        .coupon-header { border-bottom: 2px solid var(--border); padding-bottom: 12px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
-        .coupon-header h2 { font-family: var(--font-header); font-size: 1.3rem; color: var(--accent); }
-        .v-folio { background: var(--accent); color: #fff; padding: 6px 16px; font-family: 'JetBrains Mono'; font-size: 0.85rem; font-weight: 700; clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%); }
-
-        .client-name { position: relative; z-index: 2; font-family: var(--font-header); font-size: 2.6rem; line-height: 1; margin: 20px 0; color: var(--text-main); text-transform: uppercase; border-left: 6px solid var(--accent); padding-left: 18px; }
-
-        .v-row { position: relative; z-index: 2; display: flex; border-bottom: 1px solid var(--border); padding: 18px 0; justify-content: space-between; align-items: center; }
-        .v-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 1.2px; }
-        .v-value { font-size: 1.05rem; color: var(--text-main); font-weight: 600; text-align: right; }
-
-        /* QR POSICION */
-        .qr-container { position: absolute; bottom: 30px; right: 30px; z-index: 3; background: white; padding: 5px; border: 1px solid var(--border); display: none; }
-        
-        .stamp { 
-            position: absolute; bottom: 35px; right: 135px; width: 85px; height: 85px; border: 3px double var(--accent); border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-size: 0.55rem; text-align: center; font-weight: 800; 
-            color: var(--accent); transform: rotate(22deg); opacity: 0.25; text-transform: uppercase; z-index: 2; line-height: 1.4; 
+        /* ── Header del cupón ── */
+        .coupon-header{
+            display:flex;justify-content:space-between;align-items:center;
+            padding-bottom:12px;border-bottom:2px solid var(--border);
+            position:relative;z-index:2;gap:10px;flex-shrink:0;
+        }
+        .coupon-header h2{
+            font-family:var(--font-header);font-size:0.82rem;
+            color:var(--accent);letter-spacing:2px;white-space:nowrap;
+        }
+        .v-folio{
+            background:var(--accent);color:#fff;
+            padding:6px 14px;font-family:'JetBrains Mono';
+            font-size:0.7rem;font-weight:700;
+            clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);
+            letter-spacing:1px;white-space:nowrap;flex-shrink:0;
         }
 
-        .config-menu { position: absolute; top: -10px; right: 0; z-index: 100; }
-        .config-btn { background: #333; color: #fff; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: 600; }
-        .config-panel { position: absolute; top: 40px; right: 0; background: #222; padding: 15px; border-radius: 8px; display: none; width: 220px; border: 1px solid #444; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .config-panel.active { display: block; }
-        select { width: 100%; padding: 8px; background: #000; color: #fff; border: 1px solid #444; border-radius: 4px; }
+        /* ── Bloque central ── */
+        .card-body{
+            position:relative;z-index:2;
+            display:flex;flex-direction:column;
+            flex-shrink:0;margin-top:16px;
+        }
 
-        .data-card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px dashed var(--border); }
-        pre { color: var(--text-main); background: rgba(0,0,0,0.05); font-family: 'JetBrains Mono'; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px; padding: 15px; border-radius: 8px; border: 1px solid var(--border);}
-        .action-btn { width: 100%; padding: 14px; border: 1px solid var(--border); background: transparent; color: var(--text-main); cursor: pointer; border-radius: 8px; margin-top: 10px; font-weight: 700; text-transform: uppercase; }
+        /* ── State badge ── */
+        .state-badge{
+            display:inline-block;margin-bottom:5px;
+            background:var(--accent);color:#fff;
+            padding:3px 11px;font-weight:800;font-size:0.6rem;
+            border-radius:3px;letter-spacing:1px;
+        }
 
-        @media (max-width: 900px) { .display-grid { grid-template-columns: 1fr; } .extra-inputs { grid-template-columns: 1fr; } }
+        /* ── Nombre del cliente ── */
+        .client-name{
+            font-family:var(--font-header);font-size:1.75rem;
+            line-height:1.05;margin-bottom:5px;
+            color:var(--text-main);text-transform:uppercase;
+            border-left:5px solid var(--accent);padding-left:12px;
+        }
+
+        /* ── Filas de datos ── */
+        .v-rows{position:relative;z-index:2;}
+        .v-row{
+            display:flex;justify-content:space-between;align-items:center;
+            border-bottom:1px solid var(--border);
+            padding:10px 0;gap:10px;
+        }
+        .v-label{
+            font-size:0.65rem;text-transform:uppercase;color:var(--text-dim);
+            font-weight:700;letter-spacing:1px;flex-shrink:0;max-width:42%;
+        }
+        .v-value{
+            font-size:0.85rem;color:var(--text-main);font-weight:600;
+            text-align:right;word-break:break-word;max-width:58%;
+        }
+        .v-row.accent-row{border-bottom-width:2px;border-color:var(--accent);}
+        .v-row.accent-row .v-label{color:var(--accent);}
+        .v-row.accent-row .v-value{color:var(--accent);}
+
+        /* ── Nota legal ── */
+        .legal-note{
+            position:relative;z-index:2;
+            margin-top:14px;font-size:0.62rem;
+            color:var(--text-main);font-family:'JetBrains Mono';
+            line-height:1.65;padding:10px 13px;
+            border-left:3px solid var(--border);
+            background:rgba(128,128,128,.04);
+            border-radius:0 4px 4px 0;
+        }
+
+        /* ── QR: fijo abajo a la derecha ── */
+        .qr-wrap{
+            position:absolute;bottom:20px;right:20px;
+            z-index:3;background:#fff;padding:6px;
+            border:1px solid var(--border);
+            box-shadow:0 4px 16px rgba(0,0,0,0.10);
+            display:none;
+        }
+
+        /* ── Sello: fijo abajo a la izquierda ── */
+        .stamp{
+            position:absolute;bottom:20px;left:20px;
+            width:82px;height:82px;
+            border:3px double var(--accent);border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            flex-direction:column;font-size:0.48rem;text-align:center;
+            font-weight:800;color:var(--accent);
+            text-transform:uppercase;line-height:1.6;opacity:.65;
+            transform:rotate(-10deg);letter-spacing:.5px;z-index:2;
+        }
+
+        /* ══════════════════════════════════════
+           CONFIG MENU
+        ══════════════════════════════════════ */
+        .config-menu{position:absolute;top:-6px;right:0;z-index:100;}
+        .config-btn{background:#333;color:#fff;border:1px solid #444;padding:7px 13px;border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:600;}
+        .config-panel{position:absolute;top:38px;right:0;background:#222;padding:14px;border-radius:8px;display:none;width:220px;border:1px solid #444;box-shadow:0 10px 25px rgba(0,0,0,.5);}
+        .config-panel.active{display:block;}
+        select{width:100%;padding:8px;background:#000;color:#fff;border:1px solid #444;border-radius:4px;font-size:0.85rem;}
+        .reset-btn{margin-top:12px;background:none;border:none;color:#ff4444;font-size:0.6rem;cursor:pointer;text-decoration:underline;}
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════════ */
+        @media(max-width:900px){
+            .main-layout{grid-template-columns:1fr;}
+            .voucher-col{align-items:center;}
+            .voucher-preview-outer{width:calc(405px * 0.85);height:calc(720px * 0.85);}
+            .voucher-scale{transform:scale(0.85);}
+            .copy-voucher-btn{width:calc(405px * 0.85);}
+        }
+        @media(max-width:500px){
+            .form-inputs-grid{grid-template-columns:1fr;}
+        }
     </style>
 </head>
 <body>
+<div class="container">
 
-    <div class="container">
-        <div class="config-menu">
-            <button class="config-btn" onclick="toggleConfig()">⚙️ CONFIGURACIÓN</button>
-            <div class="config-panel" id="configPanel">
-                <label style="color:#aaa; font-size:0.6rem; text-transform:uppercase;">Estilo</label>
-                <select id="styleSelect" onchange="updateStyle(this.value)">
-                    <option value="gold">Voucher Oficial Gold</option>
-                    <option value="cyber">Protocolo Cyber Neón</option>
-                    <option value="modern">Modern Corporativo</option>
-                    <option value="emerald">Deep Emerald (Prestigio)</option>
-                    <option value="blueprint">Midnight Blueprint</option>
-                    <option value="minimal">Minimalist Slate</option>
-                    <option value="carbon">Carbon Fiber Luxury</option>
-                </select>
-                <button onclick="localStorage.clear(); location.reload();" style="margin-top: 15px; background: none; border: none; color: #ff4444; font-size: 0.6rem; cursor: pointer; text-decoration: underline;">Reiniciar Aplicación</button>
-            </div>
-        </div>
-
-        <header><h1>IUL LEAD STUDIO</h1></header>
-
-        <div class="input-section">
-            <div class="extra-inputs">
-                <div class="input-group">
-                    <label>Profesional Financiero</label>
-                    <input type="text" id="inputAgent" placeholder="Tu nombre..." oninput="saveManualFields()">
-                </div>
-                <div class="input-group">
-                    <label>Compañía / Agencia</label>
-                    <input type="text" id="inputCompany" placeholder="Tu firma..." oninput="saveManualFields()">
-                </div>
-                <div class="input-group">
-                    <label>URL de Verificación (QR)</label>
-                    <input type="text" id="inputQR" placeholder="https://..." oninput="saveManualFields()">
-                </div>
-            </div>
-            <textarea id="rawInput" placeholder="Pega los datos del lead aquí..."></textarea>
-            <button class="main-btn" onclick="processData()">Generar Cupón de Asesoría</button>
-        </div>
-
-        <div class="display-grid" id="displayGrid">
-            <div class="visual-container">
-                <div class="visual-card" id="screenshot-area">
-                    <div class="coupon-header">
-                        <h2>CUPÓN DE ASESORÍA</h2>
-                        <div class="v-folio" id="v-folio-display">FOLIO: ---</div>
-                    </div>
-                    <div id="v-state-box" style="margin-bottom: 8px;"></div>
-                    <div class="client-name" id="v-name">SOLICITANTE</div>
-                    
-                    <div id="v-rows-container"></div>
-                    <div id="manual-fields-container"></div>
-
-                    <div style="margin-top: 30px; font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono'; line-height: 1.4; width: 70%;">
-                        Este documento autoriza una consulta privada para el diseño de estrategias de acumulación y protección. Favor de referenciar el Folio indicado arriba. Escanee el QR para validar credenciales.
-                    </div>
-
-                    <div class="stamp">Validado<br>Asesoramiento<br>Seguro</div>
-                    
-                    <div id="qrcode" class="qr-container"></div>
-                </div>
-                <button class="action-btn" onclick="copyImage(this)">Copiar Cupón (Imagen) 📸</button>
-            </div>
-
-            <div class="data-card">
-                <div style="font-size: 0.65rem; color: var(--accent); margin-bottom: 12px; font-weight: 800;">RESUMEN DE DATOS</div>
-                <pre id="structuredText"></pre>
-                <button class="action-btn" onclick="copyText(this)">Copiar Texto 📋</button>
-            </div>
+    <!-- Config -->
+    <div class="config-menu">
+        <button class="config-btn" onclick="toggleConfig()">⚙️ Estilo</button>
+        <div class="config-panel" id="configPanel">
+            <label style="color:#aaa;font-size:.6rem;text-transform:uppercase;display:block;margin-bottom:6px;">Tema Visual</label>
+            <select id="styleSelect" onchange="updateStyle(this.value)">
+                <option value="gold">Voucher Gold Clásico</option>
+                <option value="cyber">Cyber Neón</option>
+                <option value="modern">Modern Corporativo</option>
+                <option value="emerald">Deep Emerald</option>
+                <option value="blueprint">Midnight Blueprint</option>
+                <option value="minimal">Minimalist Slate</option>
+                <option value="carbon">Carbon Fiber</option>
+            </select>
+            <button class="reset-btn" onclick="localStorage.clear();location.reload();">Reiniciar aplicación</button>
         </div>
     </div>
 
-    <script>
-        const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
-        let qrcodeInstance = null;
+    <header>
+        <h1>IUL Lead Studio</h1>
+        <p>Generador profesional de cupones de asesoría</p>
+    </header>
 
-        window.onload = () => {
-            const savedStyle = localStorage.getItem('iul-style-vfinal') || 'gold';
-            updateStyle(savedStyle);
-            document.getElementById('inputAgent').value = localStorage.getItem('iul-manual-agent-vfinal') || "";
-            document.getElementById('inputCompany').value = localStorage.getItem('iul-manual-company-vfinal') || "";
-            document.getElementById('inputQR').value = localStorage.getItem('iul-manual-qr-vfinal') || "";
-            
-            const lastData = localStorage.getItem('iul-last-raw-vfinal');
-            if (lastData) {
-                document.getElementById('rawInput').value = lastData;
-                processData(false);
+    <div class="main-layout">
+
+        <!-- ── COLUMNA IZQUIERDA: Formulario + Datos ── -->
+        <div class="form-col">
+            <div class="input-section">
+
+                <!-- 2 columnas: (Nombre + Licencia) | (Compañía + QR) -->
+                <div class="form-inputs-grid">
+                    <div class="input-col">
+                        <div class="input-group">
+                            <label>Profesional Financiero</label>
+                            <input type="text" id="inputAgent" placeholder="Tu nombre completo..." oninput="saveFields()">
+                        </div>
+                        <div class="input-group">
+                            <label>Licencia Verificable</label>
+                            <input type="text" id="inputLicense" placeholder="Núm. de licencia..." oninput="saveFields()">
+                        </div>
+                    </div>
+                    <div class="input-col">
+                        <div class="input-group">
+                            <label>Compañía / Agencia</label>
+                            <input type="text" id="inputCompany" placeholder="Nombre de tu firma..." oninput="saveFields()">
+                        </div>
+                        <div class="input-group">
+                            <label>URL para código QR</label>
+                            <input type="text" id="inputQR" placeholder="https://..." oninput="saveFields()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textarea: línea completa -->
+                <textarea id="rawInput" placeholder="Pega aquí los datos del lead (nombre, teléfono, email, estado, monto, etc.)..."></textarea>
+
+                <button class="main-btn" onclick="processData()">⚡ Generar Cupón de Asesoría</button>
+            </div>
+
+            <!-- Resumen del lead (aparece tras generar) -->
+            <div class="data-card" id="dataCard" style="display:none;">
+                <div class="data-card-title">Resumen del Lead</div>
+                <pre id="structuredText"></pre>
+                <button class="action-btn" onclick="copyText(this)">📋 Copiar texto</button>
+            </div>
+        </div>
+
+        <!-- ── COLUMNA DERECHA: Voucher Preview ── -->
+        <div class="voucher-col">
+            <div class="voucher-preview-outer" id="voucherOuter">
+                <div class="voucher-scale" id="voucherScale">
+
+                    <div class="visual-card" id="screenshot-area">
+
+                        <div class="coupon-header">
+                            <h2>CUPÓN DE ASESORÍA</h2>
+                            <div class="v-folio" id="v-folio">FOLIO: ---</div>
+                        </div>
+
+                        <div class="card-body">
+                            <div id="v-state-box"></div>
+                            <div class="client-name" id="v-name">NOMBRE CLIENTE</div>
+                            <div class="v-rows" id="v-rows"></div>
+                            <div class="v-rows" id="v-manual-rows"></div>
+                        </div>
+
+                        <div class="legal-note">
+                            Este documento autoriza una consulta privada para el diseño de
+                            estrategias de acumulación y protección de patrimonio.
+                            Referencie el Folio indicado. Escanee el QR para validar
+                            credenciales del asesor.
+                        </div>
+
+                        <div class="stamp">
+                            <span>✓</span>
+                            <span>Validado</span>
+                            <span>Asesoramiento</span>
+                            <span>Seguro</span>
+                        </div>
+                        <div id="qrcode" class="qr-wrap"></div>
+
+                    </div>
+
+                </div>
+            </div>
+            <button class="action-btn copy-voucher-btn" onclick="copyImage(this)">📸 Copiar cupón como imagen</button>
+        </div>
+
+    </div><!-- /.main-layout -->
+</div><!-- /.container -->
+
+<script>
+    const US_STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+
+    window.onload=()=>{
+        const s=localStorage.getItem('iul-style-vfinal')||'gold';
+        updateStyle(s);
+        document.getElementById('inputAgent').value=localStorage.getItem('iul-manual-agent-vfinal')||'';
+        document.getElementById('inputLicense').value=localStorage.getItem('iul-manual-license-vfinal')||'';
+        document.getElementById('inputCompany').value=localStorage.getItem('iul-manual-company-vfinal')||'';
+        document.getElementById('inputQR').value=localStorage.getItem('iul-manual-qr-vfinal')||'';
+        const last=localStorage.getItem('iul-last-raw-vfinal');
+        if(last){document.getElementById('rawInput').value=last;processData(false);}
+    };
+
+    function toggleConfig(){document.getElementById('configPanel').classList.toggle('active');}
+    function updateStyle(s){
+        document.documentElement.setAttribute('data-style',s);
+        document.getElementById('styleSelect').value=s;
+        localStorage.setItem('iul-style-vfinal',s);
+    }
+    function saveFields(){
+        localStorage.setItem('iul-manual-agent-vfinal',document.getElementById('inputAgent').value);
+        localStorage.setItem('iul-manual-license-vfinal',document.getElementById('inputLicense').value);
+        localStorage.setItem('iul-manual-company-vfinal',document.getElementById('inputCompany').value);
+        localStorage.setItem('iul-manual-qr-vfinal',document.getElementById('inputQR').value);
+    }
+    function clean(s){return s?s.replace(/_/g,' ').trim():'';}
+    function folio(phone){
+        const d=new Date();
+        const mm=String(d.getMonth()+1).padStart(2,'0');
+        const yy=String(d.getFullYear()).slice(-2);
+        const l4=phone?phone.replace(/\D/g,'').slice(-4):'0000';
+        return`IUL-${mm}${yy}-${l4}`;
+    }
+
+    function processData(save=true){
+        const raw=document.getElementById('rawInput').value.trim();
+        if(!raw)return;
+        if(save)localStorage.setItem('iul-last-raw-vfinal',raw);
+
+        const tokens=raw.includes('\t')?raw.split('\t'):raw.split(/\s+/);
+        const r={name:[],phone:'',age:'',email:'',state:'',amount:'',interest:''};
+
+        tokens.forEach(t=>{
+            const tk=t.trim();
+            if(!tk||tk.toLowerCase()==='español')return;
+            const cn=tk.replace(/\D/g,'');
+            if(!r.phone&&cn.length>=10){
+                let n=cn;if(n.length>10&&n.startsWith('1'))n=n.substring(1);
+                r.phone=`+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
+            } else if(!r.email&&tk.includes('@'))r.email=tk.toLowerCase();
+            else if(!r.state&&tk.length===2&&US_STATES.includes(tk.toUpperCase()))r.state=tk.toUpperCase();
+            else if(!r.age&&(/^\d{2}$/.test(tk)||tk.includes('-')))r.age=clean(tk)+' Años';
+            else if(tk.includes('$'))r.amount=clean(tk);
+            else if(tk.includes('_'))r.interest=clean(tk);
+            else if(/^[a-zA-ZáéíóúÁÉÍÓÚ]/.test(tk)&&tk.length>1)r.name.push(clean(tk));
+        });
+
+        const f=folio(r.phone);
+        const agent=document.getElementById('inputAgent').value.trim();
+        const license=document.getElementById('inputLicense').value.trim();
+        const company=document.getElementById('inputCompany').value.trim();
+        const qrUrl=document.getElementById('inputQR').value.trim();
+
+        document.getElementById('v-folio').textContent=`FOLIO: ${f}`;
+        document.getElementById('v-name').textContent=r.name.join(' ').toUpperCase()||'SIN NOMBRE';
+
+        const sb=document.getElementById('v-state-box');
+        sb.innerHTML=r.state?`<span class="state-badge">ESTADO: ${r.state}</span>`:'';
+
+        const rows=document.getElementById('v-rows');
+        rows.innerHTML='';
+        [
+            {l:'Teléfono de Contacto',v:r.phone},
+            {l:'Correo Electrónico',v:r.email},
+            {l:'Rango de Edad',v:r.age},
+            {l:'Inversión Mensual',v:r.amount},
+            {l:'Objetivo Principal',v:r.interest},
+        ].forEach(({l,v})=>{
+            if(v)rows.innerHTML+=`<div class="v-row"><span class="v-label">${l}</span><span class="v-value">${v}</span></div>`;
+        });
+
+        const mr=document.getElementById('v-manual-rows');
+        mr.innerHTML='';
+        if(agent)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Profesional Asignado</span><span class="v-value">${agent}</span></div>`;
+        if(license)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Licencia</span><span class="v-value">${license}</span></div>`;
+        if(company)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Firma de Asesoría</span><span class="v-value">${company}</span></div>`;
+
+        const qb=document.getElementById('qrcode');
+        if(qrUrl){
+            const url=/^https?:\/\//i.test(qrUrl)?qrUrl:'https://'+qrUrl;
+            qb.innerHTML='';
+            qb.style.display='block';
+            new QRCode(qb,{text:url,width:130,height:130,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});
+        } else {
+            qb.style.display='none';
+        }
+
+        let txt=`🆔 FOLIO: ${f}\n👤 CLIENTE: ${r.name.join(' ').toUpperCase()}`;
+        if(r.phone)txt+=`\n📞 TEL: ${r.phone}`;
+        if(r.email)txt+=`\n📧 EMAIL: ${r.email}`;
+        if(r.age)txt+=`\n🎂 EDAD: ${r.age}`;
+        if(r.state)txt+=`\n📍 ESTADO: ${r.state}`;
+        if(r.amount)txt+=`\n💰 APORTE: ${r.amount}`;
+        if(r.interest)txt+=`\n🎯 OBJETIVO: ${r.interest}`;
+        if(agent)txt+=`\n👔 ASESOR: ${agent}`;
+        if(license)txt+=`\n🪪 LICENCIA: ${license}`;
+        if(company)txt+=`\n🏢 AGENCIA: ${company}`;
+        document.getElementById('structuredText').textContent=txt;
+        document.getElementById('dataCard').style.display='block';
+    }
+
+    async function copyImage(btn){
+        const area=document.getElementById('screenshot-area');
+
+        // Clonar el card off-screen para no alterar lo visible
+        const clone=area.cloneNode(true);
+        clone.style.cssText='position:fixed;top:-9999px;left:-9999px;width:405px;height:720px;transform:none;';
+        document.body.appendChild(clone);
+
+        // Copiar contenido del canvas del QR (cloneNode no copia pixels de canvas)
+        const origCanvas=area.querySelector('#qrcode canvas');
+        if(origCanvas){
+            const cloneCanvas=clone.querySelector('canvas');
+            if(cloneCanvas) cloneCanvas.getContext('2d').drawImage(origCanvas,0,0);
+        }
+        const origImg=area.querySelector('#qrcode img');
+        if(origImg){
+            const cloneImg=clone.querySelector('img');
+            if(cloneImg) cloneImg.src=origImg.src;
+        }
+
+        await new Promise(r=>requestAnimationFrame(r));
+        const canvas=await html2canvas(clone,{scale:2.67,backgroundColor:null,useCORS:true,logging:false});
+        document.body.removeChild(clone);
+
+        canvas.toBlob(async blob=>{
+            try{
+                await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+                btn.textContent='✅ ¡Copiado!';
+            }catch(e){
+                const a=document.createElement('a');
+                a.href=URL.createObjectURL(blob);
+                a.download='cupon-asesoria.png';
+                a.click();
+                btn.textContent='✅ ¡Descargado!';
             }
-        };
+            setTimeout(()=>btn.textContent='📸 Copiar cupón como imagen',2500);
+        });
+    }
 
-        function toggleConfig() { document.getElementById('configPanel').classList.toggle('active'); }
-
-        function updateStyle(style) {
-            document.documentElement.setAttribute('data-style', style);
-            document.getElementById('styleSelect').value = style;
-            localStorage.setItem('iul-style-vfinal', style);
-        }
-
-        function saveManualFields() {
-            localStorage.setItem('iul-manual-agent-vfinal', document.getElementById('inputAgent').value);
-            localStorage.setItem('iul-manual-company-vfinal', document.getElementById('inputCompany').value);
-            localStorage.setItem('iul-manual-qr-vfinal', document.getElementById('inputQR').value);
-        }
-
-        function cleanString(str) { return str ? str.replace(/_/g, ' ').trim() : ""; }
-
-        function generateFolio(phone) {
-            const now = new Date();
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const yy = String(now.getFullYear()).slice(-2);
-            const last4 = phone ? phone.replace(/\D/g, '').slice(-4) : "0000";
-            return `IUL-${mm}${yy}-${last4}`;
-        }
-
-        function processData(shouldSave = true) {
-            let raw = document.getElementById('rawInput').value.trim();
-            if (!raw) return;
-            if (shouldSave) localStorage.setItem('iul-last-raw-vfinal', raw);
-
-            let tokens = raw.includes('\t') ? raw.split('\t') : raw.split(/\s+/);
-            let res = { name: [], phone: "", age: "", email: "", state: "", amount: "", interest: "" };
-
-            tokens.forEach(t => {
-                let token = t.trim();
-                if(token.toLowerCase() === 'español' || token.length < 1) return;
-                let cleanNum = token.replace(/\D/g, '');
-                if(!res.phone && cleanNum.length >= 10) {
-                    let n = cleanNum; if(n.length > 10 && n.startsWith('1')) n = n.substring(1);
-                    res.phone = `+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
-                }
-                else if(!res.email && token.includes('@')) res.email = token.toLowerCase();
-                else if(!res.state && token.length === 2 && US_STATES.includes(token.toUpperCase())) res.state = token.toUpperCase();
-                else if(!res.age && (/^\d{2}$/.test(token) || token.includes('-'))) res.age = cleanString(token) + " Años";
-                else if(token.includes('$')) res.amount = cleanString(token);
-                else if(token.includes('_')) res.interest = cleanString(token);
-                else if(/^[a-zA-Záéíóú]/.test(token) && token.length > 1) res.name.push(cleanString(token));
-            });
-
-            const folio = generateFolio(res.phone);
-            const agent = document.getElementById('inputAgent').value.trim();
-            const company = document.getElementById('inputCompany').value.trim();
-            const qrUrl = document.getElementById('inputQR').value.trim();
-
-            document.getElementById('v-folio-display').textContent = `FOLIO: ${folio}`;
-            document.getElementById('v-name').textContent = res.name.join(' ').toUpperCase();
-            document.getElementById('v-state-box').innerHTML = res.state ? `<span style="background:var(--accent); color:white; padding:2px 10px; font-weight:800; font-size:0.75rem; border-radius:3px;">ESTADO: ${res.state}</span>` : '';
-
-            const rows = document.getElementById('v-rows-container');
-            rows.innerHTML = '';
-            const fields = [
-                {l:"Teléfono de Contacto", v:res.phone},
-                {l:"Correo Electrónico", v:res.email},
-                {l:"Rango de Edad", v:res.age},
-                {l:"Inversión Mensual", v:res.amount},
-                {l:"Objetivo Principal", v:res.interest}
-            ];
-            fields.forEach(f => { if(f.v) rows.innerHTML += `<div class="v-row"><span class="v-label">${f.l}</span><span class="v-value">${f.v}</span></div>`; });
-
-            const manualRows = document.getElementById('manual-fields-container');
-            manualRows.innerHTML = '';
-            if(agent) manualRows.innerHTML += `<div class="v-row" style="border-color:var(--accent); border-bottom-width:2px;"><span class="v-label" style="color:var(--accent); font-weight:900;">Profesional Asignado</span><span class="v-value" style="color:var(--accent);">${agent}</span></div>`;
-            if(company) manualRows.innerHTML += `<div class="v-row" style="border-color:var(--accent); border-bottom-width:2px;"><span class="v-label" style="color:var(--accent); font-weight:900;">Firma de Asesoría</span><span class="v-value" style="color:var(--accent);">${company}</span></div>`;
-
-            // Lógica del QR
-            const qrBox = document.getElementById('qrcode');
-            if(qrUrl) {
-                qrBox.innerHTML = "";
-                qrBox.style.display = "block";
-                new QRCode(qrBox, { text: qrUrl, width: 80, height: 80, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
-            } else {
-                qrBox.style.display = "none";
-            }
-
-            let txt = `🆔 FOLIO: ${folio}\n👤 CLIENTE: ${res.name.join(' ').toUpperCase()}\n`;
-            if(res.phone) txt += `📞 TEL: ${res.phone}\n`;
-            if(res.age) txt += `🎂 EDAD: ${res.age}\n`;
-            if(res.amount) txt += `💰 APORTE: ${res.amount}\n`;
-            if(agent) txt += `👔 ASESOR: ${agent}\n`;
-            if(company) txt += `🏢 AGENCIA: ${company}\n`;
-            
-            document.getElementById('structuredText').textContent = txt;
-            document.getElementById('displayGrid').style.display = 'grid';
-        }
-
-        async function copyText(btn) { 
-            await navigator.clipboard.writeText(document.getElementById('structuredText').textContent); 
-            btn.textContent = "¡Copiado! ✅"; setTimeout(() => btn.textContent = "Copiar Texto 📋", 1500); 
-        }
-
-        async function copyImage(btn) {
-            const area = document.getElementById('screenshot-area');
-            const canvas = await html2canvas(area, { scale: 2, backgroundColor: null, useCORS: true });
-            canvas.toBlob(async (blob) => {
-                const item = new ClipboardItem({ "image/png": blob });
-                await navigator.clipboard.write([item]);
-                btn.textContent = "¡Imagen Copiada! ✅"; setTimeout(() => btn.textContent = "Copiar Cupón (Imagen) 📸", 1500);
-            });
-        }
-    </script>
+    async function copyText(btn){
+        await navigator.clipboard.writeText(document.getElementById('structuredText').textContent);
+        btn.textContent='✅ ¡Copiado!';
+        setTimeout(()=>btn.textContent='📋 Copiar texto',2000);
+    }
+</script>
 </body>
 </html>
