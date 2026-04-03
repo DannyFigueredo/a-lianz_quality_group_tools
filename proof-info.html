@@ -66,7 +66,27 @@
         .v-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 1.2px; }
         .v-value { font-size: 1.05rem; color: var(--text-main); font-weight: 600; text-align: right; }
 
-        .stamp { position: absolute; bottom: 25px; right: 25px; width: 85px; height: 85px; border: 3px double var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; text-align: center; font-weight: 800; color: var(--accent); transform: rotate(-12deg); opacity: 0.7; text-transform: uppercase; z-index: 2; line-height: 1; }
+.stamp { 
+    position: absolute; 
+    bottom: 25px; 
+    right: 25px; 
+    width: 85px; 
+    height: 85px; 
+    border: 3px double var(--accent); 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 0.55rem; 
+    text-align: center; 
+    font-weight: 800; 
+    color: var(--accent); 
+    transform: rotate(-12deg); 
+    opacity: 0.35; 
+    text-transform: uppercase; 
+    z-index: 2; 
+    line-height: 1.4; /* Separación entre las líneas de texto dentro del sello */
+}
 
         /* PANEL DERECHA (TEXTO) */
         .data-card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px dashed var(--border); }
@@ -122,11 +142,11 @@
                     <div id="v-rows-container"></div>
                     <div id="manual-fields-container"></div>
 
-                    <div style="margin-top: 30px; font-size: 0.6rem; color: var(--text-dim); font-family: 'JetBrains Mono'; line-height: 1.4;">
+                    <div style="margin-top: 30px; font-size: 0.6rem; color: var(--text-dim); font-family: 'JetBrains Mono'; line-height: 1.4; font-size: 0.7rem">
                         Este documento autoriza una consulta privada para el diseño de estrategias de acumulación y protección. Favor de referenciar el Folio indicado arriba.
                     </div>
 
-                    <div class="stamp">Validado<br>Seguro<br>IUL Studio</div>
+                    <div class="stamp">Validado<br>Asesoramiento<br>Seguro</div>
                 </div>
                 <button class="action-btn" onclick="copyImage(this)">Copiar Cupón (Imagen) 📸</button>
             </div>
