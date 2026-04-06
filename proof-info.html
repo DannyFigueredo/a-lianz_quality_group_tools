@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="es" data-style="gold">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IUL Lead Studio Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=Exo+2:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&family=Cinzel:wght@700&family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&family=Exo+2:ital,wght@1,700&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -13,607 +16,1252 @@
            VARIABLES POR ESTILO
         ══════════════════════════════════════ */
         :root {
-            --bg:#1a1a1a; --card-bg:#fdfcf8; --accent:#947a3a; --text-main:#1d1d1d;
-            --text-dim:#666; --border:#d4af37; --font-header:'Cinzel',serif;
-            --font-main:'Outfit',sans-serif; --input-bg:#2a2a2a; --input-text:#fff;
-            --wm-color:rgba(148,122,58,0.06); --wm-size:3.5rem;
+            --bg: #1a1a1a;
+            --card-bg: #fdfcf8;
+            --accent: #947a3a;
+            --text-main: #1d1d1d;
+            --text-dim: #666;
+            --border: #d4af37;
+            --font-header: 'Cinzel', serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #2a2a2a;
+            --input-text: #fff;
+            --wm-color: rgba(148, 122, 58, 0.06);
+            --wm-size: 3.5rem;
         }
-        [data-style="cyber"]{
-            --bg:#050505;--card-bg:#111111;--accent:#00c878;--text-main:#ffffff;
-            --text-dim:#888888;--border:#00c878;--font-header:'Bebas Neue',sans-serif;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#111;--input-text:#fff;--wm-color:rgba(0,200,120,0.06);--wm-size:3.5rem;
+
+        [data-style="cyber"] {
+            --bg: #050505;
+            --card-bg: #111111;
+            --accent: #00c878;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --border: #00c878;
+            --font-header: 'Bebas Neue', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #111;
+            --input-text: #fff;
+            --wm-color: rgba(0, 200, 120, 0.06);
+            --wm-size: 3.5rem;
         }
-        [data-style="modern"]{
-            --bg:#eef2f7;--card-bg:#ffffff;--accent:#1a365d;--text-main:#1a2740;
-            --text-dim:#7a8fa8;--border:#b8c9e0;--font-header:'Montserrat',sans-serif;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#fff;--input-text:#1a2740;--wm-color:rgba(26,54,93,0.05);--wm-size:3.5rem;
+
+        [data-style="modern"] {
+            --bg: #eef2f7;
+            --card-bg: #ffffff;
+            --accent: #1a365d;
+            --text-main: #1a2740;
+            --text-dim: #7a8fa8;
+            --border: #b8c9e0;
+            --font-header: 'Montserrat', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #fff;
+            --input-text: #1a2740;
+            --wm-color: rgba(26, 54, 93, 0.05);
+            --wm-size: 3.5rem;
         }
-        [data-style="emerald"]{
-            --bg:#062c26;--card-bg:#fdfcf8;--accent:#164a41;--text-main:#062c26;
-            --text-dim:#4d6d6a;--border:#c5a059;--font-header:'Playfair Display',serif;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#0a3d35;--input-text:#fff;--wm-color:rgba(6,44,38,0.06);--wm-size:3.5rem;
+
+        [data-style="emerald"] {
+            --bg: #062c26;
+            --card-bg: #fdfcf8;
+            --accent: #164a41;
+            --text-main: #062c26;
+            --text-dim: #4d6d6a;
+            --border: #c5a059;
+            --font-header: 'Playfair Display', serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #0a3d35;
+            --input-text: #fff;
+            --wm-color: rgba(6, 44, 38, 0.06);
+            --wm-size: 3.5rem;
         }
-        [data-style="blueprint"]{
-            --bg:#0a192f;--card-bg:#0a192f;--accent:#64ffda;--text-main:#ccd6f6;
-            --text-dim:#8892b0;--border:#64ffda;--font-header:'JetBrains Mono',monospace;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#112240;--input-text:#64ffda;--wm-color:rgba(100,255,218,0.05);--wm-size:3.5rem;
+
+        [data-style="blueprint"] {
+            --bg: #0a192f;
+            --card-bg: #0a192f;
+            --accent: #64ffda;
+            --text-main: #ccd6f6;
+            --text-dim: #8892b0;
+            --border: #64ffda;
+            --font-header: 'JetBrains Mono', monospace;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #112240;
+            --input-text: #64ffda;
+            --wm-color: rgba(100, 255, 218, 0.05);
+            --wm-size: 3.5rem;
         }
-        [data-style="minimal"]{
-            --bg:#ffffff;--card-bg:#ffffff;--accent:#2d3436;--text-main:#2d3436;
-            --text-dim:#636e72;--border:#dfe6e9;--font-header:'Montserrat',sans-serif;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#f0f0f0;--input-text:#2d3436;--wm-color:rgba(0,0,0,0.04);--wm-size:3.5rem;
+
+        [data-style="minimal"] {
+            --bg: #ffffff;
+            --card-bg: #ffffff;
+            --accent: #2d3436;
+            --text-main: #2d3436;
+            --text-dim: #636e72;
+            --border: #dfe6e9;
+            --font-header: 'Montserrat', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #f0f0f0;
+            --input-text: #2d3436;
+            --wm-color: rgba(0, 0, 0, 0.04);
+            --wm-size: 3.5rem;
         }
-        [data-style="carbon"]{
-            --bg:#111;--card-bg:#1a1a1a;--accent:#d63031;--text-main:#eee;
-            --text-dim:#888;--border:#444;--font-header:'Exo 2',sans-serif;
-            --font-main:'Outfit',sans-serif;
-            --input-bg:#222;--input-text:#fff;--wm-color:rgba(214,48,49,0.06);--wm-size:3.5rem;
+
+        [data-style="carbon"] {
+            --bg: #111;
+            --card-bg: #1a1a1a;
+            --accent: #d63031;
+            --text-main: #eee;
+            --text-dim: #888;
+            --border: #444;
+            --font-header: 'Exo 2', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #222;
+            --input-text: #fff;
+            --wm-color: rgba(214, 48, 49, 0.06);
+            --wm-size: 3.5rem;
+        }
+
+        [data-style="founder"] {
+            --bg: #0e0e0e;
+            --card-bg: #161614;
+            --accent: #c8ab6e;
+            --text-main: #e8e0d0;
+            --text-dim: #8a8070;
+            --border: #3a3530;
+            --font-header: 'Montserrat', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #1e1d1a;
+            --input-text: #e8e0d0;
+            --wm-color: rgba(200, 171, 110, 0.04);
+            --wm-size: 3.5rem;
+        }
+
+        [data-style="agency"] {
+            --bg: #e8e8e8;
+            --card-bg: #2b2d2f;
+            --accent: #6abf4b;
+            --text-main: #f0f0f0;
+            --text-dim: #a0a8a0;
+            --border: #6abf4b;
+            --font-header: 'Montserrat', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #1e2022;
+            --input-text: #f0f0f0;
+            --wm-color: rgba(106, 191, 75, 0.05);
+            --wm-size: 3.5rem;
+        }
+
+        [data-style="auditor"] {
+            --bg: #dde0e8;
+            --card-bg: #f5f5f5;
+            --accent: #2e3a52;
+            --text-main: #2e3a52;
+            --text-dim: #e8856a;
+            --border: #e8856a;
+            --font-header: 'Montserrat', sans-serif;
+            --font-main: 'Outfit', sans-serif;
+            --input-bg: #2e3a52;
+            --input-text: #f5f5f5;
+            --wm-color: rgba(46, 58, 82, 0.05);
+            --wm-size: 3.5rem;
         }
 
         /* ══════════════════════════════════════
            RESET & BASE
         ══════════════════════════════════════ */
-        *{box-sizing:border-box;margin:0;padding:0;}
-        body{
-            background:var(--bg);color:var(--text-main);font-family:var(--font-main);
-            padding:20px;min-height:100vh;transition:background .3s,color .2s;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .container{max-width:1200px;margin:0 auto;position:relative;}
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background .3s, color .2s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
 
         /* ══════════════════════════════════════
            HEADER
         ══════════════════════════════════════ */
-        header{margin-bottom:16px;}
-        header h1{font-family:var(--font-header);font-size:1.4rem;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
-        header p{font-size:0.65rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+        header {
+            margin-bottom: 16px;
+        }
+
+        header h1 {
+            font-family: var(--font-header);
+            font-size: 1.4rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
 
         /* ══════════════════════════════════════
            LAYOUT PRINCIPAL: 3/4 form | 1/4 voucher
         ══════════════════════════════════════ */
-        .main-layout{
-            display:grid;
-            grid-template-columns:3fr 1fr;
-            gap:20px;
-            align-items:start;
+        .main-layout {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+            align-items: start;
         }
 
         /* ══════════════════════════════════════
            COLUMNA IZQUIERDA — FORMULARIO
         ══════════════════════════════════════ */
-        .form-col{display:flex;flex-direction:column;gap:14px;}
+        .form-col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-        .input-section{
-            background:rgba(128,128,128,.08);
-            padding:20px;border-radius:12px;
-            border:1px solid rgba(128,128,128,.18);
+        .input-section {
+            background: rgba(128, 128, 128, .08);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(128, 128, 128, .18);
         }
 
         /* Grid interno: 2 columnas de inputs */
-        .form-inputs-grid{
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:14px;
-            margin-bottom:14px;
+        .form-inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
         }
-        .input-col{display:flex;flex-direction:column;gap:12px;}
 
-        .input-group label{
-            display:block;font-size:0.6rem;color:var(--accent);
-            text-transform:uppercase;margin-bottom:4px;
-            font-weight:800;letter-spacing:1.2px;
+        .input-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-        .input-group input{
-            width:100%;padding:10px 13px;
-            background:var(--input-bg)!important;color:var(--input-text)!important;
-            border:1px solid var(--border);border-radius:8px;
-            font-family:inherit;font-size:0.88rem;
-            outline:none;transition:border .2s;
-        }
-        .input-group input:focus{border-color:var(--accent);}
 
-        textarea{
-            width:100%;padding:11px 14px;height:90px;
-            background:var(--input-bg)!important;color:var(--input-text)!important;
-            border:1px solid var(--border);border-radius:8px;
-            font-family:'JetBrains Mono';font-size:0.88rem;
-            outline:none;transition:border .2s;
-            resize:none;margin-bottom:12px;
+        .input-group label {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
         }
-        textarea:focus{border-color:var(--accent);}
 
-        .main-btn{
-            width:100%;padding:14px;background:var(--accent);color:#fff;border:none;
-            border-radius:8px;cursor:pointer;font-weight:700;text-transform:uppercase;
-            letter-spacing:1.5px;font-size:0.85rem;transition:opacity .2s;
+        .input-group input {
+            width: 100%;
+            padding: 10px 13px;
+            background: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border .2s;
         }
-        .main-btn:hover{opacity:.88;}
+
+        .input-group input:focus {
+            border-color: var(--accent);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 11px 14px;
+            height: 90px;
+            background: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.88rem;
+            outline: none;
+            transition: border .2s;
+            resize: none;
+            margin-bottom: 12px;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+            transition: opacity .2s;
+        }
+
+        .main-btn:hover {
+            opacity: .88;
+        }
 
         /* ── Data card (debajo del form) ── */
-        .data-card{
-            background:var(--card-bg);padding:18px;border-radius:12px;
-            border:1px dashed var(--border);
+        .data-card {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
         }
-        .data-card-title{font-size:0.6rem;color:var(--accent);margin-bottom:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
-        pre{
-            color:var(--text-main);background:rgba(0,0,0,.04);
-            font-family:'JetBrains Mono';font-size:0.8rem;line-height:1.6;
-            white-space:pre-wrap;margin-bottom:12px;padding:12px;
-            border-radius:8px;border:1px solid var(--border);
-            max-height:220px;overflow-y:auto;
+
+        .data-card-title {
+            font-size: 0.6rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
-        .action-btn{
-            width:100%;padding:11px;border:1px solid var(--border);
-            background:transparent;color:var(--text-main);cursor:pointer;
-            border-radius:8px;margin-top:6px;font-weight:700;
-            text-transform:uppercase;font-size:0.75rem;letter-spacing:.8px;
-            transition:background .2s,color .2s;
+
+        pre {
+            color: var(--text-main);
+            background: rgba(0, 0, 0, .04);
+            font-family: 'JetBrains Mono';
+            font-size: 0.8rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            max-height: 220px;
+            overflow-y: auto;
         }
-        .action-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+        .action-btn {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: .8px;
+            transition: background .2s, color .2s;
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
 
         /* ══════════════════════════════════════
            COLUMNA DERECHA — VOUCHER PREVIEW
         ══════════════════════════════════════ */
-        .voucher-col{
-            display:flex;flex-direction:column;
-            align-items:flex-start;
-            position:sticky;top:20px;
+        .voucher-col {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: sticky;
+            top: 20px;
         }
 
         /* Contenedor que ocupa el espacio visual del voucher escalado */
-        .voucher-preview-outer{
-            position:relative;
-            width:calc(405px * 0.69);
-            height:calc(720px * 0.69);
-            flex-shrink:0;
+        .voucher-preview-outer {
+            position: relative;
+            width: calc(405px * 0.69);
+            height: calc(720px * 0.69);
+            flex-shrink: 0;
         }
-        /* Wrapper que aplica la escala (el visual-card adentro NO tiene transform) */
-        .voucher-scale{
-            position:absolute;
-            top:0;left:0;
-            transform:scale(0.69);
-            transform-origin:top left;
-            width:405px;
-            height:720px;
-        }
-        /* Estado "capturando": quita la escala para html2canvas */
-        .voucher-scale.capturing{transform:none;transform-origin:initial;}
-        .voucher-preview-outer.capturing{width:405px;height:720px;}
 
-        .copy-voucher-btn{
-            margin-top:8px;
-            width:calc(405px * 0.69);
+        /* Wrapper que aplica la escala (el visual-card adentro NO tiene transform) */
+        .voucher-scale {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scale(0.69);
+            transform-origin: top left;
+            width: 405px;
+            height: 720px;
+        }
+
+        /* Estado "capturando": quita la escala para html2canvas */
+        .voucher-scale.capturing {
+            transform: none;
+            transform-origin: initial;
+        }
+
+        .voucher-preview-outer.capturing {
+            width: 405px;
+            height: 720px;
+        }
+
+        .copy-voucher-btn {
+            margin-top: 8px;
+            width: calc(405px * 0.69);
         }
 
         /* ══════════════════════════════════════
            CUPÓN VISUAL — FORMATO MÓVIL 9:16
         ══════════════════════════════════════ */
-        .visual-card{
-            width:405px;
-            height:720px;
-            background:var(--card-bg);
-            border:3px double var(--border);
-            border-radius:6px;
-            padding:28px 28px 160px;
-            position:relative;
-            color:var(--text-main);
-            box-shadow:0 25px 60px rgba(0,0,0,.25);
-            overflow:hidden;
-            display:flex;
-            flex-direction:column;
-            flex-shrink:0;
+        .visual-card {
+            width: 405px;
+            height: auto;
+            min-height: 720px;
+            background: var(--card-bg);
+            border: 3px double var(--border);
+            border-radius: 6px;
+            padding: 28px 28px 120px;
+            position: relative;
+            color: var(--text-main);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .25);
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
         }
 
         /* ── Marca de agua ── */
-        .visual-card::before{
-            content:"OFICIAL VOUCHER";
-            position:absolute;
-            top:50%;left:30%;
-            transform:translate(-50%,-50%) rotate(-53deg);
-            font-size:5rem;
-            color:var(--wm-color);
-            font-weight:900;
-            pointer-events:none;
-            width:100%;
-            text-align:center;
-            font-family:var(--font-header);
-            letter-spacing:5px;
-            white-space:nowrap;
-            z-index:1;
-            opacity:0.39;
+        .visual-card::before {
+            content: "OFICIAL VOUCHER";
+            position: absolute;
+            top: 70%;
+            left: 30%;
+            transform: translate(-50%, -50%) rotate(-53deg);
+            font-size: 5rem;
+            color: var(--wm-color);
+            font-weight: 900;
+            pointer-events: none;
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-header);
+            letter-spacing: 5px;
+            white-space: nowrap;
+            z-index: 1;
+            opacity: 0.90;
         }
 
         /* ── Header del cupón ── */
-        .coupon-header{
-            display:flex;justify-content:space-between;align-items:center;
-            padding-bottom:12px;border-bottom:2px solid var(--border);
-            position:relative;z-index:2;gap:10px;flex-shrink:0;
+        .coupon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            position: relative;
+            z-index: 2;
+            gap: 10px;
+            flex-shrink: 0;
         }
-        .coupon-header h2{
-            font-family:var(--font-header);font-size:0.82rem;
-            color:var(--accent);letter-spacing:2px;white-space:nowrap;
+
+        .coupon-header h2 {
+            font-family: var(--font-header);
+            font-size: 0.82rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            white-space: nowrap;
         }
-        .v-folio{
-            background:var(--accent);color:#fff;
-            padding:6px 14px;font-family:'JetBrains Mono';
-            font-size:0.7rem;font-weight:700;
-            clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);
-            letter-spacing:1px;white-space:nowrap;flex-shrink:0;
+
+        .v-folio {
+            background: var(--accent);
+            color: #fff;
+            padding: 6px 14px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.7rem;
+            font-weight: 700;
+            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+            letter-spacing: 1px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         /* ── Bloque central ── */
-        .card-body{
-            position:relative;z-index:2;
-            display:flex;flex-direction:column;
-            flex-shrink:0;margin-top:16px;
+        .card-body {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            margin-top: 16px;
         }
 
         /* ── State badge ── */
-        .state-badge{
-            display:inline-block;margin-bottom:5px;
-            background:var(--accent);color:#fff;
-            padding:3px 11px;font-weight:800;font-size:0.6rem;
-            border-radius:3px;letter-spacing:1px;
+        .state-badge {
+            display: inline-block;
+            margin-bottom: 5px;
+            background: var(--accent);
+            color: #fff;
+            padding: 3px 11px;
+            font-weight: 800;
+            font-size: 0.6rem;
+            border-radius: 3px;
+            letter-spacing: 1px;
+        }
+
+        /* ── Nombre + Estado ── */
+        .name-state-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .name-state-row .client-name {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        #v-state-box {
+            flex-shrink: 0;
+            align-self: center;
+        }
+        #v-state-box .state-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 6px 14px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.7rem;
+            font-weight: 700;
+            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         /* ── Nombre del cliente ── */
-        .client-name{
-            font-family:var(--font-header);font-size:1.75rem;
-            line-height:1.05;margin-bottom:5px;
-            color:var(--text-main);text-transform:uppercase;
-            border-left:5px solid var(--accent);padding-left:12px;
+        .client-name {
+            font-family: var(--font-header);
+            font-size: 1.75rem;
+            line-height: 1.05;
+            margin-bottom: 5px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            border-left: 5px solid var(--accent);
+            padding-left: 12px;
         }
 
         /* ── Filas de datos ── */
-        .v-rows{position:relative;z-index:2;}
-        .v-row{
-            display:flex;justify-content:space-between;align-items:center;
-            border-bottom:1px solid var(--border);
-            padding:10px 0;gap:10px;
+        .v-rows {
+            position: relative;
+            z-index: 2;
         }
-        .v-label{
-            font-size:0.65rem;text-transform:uppercase;color:var(--text-dim);
-            font-weight:700;letter-spacing:1px;flex-shrink:0;max-width:42%;
+
+        .v-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            gap: 10px;
         }
-        .v-value{
-            font-size:0.85rem;color:var(--text-main);font-weight:600;
-            text-align:right;word-break:break-word;max-width:58%;
+
+        .v-label {
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            max-width: 42%;
         }
-        .v-row.accent-row{border-bottom-width:2px;border-color:var(--accent);}
-        .v-row.accent-row .v-label{color:var(--accent);}
-        .v-row.accent-row .v-value{color:var(--accent);}
+
+        .v-value {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+            max-width: 58%;
+        }
+        .v-autofit {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .v-row.accent-row {
+            border-bottom-width: 2px;
+            border-color: var(--accent);
+        }
+
+        .v-row.accent-row .v-label {
+            color: var(--accent);
+        }
+
+        .v-row.accent-row .v-value {
+            color: var(--accent);
+        }
 
         /* ── Nota legal ── */
-        .legal-note{
-            position:relative;z-index:2;
-            margin-top:14px;font-size:0.62rem;
-            color:var(--text-main);font-family:'JetBrains Mono';
-            line-height:1.65;padding:10px 13px;
-            border-left:3px solid var(--border);
-            background:rgba(128,128,128,.04);
-            border-radius:0 4px 4px 0;
+        .legal-note {
+            position: relative;
+            z-index: 2;
+            margin-top: 14px;
+            font-size: 0.56rem;
+            color: var(--text-main);
+            font-family: 'JetBrains Mono';
+            line-height: 1.55;
+            text-align: justify;
+            padding: 10px 13px;
+            border-left: 3px solid var(--border);
+            background: rgba(128, 128, 128, .04);
+            border-radius: 0 4px 4px 0;
+        }
+        .legal-note ul {
+            list-style: disc;
+            padding-left: 14px;
+            margin: 0;
+        }
+        .legal-note ul li {
+            margin-bottom: 3px;
         }
 
-        /* ── QR: fijo abajo a la derecha ── */
-        .qr-wrap{
-            position:absolute;bottom:20px;right:20px;
-            z-index:3;background:#fff;padding:6px;
-            border:1px solid var(--border);
-            box-shadow:0 4px 16px rgba(0,0,0,0.10);
-            display:none;
+        /* ── QR: flujo natural después de legal-note ── */
+        .qr-wrap {
+            position: relative;
+            display: block;
+            margin: 12px auto 0;
+            width: fit-content;
+            z-index: 3;
+            background: #fff;
+            padding: 6px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ── Frase institucional: esquina inferior derecha ── */
+        .v-phrase {
+            position: absolute;
+            bottom: 26px;
+            right: 32px;
+            font-style: italic;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            text-align: right;
+            max-width: 55%;
+            z-index: 2;
+            line-height: 1.4;
         }
 
         /* ── Sello: fijo abajo a la izquierda ── */
-        .stamp{
-            position:absolute;bottom:20px;left:20px;
-            width:82px;height:82px;
-            border:3px double var(--accent);border-radius:50%;
-            display:flex;align-items:center;justify-content:center;
-            flex-direction:column;font-size:0.48rem;text-align:center;
-            font-weight:800;color:var(--accent);
-            text-transform:uppercase;line-height:1.6;opacity:.65;
-            transform:rotate(-10deg);letter-spacing:.5px;z-index:2;
+        .stamp {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 82px;
+            height: 82px;
+            border: 3px double var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 0.48rem;
+            text-align: center;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            line-height: 1.6;
+            opacity: .65;
+            transform: rotate(-10deg);
+            letter-spacing: .5px;
+            z-index: 2;
         }
 
         /* ══════════════════════════════════════
            CONFIG MENU
         ══════════════════════════════════════ */
-        .config-menu{position:absolute;top:-6px;right:0;z-index:100;}
-        .config-btn{background:#333;color:#fff;border:1px solid #444;padding:7px 13px;border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:600;}
-        .config-panel{position:absolute;top:38px;right:0;background:#222;padding:14px;border-radius:8px;display:none;width:220px;border:1px solid #444;box-shadow:0 10px 25px rgba(0,0,0,.5);}
-        .config-panel.active{display:block;}
-        select{width:100%;padding:8px;background:#000;color:#fff;border:1px solid #444;border-radius:4px;font-size:0.85rem;}
-        .reset-btn{margin-top:12px;background:none;border:none;color:#ff4444;font-size:0.6rem;cursor:pointer;text-decoration:underline;}
+        .config-menu {
+            position: absolute;
+            top: -6px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .config-btn {
+            background: #333;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 7px 13px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .config-panel {
+            position: absolute;
+            top: 38px;
+            right: 0;
+            background: #222;
+            padding: 14px;
+            border-radius: 8px;
+            display: none;
+            width: 220px;
+            border: 1px solid #444;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .5);
+        }
+
+        .config-panel.active {
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .reset-btn {
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 0.6rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
         /* ══════════════════════════════════════
            RESPONSIVE
         ══════════════════════════════════════ */
-        @media(max-width:900px){
-            .main-layout{grid-template-columns:1fr;}
-            .voucher-col{align-items:center;}
-            .voucher-preview-outer{width:calc(405px * 0.85);height:calc(720px * 0.85);}
-            .voucher-scale{transform:scale(0.85);}
-            .copy-voucher-btn{width:calc(405px * 0.85);}
+        @media(max-width:900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .voucher-col {
+                align-items: center;
+            }
+
+            .voucher-preview-outer {
+                width: calc(405px * 0.85);
+                height: calc(720px * 0.85);
+            }
+
+            .voucher-scale {
+                transform: scale(0.85);
+            }
+
+            .copy-voucher-btn {
+                width: calc(405px * 0.85);
+            }
         }
-        @media(max-width:500px){
-            .form-inputs-grid{grid-template-columns:1fr;}
+
+        @media(max-width:500px) {
+            .form-inputs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Fondos del voucher ── */
+        .bg-swatch-row {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .bg-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color .2s, transform .15s;
+            flex-shrink: 0;
+        }
+        .bg-swatch:hover { transform: scale(1.12); }
+        .bg-swatch.active { border-color: var(--accent, #d4af37); }
+
+        .bg-swatch[data-bg="none"]     { background: #444; background-image: repeating-linear-gradient(45deg,#666 0,#666 1px,transparent 0,transparent 50%); background-size: 6px 6px; }
+        .bg-swatch[data-bg="lines"]    { background: #fff; background-image: repeating-linear-gradient(0deg,#ccc 0,#ccc 1px,transparent 0,transparent 20px); }
+        .bg-swatch[data-bg="dots"]     { background: #fff; background-image: radial-gradient(circle,#aaa 1px,transparent 1px); background-size: 8px 8px; }
+        .bg-swatch[data-bg="diagonal"] { background: linear-gradient(135deg,#f5f5f5 25%,#e8e8e8 25%,#e8e8e8 50%,#f5f5f5 50%,#f5f5f5 75%,#e8e8e8 75%); background-size: 12px 12px; }
+        .bg-swatch[data-bg="grid"]     { background: #fff; background-image: linear-gradient(#ddd 1px,transparent 1px),linear-gradient(90deg,#ddd 1px,transparent 1px); background-size: 12px 12px; }
+        .bg-swatch[data-bg="topaz"]      { background: linear-gradient(160deg,#1a2a4a 0%,#0d0d0d 60%,#1a1a1a 100%); }
+        .bg-swatch[data-bg="paper-ivory"]{ background: #f5f0e8; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"); }
+        .bg-swatch[data-bg="paper-kraft"]{ background: #c8a96e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E"); }
+        .bg-swatch[data-bg="paper-aged"] { background: #e8dcc8; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.4' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"); }
+        .bg-swatch[data-bg="paper-dark"] { background: #2a2520; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.2'/%3E%3C/svg%3E"); }
+        .bg-swatch[data-bg="paper-linen"]{ background: #f0ebe0; background-image: repeating-linear-gradient(90deg,rgba(160,140,110,0.08) 0,rgba(160,140,110,0.08) 1px,transparent 0,transparent 3px),repeating-linear-gradient(0deg,rgba(160,140,110,0.06) 0,rgba(160,140,110,0.06) 1px,transparent 0,transparent 3px); }
+        .bg-swatch[data-bg="paper-noise"]{ background: #f8f6f2; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E"); }
+
+        /* Aplicación al visual-card */
+        #screenshot-area[data-bg="lines"] {
+            background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0, rgba(0,0,0,0.04) 1px, transparent 0, transparent 22px) !important;
+        }
+        #screenshot-area[data-bg="dots"] {
+            background-image: radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px) !important;
+            background-size: 14px 14px !important;
+        }
+        #screenshot-area[data-bg="diagonal"] {
+            background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px, transparent 0, transparent 14px) !important;
+        }
+        #screenshot-area[data-bg="grid"] {
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px) !important;
+            background-size: 18px 18px !important;
+        }
+        #screenshot-area[data-bg="topaz"] {
+            background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 18%, var(--card-bg)) 0%, var(--card-bg) 55%) !important;
+        }
+        #screenshot-area[data-bg="paper-ivory"] {
+            background-color: #f5f0e8 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E") !important;
+        }
+        #screenshot-area[data-bg="paper-kraft"] {
+            background-color: #d4a96a !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E") !important;
+        }
+        #screenshot-area[data-bg="paper-aged"] {
+            background-color: #e8dcc8 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.4' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E") !important;
+        }
+        #screenshot-area[data-bg="paper-dark"] {
+            background-color: #2a2520 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E") !important;
+        }
+        #screenshot-area[data-bg="paper-linen"] {
+            background-color: #f0ebe0 !important;
+            background-image: repeating-linear-gradient(90deg,rgba(160,140,110,0.07) 0,rgba(160,140,110,0.07) 1px,transparent 0,transparent 4px),repeating-linear-gradient(0deg,rgba(160,140,110,0.05) 0,rgba(160,140,110,0.05) 1px,transparent 0,transparent 4px) !important;
+        }
+        #screenshot-area[data-bg="paper-noise"] {
+            background-color: #f8f6f2 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E") !important;
         }
     </style>
 </head>
+
 <body>
-<div class="container">
+    <div class="container">
 
-    <!-- Config -->
-    <div class="config-menu">
-        <button class="config-btn" onclick="toggleConfig()">⚙️ Estilo</button>
-        <div class="config-panel" id="configPanel">
-            <label style="color:#aaa;font-size:.6rem;text-transform:uppercase;display:block;margin-bottom:6px;">Tema Visual</label>
-            <select id="styleSelect" onchange="updateStyle(this.value)">
-                <option value="gold">Voucher Gold Clásico</option>
-                <option value="cyber">Cyber Neón</option>
-                <option value="modern">Modern Corporativo</option>
-                <option value="emerald">Deep Emerald</option>
-                <option value="blueprint">Midnight Blueprint</option>
-                <option value="minimal">Minimalist Slate</option>
-                <option value="carbon">Carbon Fiber</option>
-            </select>
-            <button class="reset-btn" onclick="localStorage.clear();location.reload();">Reiniciar aplicación</button>
+        <!-- Config -->
+        <div class="config-menu">
+            <button class="config-btn" onclick="toggleConfig(event)">⚙️ Estilo</button>
+            <div class="config-panel" id="configPanel">
+                <label style="color:#aaa;font-size:.6rem;text-transform:uppercase;display:block;margin-bottom:6px;">Tema
+                    Visual</label>
+                <select id="styleSelect" onchange="updateStyle(this.value)">
+                    <option value="gold">Voucher Gold Clásico</option>
+                    <option value="cyber">Cyber Neón</option>
+                    <option value="modern">Modern Corporativo</option>
+                    <option value="emerald">Deep Emerald</option>
+                    <option value="blueprint">Midnight Blueprint</option>
+                    <option value="minimal">Minimalist Slate</option>
+                    <option value="carbon">Carbon Fiber</option>
+                    <option value="founder">Founder Dark</option>
+                    <option value="agency">Agency Green</option>
+                    <option value="auditor">Auditor Navy</option>
+                </select>
+                <label style="color:#aaa;font-size:.6rem;text-transform:uppercase;display:block;margin-top:10px;margin-bottom:6px;">Fondo del cupón</label>
+                <div class="bg-swatch-row">
+                    <div class="bg-swatch active" data-bg="none"     title="Sin fondo"       onclick="updateBg('none',this)"></div>
+                    <div class="bg-swatch"        data-bg="lines"    title="Líneas sutiles"   onclick="updateBg('lines',this)"></div>
+                    <div class="bg-swatch"        data-bg="dots"     title="Puntos"           onclick="updateBg('dots',this)"></div>
+                    <div class="bg-swatch"        data-bg="diagonal" title="Diagonal"         onclick="updateBg('diagonal',this)"></div>
+                    <div class="bg-swatch"        data-bg="grid"     title="Cuadrícula"       onclick="updateBg('grid',this)"></div>
+                    <div class="bg-swatch"        data-bg="topaz"    title="Degradado acento" onclick="updateBg('topaz',this)"></div>
+                </div>
+                <label style="color:#aaa;font-size:.6rem;text-transform:uppercase;display:block;margin-top:10px;margin-bottom:6px;">Texturas de papel</label>
+                <div class="bg-swatch-row">
+                    <div class="bg-swatch" data-bg="paper-ivory" title="Papel marfil"   onclick="updateBg('paper-ivory',this)"></div>
+                    <div class="bg-swatch" data-bg="paper-kraft" title="Papel kraft"    onclick="updateBg('paper-kraft',this)"></div>
+                    <div class="bg-swatch" data-bg="paper-aged"  title="Papel envejecido" onclick="updateBg('paper-aged',this)"></div>
+                    <div class="bg-swatch" data-bg="paper-dark"  title="Papel oscuro"   onclick="updateBg('paper-dark',this)"></div>
+                    <div class="bg-swatch" data-bg="paper-linen" title="Lino"           onclick="updateBg('paper-linen',this)"></div>
+                    <div class="bg-swatch" data-bg="paper-noise" title="Grano fino"     onclick="updateBg('paper-noise',this)"></div>
+                </div>
+                <button class="reset-btn" onclick="localStorage.clear();location.reload();">Reiniciar
+                    aplicación</button>
+            </div>
         </div>
-    </div>
 
-    <header>
-        <h1>IUL Lead Studio</h1>
-        <p>Generador profesional de cupones de asesoría</p>
-    </header>
+        <header>
+            <h1>IUL Lead Studio</h1>
+            <p>Generador profesional de cupones de asesoría. por danny solo para integrantes de A-lianz Quality Group</p>
+        </header>
 
-    <div class="main-layout">
+        <div class="main-layout">
 
-        <!-- ── COLUMNA IZQUIERDA: Formulario + Datos ── -->
-        <div class="form-col">
-            <div class="input-section">
+            <!-- ── COLUMNA IZQUIERDA: Formulario + Datos ── -->
+            <div class="form-col">
+                <div class="input-section">
 
-                <!-- 2 columnas: (Nombre + Licencia) | (Compañía + QR) -->
-                <div class="form-inputs-grid">
-                    <div class="input-col">
-                        <div class="input-group">
-                            <label>Profesional Financiero</label>
-                            <input type="text" id="inputAgent" placeholder="Tu nombre completo..." oninput="saveFields()">
+                    <!-- 2 columnas: (Nombre + Licencia) | (Compañía + QR) -->
+                    <div class="form-inputs-grid">
+                        <div class="input-col">
+                            <div class="input-group">
+                                <label>Profesional Financiero</label>
+                                <input type="text" id="inputAgent" placeholder="Tu nombre completo..."
+                                    oninput="saveFields()">
+                            </div>
+                            <div class="input-group">
+                                <label>Licencia Verificable</label>
+                                <input type="text" id="inputLicense" placeholder="Núm. de licencia..."
+                                    oninput="saveFields()">
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <label>Licencia Verificable</label>
-                            <input type="text" id="inputLicense" placeholder="Núm. de licencia..." oninput="saveFields()">
+                        <div class="input-col">
+                            <div class="input-group">
+                                <label>Compañía / Agencia</label>
+                                <input type="text" id="inputCompany" placeholder="Nombre de tu firma..."
+                                    oninput="saveFields()">
+                            </div>
+                            <div class="input-group">
+                                <label>URL de verificación para QR</label>
+                                <input type="text" id="inputQR" placeholder="https://..." oninput="saveFields()">
+                            </div>
                         </div>
                     </div>
-                    <div class="input-col">
-                        <div class="input-group">
-                            <label>Compañía / Agencia</label>
-                            <input type="text" id="inputCompany" placeholder="Nombre de tu firma..." oninput="saveFields()">
-                        </div>
-                        <div class="input-group">
-                            <label>URL para código QR</label>
-                            <input type="text" id="inputQR" placeholder="https://..." oninput="saveFields()">
-                        </div>
+
+                    <!-- Frase institucional: línea completa -->
+                    <div class="input-group" style="margin-bottom:14px;">
+                        <label>Frase Institucional</label>
+                        <input type="text" id="inputPhrase" placeholder="Ej: Tu futuro financiero comienza hoy..." oninput="saveFields(); updatePhrase()">
                     </div>
+
+                    <!-- Textarea: línea completa -->
+                    <textarea id="rawInput"
+                        placeholder="Pega aquí los datos del lead (nombre, teléfono, email, estado, monto, etc.)..."></textarea>
+
+                    <button class="main-btn" onclick="processData()">⚡ Generar Cupón de Asesoría</button>
                 </div>
 
-                <!-- Textarea: línea completa -->
-                <textarea id="rawInput" placeholder="Pega aquí los datos del lead (nombre, teléfono, email, estado, monto, etc.)..."></textarea>
-
-                <button class="main-btn" onclick="processData()">⚡ Generar Cupón de Asesoría</button>
-            </div>
-
-            <!-- Resumen del lead (aparece tras generar) -->
-            <div class="data-card" id="dataCard" style="display:none;">
-                <div class="data-card-title">Resumen del Lead</div>
-                <pre id="structuredText"></pre>
-                <button class="action-btn" onclick="copyText(this)">📋 Copiar texto</button>
-            </div>
-        </div>
-
-        <!-- ── COLUMNA DERECHA: Voucher Preview ── -->
-        <div class="voucher-col">
-            <div class="voucher-preview-outer" id="voucherOuter">
-                <div class="voucher-scale" id="voucherScale">
-
-                    <div class="visual-card" id="screenshot-area">
-
-                        <div class="coupon-header">
-                            <h2>CUPÓN DE ASESORÍA</h2>
-                            <div class="v-folio" id="v-folio">FOLIO: ---</div>
-                        </div>
-
-                        <div class="card-body">
-                            <div id="v-state-box"></div>
-                            <div class="client-name" id="v-name">NOMBRE CLIENTE</div>
-                            <div class="v-rows" id="v-rows"></div>
-                            <div class="v-rows" id="v-manual-rows"></div>
-                        </div>
-
-                        <div class="legal-note">
-                            Este documento autoriza una consulta privada para el diseño de
-                            estrategias de acumulación y protección de patrimonio.
-                            Referencie el Folio indicado. Escanee el QR para validar
-                            credenciales del asesor.
-                        </div>
-
-                        <div class="stamp">
-                            <span>✓</span>
-                            <span>Validado</span>
-                            <span>Asesoramiento</span>
-                            <span>Seguro</span>
-                        </div>
-                        <div id="qrcode" class="qr-wrap"></div>
-
-                    </div>
-
+                <!-- Resumen del lead (aparece tras generar) -->
+                <div class="data-card" id="dataCard" style="display:none;">
+                    <div class="data-card-title">Resumen del Lead</div>
+                    <pre id="structuredText"></pre>
+                    <button class="action-btn" onclick="copyText(this)">📋 Copiar texto</button>
                 </div>
             </div>
-            <button class="action-btn copy-voucher-btn" onclick="copyImage(this)">📸 Copiar cupón como imagen</button>
-        </div>
 
-    </div><!-- /.main-layout -->
-</div><!-- /.container -->
+            <!-- ── COLUMNA DERECHA: Voucher Preview ── -->
+            <div class="voucher-col">
+                <button class="action-btn copy-voucher-btn" onclick="copyImage(this)" style="margin-bottom: 10px; margin-top: 0px;">📸 Copiar cupón como
+                    imagen</button>
+                <div class="voucher-preview-outer" id="voucherOuter">
+                    <div class="voucher-scale" id="voucherScale">
 
-<script>
-    const US_STATES=["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+                        <div class="visual-card" id="screenshot-area">
 
-    window.onload=()=>{
-        const s=localStorage.getItem('iul-style-vfinal')||'gold';
-        updateStyle(s);
-        document.getElementById('inputAgent').value=localStorage.getItem('iul-manual-agent-vfinal')||'';
-        document.getElementById('inputLicense').value=localStorage.getItem('iul-manual-license-vfinal')||'';
-        document.getElementById('inputCompany').value=localStorage.getItem('iul-manual-company-vfinal')||'';
-        document.getElementById('inputQR').value=localStorage.getItem('iul-manual-qr-vfinal')||'';
-        const last=localStorage.getItem('iul-last-raw-vfinal');
-        if(last){document.getElementById('rawInput').value=last;processData(false);}
-    };
+                            <div class="coupon-header">
+                                <h2>Invitación Privada </br>Estrategia IUL</h2>
+                                <div class="v-folio" id="v-folio"></div>
+                            </div>
 
-    function toggleConfig(){document.getElementById('configPanel').classList.toggle('active');}
-    function updateStyle(s){
-        document.documentElement.setAttribute('data-style',s);
-        document.getElementById('styleSelect').value=s;
-        localStorage.setItem('iul-style-vfinal',s);
-    }
-    function saveFields(){
-        localStorage.setItem('iul-manual-agent-vfinal',document.getElementById('inputAgent').value);
-        localStorage.setItem('iul-manual-license-vfinal',document.getElementById('inputLicense').value);
-        localStorage.setItem('iul-manual-company-vfinal',document.getElementById('inputCompany').value);
-        localStorage.setItem('iul-manual-qr-vfinal',document.getElementById('inputQR').value);
-    }
-    function clean(s){return s?s.replace(/_/g,' ').trim():'';}
-    function folio(phone){
-        const d=new Date();
-        const mm=String(d.getMonth()+1).padStart(2,'0');
-        const yy=String(d.getFullYear()).slice(-2);
-        const l4=phone?phone.replace(/\D/g,'').slice(-4):'0000';
-        return`IUL-${mm}${yy}-${l4}`;
-    }
+                            <div class="card-body">
+                                <div class="name-state-row">
+                                    <div class="client-name" id="v-name">NOMBRE CLIENTE</div>
+                                    <div id="v-state-box"></div>
+                                </div>
+                                <div class="v-rows" id="v-rows"></div>
+                                <div class="v-rows" id="v-manual-rows"></div>
+                            </div>
 
-    function processData(save=true){
-        const raw=document.getElementById('rawInput').value.trim();
-        if(!raw)return;
-        if(save)localStorage.setItem('iul-last-raw-vfinal',raw);
+                            <div class="legal-note">
+                                <ul>
+                                    <li>Este cupón le otorga acceso a una sesión estratégica privada con un profesional certificado.</li>
+                                    <li>Verifique las credenciales de su asesor en <strong><span id="v-legal-url" style="font-style: italic;"></span></strong> o escaneando el QR.</li>
+                                    <li>Número de Folio requerido al momento de la sesión.</li>
+                                </ul>
+                            </div>
 
-        const tokens=raw.includes('\t')?raw.split('\t'):raw.split(/\s+/);
-        const r={name:[],phone:'',age:'',email:'',state:'',amount:'',interest:''};
+                            <div id="qrcode" class="qr-wrap" style="display:none;"></div>
 
-        tokens.forEach(t=>{
-            const tk=t.trim();
-            if(!tk||tk.toLowerCase()==='español')return;
-            const cn=tk.replace(/\D/g,'');
-            if(!r.phone&&cn.length>=10){
-                let n=cn;if(n.length>10&&n.startsWith('1'))n=n.substring(1);
-                r.phone=`+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
-            } else if(!r.email&&tk.includes('@'))r.email=tk.toLowerCase();
-            else if(!r.state&&tk.length===2&&US_STATES.includes(tk.toUpperCase()))r.state=tk.toUpperCase();
-            else if(!r.age&&(/^\d{2}$/.test(tk)||tk.includes('-')))r.age=clean(tk)+' Años';
-            else if(tk.includes('$'))r.amount=clean(tk);
-            else if(tk.includes('_'))r.interest=clean(tk);
-            else if(/^[a-zA-ZáéíóúÁÉÍÓÚ]/.test(tk)&&tk.length>1)r.name.push(clean(tk));
-        });
+                        
+                            <div class="stamp">
+                                <span>✓</span>
+                                <span>Validado</span>
+                                <span>Asesoramiento</span>
+                                <span>Seguro</span>
+                            </div>
+                            <div id="v-phrase" class="v-phrase" style="display:none;"></div>
 
-        const f=folio(r.phone);
-        const agent=document.getElementById('inputAgent').value.trim();
-        const license=document.getElementById('inputLicense').value.trim();
-        const company=document.getElementById('inputCompany').value.trim();
-        const qrUrl=document.getElementById('inputQR').value.trim();
+                        </div>
 
-        document.getElementById('v-folio').textContent=`FOLIO: ${f}`;
-        document.getElementById('v-name').textContent=r.name.join(' ').toUpperCase()||'SIN NOMBRE';
+                    </div>
+                </div>
+                
+            </div>
 
-        const sb=document.getElementById('v-state-box');
-        sb.innerHTML=r.state?`<span class="state-badge">ESTADO: ${r.state}</span>`:'';
+        </div><!-- /.main-layout -->
+    </div><!-- /.container -->
 
-        const rows=document.getElementById('v-rows');
-        rows.innerHTML='';
-        [
-            {l:'Teléfono de Contacto',v:r.phone},
-            {l:'Correo Electrónico',v:r.email},
-            {l:'Rango de Edad',v:r.age},
-            {l:'Inversión Mensual',v:r.amount},
-            {l:'Objetivo Principal',v:r.interest},
-        ].forEach(({l,v})=>{
-            if(v)rows.innerHTML+=`<div class="v-row"><span class="v-label">${l}</span><span class="v-value">${v}</span></div>`;
-        });
+    <script>
+        const US_STATES = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"];
+        const STATE_NAME_MAP = {"alabama":"Alabama","alaska":"Alaska","arizona":"Arizona","arkansas":"Arkansas","california":"California","colorado":"Colorado","connecticut":"Connecticut","delaware":"Delaware","florida":"Florida","georgia":"Georgia","hawaii":"Hawaii","idaho":"Idaho","illinois":"Illinois","indiana":"Indiana","iowa":"Iowa","kansas":"Kansas","kentucky":"Kentucky","louisiana":"Louisiana","maine":"Maine","maryland":"Maryland","massachusetts":"Massachusetts","michigan":"Michigan","minnesota":"Minnesota","mississippi":"Mississippi","missouri":"Missouri","montana":"Montana","nebraska":"Nebraska","nevada":"Nevada","new hampshire":"New Hampshire","new jersey":"New Jersey","new mexico":"New Mexico","new york":"New York","north carolina":"North Carolina","north dakota":"North Dakota","ohio":"Ohio","oklahoma":"Oklahoma","oregon":"Oregon","pennsylvania":"Pennsylvania","rhode island":"Rhode Island","south carolina":"South Carolina","south dakota":"South Dakota","tennessee":"Tennessee","texas":"Texas","utah":"Utah","vermont":"Vermont","virginia":"Virginia","washington":"Washington","west virginia":"West Virginia","wisconsin":"Wisconsin","wyoming":"Wyoming"};
 
-        const mr=document.getElementById('v-manual-rows');
-        mr.innerHTML='';
-        if(agent)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Profesional Asignado</span><span class="v-value">${agent}</span></div>`;
-        if(license)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Licencia</span><span class="v-value">${license}</span></div>`;
-        if(company)mr.innerHTML+=`<div class="v-row accent-row"><span class="v-label">Firma de Asesoría</span><span class="v-value">${company}</span></div>`;
-
-        const qb=document.getElementById('qrcode');
-        if(qrUrl){
-            const url=/^https?:\/\//i.test(qrUrl)?qrUrl:'https://'+qrUrl;
-            qb.innerHTML='';
-            qb.style.display='block';
-            new QRCode(qb,{text:url,width:130,height:130,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.H});
-        } else {
-            qb.style.display='none';
-        }
-
-        let txt=`🆔 FOLIO: ${f}\n👤 CLIENTE: ${r.name.join(' ').toUpperCase()}`;
-        if(r.phone)txt+=`\n📞 TEL: ${r.phone}`;
-        if(r.email)txt+=`\n📧 EMAIL: ${r.email}`;
-        if(r.age)txt+=`\n🎂 EDAD: ${r.age}`;
-        if(r.state)txt+=`\n📍 ESTADO: ${r.state}`;
-        if(r.amount)txt+=`\n💰 APORTE: ${r.amount}`;
-        if(r.interest)txt+=`\n🎯 OBJETIVO: ${r.interest}`;
-        if(agent)txt+=`\n👔 ASESOR: ${agent}`;
-        if(license)txt+=`\n🪪 LICENCIA: ${license}`;
-        if(company)txt+=`\n🏢 AGENCIA: ${company}`;
-        document.getElementById('structuredText').textContent=txt;
-        document.getElementById('dataCard').style.display='block';
-    }
-
-    async function copyImage(btn){
-        const area=document.getElementById('screenshot-area');
-
-        // Clonar el card off-screen para no alterar lo visible
-        const clone=area.cloneNode(true);
-        clone.style.cssText='position:fixed;top:-9999px;left:-9999px;width:405px;height:720px;transform:none;';
-        document.body.appendChild(clone);
-
-        // Copiar contenido del canvas del QR (cloneNode no copia pixels de canvas)
-        const origCanvas=area.querySelector('#qrcode canvas');
-        if(origCanvas){
-            const cloneCanvas=clone.querySelector('canvas');
-            if(cloneCanvas) cloneCanvas.getContext('2d').drawImage(origCanvas,0,0);
-        }
-        const origImg=area.querySelector('#qrcode img');
-        if(origImg){
-            const cloneImg=clone.querySelector('img');
-            if(cloneImg) cloneImg.src=origImg.src;
-        }
-
-        await new Promise(r=>requestAnimationFrame(r));
-        const canvas=await html2canvas(clone,{scale:2.67,backgroundColor:null,useCORS:true,logging:false});
-        document.body.removeChild(clone);
-
-        canvas.toBlob(async blob=>{
-            try{
-                await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-                btn.textContent='✅ ¡Copiado!';
-            }catch(e){
-                const a=document.createElement('a');
-                a.href=URL.createObjectURL(blob);
-                a.download='cupon-asesoria.png';
-                a.click();
-                btn.textContent='✅ ¡Descargado!';
+        window.onload = () => {
+            const s = localStorage.getItem('iul-style-vfinal') || 'gold';
+            updateStyle(s);
+            const bg = localStorage.getItem('iul-bg-vfinal') || 'none';
+            if (bg && bg !== 'none') {
+                document.getElementById('screenshot-area').setAttribute('data-bg', bg);
+                const swatch = document.querySelector(`.bg-swatch[data-bg="${bg}"]`);
+                if (swatch) { document.querySelectorAll('.bg-swatch').forEach(s => s.classList.remove('active')); swatch.classList.add('active'); }
             }
-            setTimeout(()=>btn.textContent='📸 Copiar cupón como imagen',2500);
-        });
-    }
+            document.getElementById('inputAgent').value = localStorage.getItem('iul-manual-agent-vfinal') || '';
+            document.getElementById('inputLicense').value = localStorage.getItem('iul-manual-license-vfinal') || '';
+            document.getElementById('inputCompany').value = localStorage.getItem('iul-manual-company-vfinal') || '';
+            document.getElementById('inputQR').value = localStorage.getItem('iul-manual-qr-vfinal') || '';
+            document.getElementById('inputPhrase').value = localStorage.getItem('app-phrase-vfinal') || '';
+            updatePhrase();
+            const last = localStorage.getItem('iul-last-raw-vfinal');
+            if (last) { document.getElementById('rawInput').value = last; processData(false); }
+        };
 
-    async function copyText(btn){
-        await navigator.clipboard.writeText(document.getElementById('structuredText').textContent);
-        btn.textContent='✅ ¡Copiado!';
-        setTimeout(()=>btn.textContent='📋 Copiar texto',2000);
-    }
-</script>
+        function toggleConfig(e) {
+            e.stopPropagation();
+            document.getElementById('configPanel').classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('configPanel');
+            if (panel && !panel.contains(e.target)) panel.classList.remove('active');
+        });
+        function updateStyle(s) {
+            document.documentElement.setAttribute('data-style', s);
+            document.getElementById('styleSelect').value = s;
+            localStorage.setItem('iul-style-vfinal', s);
+        }
+        function updateBg(val, el) {
+            const card = document.getElementById('screenshot-area');
+            card.setAttribute('data-bg', val === 'none' ? '' : val);
+            document.querySelectorAll('.bg-swatch').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            localStorage.setItem('iul-bg-vfinal', val);
+        }
+        function saveFields() {
+            localStorage.setItem('iul-manual-agent-vfinal', document.getElementById('inputAgent').value);
+            localStorage.setItem('iul-manual-license-vfinal', document.getElementById('inputLicense').value);
+            localStorage.setItem('iul-manual-company-vfinal', document.getElementById('inputCompany').value);
+            localStorage.setItem('iul-manual-qr-vfinal', document.getElementById('inputQR').value);
+            localStorage.setItem('app-phrase-vfinal', document.getElementById('inputPhrase').value);
+        }
+        function clean(s) { return s ? s.replace(/_/g, ' ').trim() : ''; }
+        function folio(phone) {
+            const d = new Date();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yy = String(d.getFullYear()).slice(-2);
+            const l4 = phone ? phone.replace(/\D/g, '').slice(-4) : '0000';
+            return `${mm}${yy}-${l4}`;
+        }
+
+
+        function syncOuterHeight() {
+            const card = document.getElementById('screenshot-area');
+            const outer = document.getElementById('voucherOuter');
+            const scale = document.getElementById('voucherScale');
+            const h = card.offsetHeight;
+            outer.style.height = (h * 0.69) + 'px';
+            scale.style.height = h + 'px';
+
+            const qb = document.getElementById('qrcode');
+            const stamp = card.querySelector('.stamp');
+            if (qb && stamp && qb.style.display !== 'none') {
+                const cardRect = card.getBoundingClientRect();
+                const qbRect = qb.getBoundingClientRect();
+                const qbBottomFromCardBottom = cardRect.bottom - qbRect.bottom;
+                if (qbBottomFromCardBottom < 130) {
+                    // QR entra en zona del stamp: llevarlo a posición del stamp
+                    qb.style.position = 'absolute';
+                    qb.style.bottom = '14px';
+                    qb.style.left = '14px';
+                    qb.style.margin = '0';
+                    stamp.style.display = 'none';
+                } else {
+                    // Restaurar flujo normal
+                    qb.style.position = 'relative';
+                    qb.style.bottom = '';
+                    qb.style.left = '';
+                    qb.style.margin = '12px auto 0';
+                    stamp.style.display = 'flex';
+                }
+            }
+        }
+
+        function updatePhrase() {
+            const val = document.getElementById('inputPhrase').value.trim();
+            const el = document.getElementById('v-phrase');
+            if (val) {
+                el.textContent = `"${val}"`;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function autoFitText(el) {
+            if (!el) return;
+            let fs = 0.85;
+            el.style.fontSize = fs + 'rem';
+            const maxW = el.closest('.v-row').offsetWidth * 0.58;
+            while (el.scrollWidth > maxW && fs > 0.45) {
+                fs = Math.round((fs - 0.02) * 100) / 100;
+                el.style.fontSize = fs + 'rem';
+            }
+        }
+
+        function processData(save = true) {
+            const raw = document.getElementById('rawInput').value.trim();
+            if (!raw) return;
+            if (save) localStorage.setItem('iul-last-raw-vfinal', raw);
+
+            // Extraer teléfono del raw antes de tokenizar (soporta espacios dentro del número)
+            const phoneMatch = raw.replace(/p:\s*/i, '').match(/[\+\(]?1?[\s\-\.]?\(?\d{3}\)?[\s\-\.]?\d{3}[\s\-\.]?\d{4}/);
+            const rawClean = raw.replace(/p:\s*/i, '');
+            const tokens = rawClean.includes('\t') ? rawClean.split('\t').flatMap(t => t.split(/[\n\r]+/)) : rawClean.split(/\s+/);
+            const r = { name: [], phone: '', age: '', email: '', state: '', amount: '', interest: '' };
+
+            if (phoneMatch) {
+                let n = phoneMatch[0].replace(/\D/g, '');
+                if (n.length > 10 && n.startsWith('1')) n = n.substring(1);
+                if (n.length === 10) r.phone = `+1 (${n.substring(0,3)}) ${n.substring(3,6)}-${n.substring(6,10)}`;
+            }
+
+            tokens.forEach(t => {
+                const tk = t.trim();
+                if (!tk || tk.toLowerCase() === 'español') return;
+                const cn = tk.replace(/\D/g, '');
+                if (!r.phone && cn.length >= 10) {
+                    let n = cn; if (n.length > 10 && n.startsWith('1')) n = n.substring(1);
+                    r.phone = `+1 (${n.substring(0, 3)}) ${n.substring(3, 6)}-${n.substring(6, 10)}`;
+                } else if (!r.email && tk.includes('@')) r.email = tk.toLowerCase();
+                else if (!r.state && tk.length === 2 && US_STATES.includes(tk.toUpperCase())) r.state = tk.toUpperCase();
+                else if (!r.state && STATE_NAME_MAP[tk.toLowerCase()]) r.state = STATE_NAME_MAP[tk.toLowerCase()];
+                else if (tk.includes('$')) { const m = clean(tk).match(/\$[\d.,\-$]+/g); r.amount = m ? m.join('') : clean(tk); }
+                else if (!r.age && /^\d{2}(-\d{2})?$/.test(tk)) r.age = clean(tk) + ' Años';
+                else if (tk.includes('_')) r.interest = clean(tk);
+                else if (/^[a-zA-ZáéíóúÁÉÍÓÚ]/.test(tk) && tk.length > 1) r.name.push(clean(tk));
+            });
+
+            const f = folio(r.phone);
+            const agent = document.getElementById('inputAgent').value.trim();
+            const license = document.getElementById('inputLicense').value.trim();
+            const company = document.getElementById('inputCompany').value.trim();
+            const qrUrl = document.getElementById('inputQR').value.trim();
+
+            document.getElementById('v-folio').textContent = `${f}`;
+            const legalUrl = document.getElementById('v-legal-url');
+            legalUrl.textContent = qrUrl ? ` ${qrUrl.replace(/^https?:\/\//i, '')}` : '';
+            document.getElementById('v-name').textContent = r.name.join(' ').toUpperCase() || 'SIN NOMBRE';
+
+            // State badge
+            const sb = document.getElementById('v-state-box');
+            sb.innerHTML = r.state ? `<span class="state-badge">${r.state.toUpperCase()}</span>` : '';
+
+            // Filas de datos
+            const rows = document.getElementById('v-rows');
+            rows.innerHTML = '';
+            [
+                { l: 'Teléfono de Contacto', v: r.phone },
+                { l: 'Email', v: r.email, fit: true },
+                { l: 'Rango de Edad', v: r.age },
+                { l: 'Inversión Mensual', v: r.amount },
+                { l: 'Objetivo Principal', v: r.interest },
+            ].forEach(({ l, v, fit }) => {
+                if (v) rows.innerHTML += `<div class="v-row"><span class="v-label">${l}</span><span class="v-value${fit ? ' v-autofit' : ''}">${v}</span></div>`;
+            });
+            setTimeout(() => { document.querySelectorAll('.v-autofit').forEach(autoFitText); }, 0);
+
+            // Filas manuales
+            const mr = document.getElementById('v-manual-rows');
+            mr.innerHTML = '';
+            if (agent) mr.innerHTML += `<div class="v-row accent-row"><span class="v-label">Profesional Asignado</span><span class="v-value">${agent}</span></div>`;
+            if (license) mr.innerHTML += `<div class="v-row accent-row"><span class="v-label">Licencia</span><span class="v-value">${license}</span></div>`;
+            if (company) mr.innerHTML += `<div class="v-row accent-row"><span class="v-label">Compañía</span><span class="v-value">${company}</span></div>`;
+
+            updatePhrase();
+
+            // QR
+            const qb = document.getElementById('qrcode');
+            if (qrUrl) {
+                const url = /^https?:\/\//i.test(qrUrl) ? qrUrl : 'https://' + qrUrl;
+                qb.innerHTML = '';
+                new QRCode(qb, { text: url, width: 100, height: 100, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.H });
+                qb.style.display = 'block';
+                qb.style.margin = '12px auto 0';
+            } else {
+                qb.style.display = 'none';
+            }
+
+            let txt = `🆔 FOLIO: ${f}\n👤 CLIENTE: ${r.name.join(' ').toUpperCase()}`;
+            if (r.phone) txt += `\n📞 TEL: ${r.phone}`;
+            if (r.email) txt += `\n📧 EMAIL: ${r.email}`;
+            if (r.age) txt += `\n🎂 EDAD: ${r.age}`;
+            if (r.state) txt += `\n📍 ESTADO: ${r.state}`;
+            if (r.amount) txt += `\n💰 APORTE: ${r.amount}`;
+            if (r.interest) txt += `\n🎯 OBJETIVO: ${r.interest}`;
+            if (agent) txt += `\n👔 ASESOR: ${agent}`;
+            if (license) txt += `\n🪪 LICENCIA: ${license}`;
+            if (company) txt += `\n🏢 AGENCIA: ${company}`;
+            document.getElementById('structuredText').textContent = txt;
+            document.getElementById('dataCard').style.display = 'block';
+            setTimeout(syncOuterHeight, 0);
+        }
+
+        async function copyImage(btn) {
+            const area = document.getElementById('screenshot-area');
+
+            // Clonar el card off-screen para no alterar lo visible
+            const clone = area.cloneNode(true);
+            clone.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:405px;height:720px;transform:none;';
+            document.body.appendChild(clone);
+
+            // Copiar contenido del canvas del QR (cloneNode no copia pixels de canvas)
+            const origCanvas = area.querySelector('#qrcode canvas');
+            if (origCanvas) {
+                const cloneCanvas = clone.querySelector('canvas');
+                if (cloneCanvas) cloneCanvas.getContext('2d').drawImage(origCanvas, 0, 0);
+            }
+            const origImg = area.querySelector('#qrcode img');
+            if (origImg) {
+                const cloneImg = clone.querySelector('img');
+                if (cloneImg) cloneImg.src = origImg.src;
+            }
+
+            await new Promise(r => requestAnimationFrame(r));
+            const canvas = await html2canvas(clone, { scale: 2.67, backgroundColor: null, useCORS: true, logging: false });
+            document.body.removeChild(clone);
+
+            canvas.toBlob(async blob => {
+                try {
+                    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                    btn.textContent = '✅ ¡Copiado!';
+                } catch (e) {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'cupon-asesoria.png';
+                    a.click();
+                    btn.textContent = '✅ ¡Descargado!';
+                }
+                setTimeout(() => btn.textContent = '📸 Copiar cupón como imagen', 2500);
+            });
+        }
+
+        async function copyText(btn) {
+            await navigator.clipboard.writeText(document.getElementById('structuredText').textContent);
+            btn.textContent = '✅ ¡Copiado!';
+            setTimeout(() => btn.textContent = '📋 Copiar texto', 2000);
+        }
+    </script>
 </body>
+
 </html>
