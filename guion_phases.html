@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Script IUL — Vista Profesional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=DM+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --node-bg: #13161d;
+      --card-bg: #1a1e26;
+      --accent: #c8a96e;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --line: rgba(200, 169, 110, 0.15);
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    #viewport {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      display: block;
+    }
+
+    #map-canvas {
+      position: absolute;
+      width: 8000px;
+      height: 8000px;
+      transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    .node {
+      position: absolute;
+      background: var(--node-bg);
+      border: 1px solid var(--line);
+      padding: 25px;
+      border-radius: 16px;
+      transition: all 0.5s ease;
+      opacity: 0.1;
+      transform: scale(0.9);
+    }
+
+    .node.active {
+      opacity: 1;
+      transform: scale(1);
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-tag {
+      font-family: 'DM Mono';
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .script-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .literal {
+      font-size: 1.05rem;
+      color: #fff;
+      line-height: 1.5;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      font-family: 'DM Mono';
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .subphase-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .sub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      padding: 15px;
+      border-radius: 10px;
+      flex: 1;
+    }
+
+    .nav-ui {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      background: #1a1e26;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'DM Mono';
+      font-size: 12px;
+      transition: 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .q-item {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="viewport">
+    <div id="map-canvas"></div>
+    <div class="nav-ui">
+      <button class="nav-btn" onclick="move(-1)">← ANTERIOR</button>
+      <button class="nav-btn" onclick="move(1)">SIGUIENTE →</button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. PEGA TU JSON AQUÍ ABAJO (Dentro de scriptData)
+    // ==========================================
+    const scriptData = {
+      "script": {
+        "name": "Script IUL — Guión Estándar Completo",
+        "version": "1.0",
+        "type": "iul",
+        "description": "Guión estandarizado de venta consultiva para IUL basado en venta socrática, neuroventas y manejo de objeciones por estado emocional.",
+        "phases": [
+          {
+            "id": "fase_1",
+            "order": 1,
+            "title": "Saludo profesional con frame alto",
+            "objective": "Establecer autoridad y posicionamiento desde el primer segundo. El cliente debe ganarse la conversación, no al revés.",
+            "execution_notes": [
+              "Tono serio y profesional, sin risas ni intentos de agradar",
+              "Cálido pero firme",
+              "El primero que intenta caer bien es el que pierde el frame"
+            ],
+            "script_literal": [
+              {
+                "step": "saludo_inicial",
+                "text": "Hola [nombre del cliente], ¿cómo estás?"
+              },
+              {
+                "step": "validacion",
+                "text": "[Validar brevemente la respuesta del cliente]"
+              },
+              {
+                "step": "presentacion",
+                "text": "Un gusto saludarte, mi nombre es [nombre del agente]."
+              },
+              {
+                "step": "motivo_llamada",
+                "text": "Le llamo porque usted [acción específica que tomó el cliente: solicitó información, llenó un formulario, agendó la asesoría]. ¿Correcto?"
+              },
+              {
+                "step": "posicionamiento",
+                "text": "Yo soy el profesional financiero disponible para poder ayudarle el día de hoy."
+              }
+            ]
+          },
+          {
+            "id": "fase_2",
+            "order": 2,
+            "title": "Canalización del interés financiero",
+            "objective": "Identificar si el cliente viene por ahorro y crecimiento, o por seguro y construcción de legado, para enfocar el descubrimiento.",
+            "execution_notes": [
+              "Pregunta sencilla y natural",
+              "Si el cliente intenta tomar el control pidiendo solo información, redirigir con calma sin desesperarse"
+            ],
+            "script_literal": [
+              {
+                "step": "pregunta_canalizacion",
+                "text": "Para comenzar con la asesoría, me gustaría primero que me hablaras: ¿qué fue lo que te llamó la atención? ¿Fue la parte del ahorro y poner a trabajar tu dinero, o fueron los beneficios de seguro y construcción de herencia?"
+              }
+            ],
+            "objection_paths": [
+              {
+                "trigger": "cliente_pide_solo_informacion",
+                "client_says_examples": [
+                  "Yo solo quiero información",
+                  "Mándame la información",
+                  "Quiero saber cómo funciona el IUL"
+                ],
+                "response_strategy": "Redirigir con autoridad explicando que hay múltiples compañías y productos, y que sin entender qué busca, no puede ofrecerle el correcto.",
+                "response_text": "Entiendo que quieras toda la información, pero el IUL no es un solo producto. Hay muchísimas compañías con las que trabajo que ofrecen IUL, y cada compañía tiene un índice y un programa distinto con distintas ventajas y beneficios. Lo primordial es identificar qué es lo que tú estás buscando solucionar o qué te interesa más, para yo poder ofrecerte el programa correcto y la explicación correcta."
+              }
+            ],
+            "branching": {
+              "interes_ahorro": "Continuar a Fase 3 con preguntas etiquetadas [AHORRO]",
+              "interes_seguro": "Continuar a Fase 3 con preguntas etiquetadas [SEGURO]",
+              "interes_ambos": "Continuar a Fase 3 combinando preguntas de ambos tipos"
+            }
+          },
+          {
+            "id": "fase_3",
+            "order": 3,
+            "title": "Descubrimiento socrático",
+            "objective": "Que el cliente llegue a sus propias conclusiones a través de preguntas. Cuando el cliente se convence solo, no hay resistencia.",
+            "execution_notes": [
+              "El agente no afirma — pregunta",
+              "Sócrates fue un filósofo griego que enseñaba haciendo preguntas hasta que la otra persona descubría la verdad por sí misma",
+              "Si tú dices 'necesitas esto' el cliente puede resistir; si él dice 'necesito esto' ya está vendido",
+              "No usar todas las preguntas — usar como menú según el flujo de la conversación",
+              "Buscar un sí explícito en el paso 3.4 de Valor"
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_3_1",
+                "order": "3.1",
+                "title": "Situación (ELIGE 3 PREGUNTAS)",
+                "objective": "Entender el contexto actual del cliente: edad, ocupación, situación financiera, qué tiene actualmente.",
+                "questions_bank": [
+                  {
+                    "tag": "GENERAL",
+                    "questions": [
+                      "¿Qué edad tienes actualmente?",
+                      "¿A qué te dedicas?",
+                      "¿Eres empleado, trabajas independiente, o tienes tu propio negocio?",
+                      "¿Hace cuánto tiempo te dedicas a eso?",
+                      "¿Cómo está conformada tu familia? ¿Tienes pareja, hijos, dependientes?",
+                      "¿Por qué decidiste buscar esta información ahora y no antes?",
+                      "¿Qué tienes actualmente para resolver este interés que me comentas?"
+                    ]
+                  },
+                  {
+                    "tag": "AHORRO",
+                    "questions": [
+                      "¿Cuentas actualmente con algún plan de ahorro o de retiro?",
+                      "¿Tienes 401k, IRA, o algún otro vehículo de inversión?",
+                      "¿Cuánto destinas mensualmente al ahorro o inversión?",
+                      "¿Sientes que ese ahorro está creciendo al ritmo que necesitas?",
+                      "¿Has pensado a qué edad te gustaría retirarte o tener libertad financiera?",
+                      "¿Sabes cuánto necesitarías acumular para mantener tu estilo de vida en el retiro?"
+                    ]
+                  },
+                  {
+                    "tag": "SEGURO",
+                    "questions": [
+                      "¿Cuentas actualmente con algún seguro de vida?",
+                      "¿Es un seguro de la empresa o uno personal?",
+                      "¿Sabes qué tipo de seguro tienes — término, vida entera, o universal?",
+                      "¿Tu familia sabe qué pasaría económicamente si tú llegaras a faltar?",
+                      "¿Tienes claro qué cobertura sería suficiente para proteger a los tuyos?",
+                      "¿Hay alguien que dependa económicamente de ti directamente?"
+                    ]
+                  }
+                ],
+                "occupation_specific": {
+                  "empleado": [
+                    "¿El seguro de vida que tienes es propio o lo da la empresa?",
+                    "¿Qué pasaría con esa cobertura si dejaras la empresa?",
+                    "¿El plan de retiro depende del 401k del empleador?",
+                    "¿Tienes ahorros separados de los beneficios de tu trabajo?"
+                  ],
+                  "independiente": [
+                    "Como trabajador independiente, ¿tienes algún beneficio que reemplace lo que tendría un empleado?",
+                    "¿Cómo manejas los meses con ingresos más bajos?",
+                    "¿Quién está construyendo tu retiro actualmente?",
+                    "¿Qué pasaría con tus ingresos si te enfermaras y no pudieras trabajar?"
+                  ],
+                  "dueno_negocio": [
+                    "¿Qué pasaría con el negocio si tú no estuvieras presente?",
+                    "¿Tienes un patrimonio separado del negocio?",
+                    "¿Cuántas familias dependen indirectamente de ti, contando empleados?",
+                    "¿Has pensado en un plan de salida o sucesión del negocio?"
+                  ]
+                }
+              },
+              {
+                "id": "fase_3_2",
+                "order": "3.2",
+                "title": "Problema (ELIGE 2 PREGUNTAS)",
+                "objective": "Que el cliente reconozca que su situación actual representa un problema real.",
+                "questions_bank": [
+                  {
+                    "tag": "GENERAL",
+                    "questions": [
+                      "¿Sientes que es un problema actualmente no tener esto resuelto?",
+                      "¿Te preocupa estar pasando los años sin tener esta parte de tu vida financiera resuelta?",
+                      "¿Qué tan importante es para ti dejar esto resuelto pronto?",
+                      "¿Es algo que te quita el sueño o lo tienes muy presente?"
+                    ]
+                  },
+                  {
+                    "tag": "AHORRO",
+                    "questions": [
+                      "¿Sientes que el dinero que ganas se te va sin acumular nada?",
+                      "¿Te preocupa llegar al retiro sin haber acumulado lo suficiente?",
+                      "¿Sientes que tu dinero está parado en el banco sin crecer?",
+                      "¿Te has dado cuenta que la inflación se está comiendo lo que ahorras?"
+                    ]
+                  },
+                  {
+                    "tag": "SEGURO",
+                    "questions": [
+                      "¿Te preocupa que si algo te pasara, tu familia no esté económicamente protegida?",
+                      "¿Sientes que el seguro que tienes actualmente no es suficiente?",
+                      "¿Has pensado en lo que pasaría con los gastos de tu familia si tú no estuvieras?",
+                      "¿Es algo que te genera intranquilidad cuando piensas en tu familia?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_3_3",
+                "order": "3.3",
+                "title": "Implicación (ELIGE 1 DE CADA TIPO AHORRO Y SEGURO)",
+                "objective": "Que el cliente visualice las consecuencias futuras de no actuar. Aquí se proyecta el dolor en el tiempo.",
+                "questions_bank": [
+                  {
+                    "tag": "GENERAL",
+                    "questions": [
+                      "¿Qué crees que pasaría de aquí a 10 o 15 años si sigues exactamente igual a como estás hoy?",
+                      "¿Cómo te imaginas a tus [edad + 15] años si no tomaras una decisión sobre esto?",
+                      "¿Cuáles serían las consecuencias reales para ti y tu familia si esto se queda como está?",
+                      "¿Te has puesto a pensar qué pasaría si esperas 5 años más para tomar esta decisión?"
+                    ]
+                  },
+                  {
+                    "tag": "AHORRO",
+                    "questions": [
+                      "Si en los próximos 15 años no acumulas un ahorro estructurado, ¿cómo se vería tu retiro?",
+                      "¿Has calculado cuánto pierdes en interés compuesto cada año que no empiezas?",
+                      "Si dependes solo del Social Security, ¿alcanza para mantener tu estilo de vida?",
+                      "¿Qué tan cómodo te sentirías a los 65 años sin un ahorro propio sólido?"
+                    ]
+                  },
+                  {
+                    "tag": "SEGURO",
+                    "questions": [
+                      "Si algo te pasara mañana, ¿cómo cubriría tu familia los gastos de los próximos años?",
+                      "¿Quién absorbería las deudas, la hipoteca, o los estudios de los hijos?",
+                      "¿Tu pareja podría mantener el mismo estilo de vida sin tu ingreso?",
+                      "¿Cómo te sentirías sabiendo que dejaste a tu familia sin una protección real?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_3_4",
+                "order": "3.4",
+                "title": "Valor (ELIGE SOLO)",
+                "objective": "Activar oxitocina mostrando el escenario resuelto. Buscar un sí explícito.",
+                "execution_notes": [
+                  "Aquí el cliente debe verbalizar que sí sería valioso tener esto resuelto",
+                  "Sin un sí en esta fase, no se debe avanzar a la presentación del producto"
+                ],
+                "questions_bank": [
+                  {
+                    "tag": "GENERAL",
+                    "questions": [
+                      "¿Sería valioso para ti saber que tomaste una decisión estratégica anticipada?",
+                      "¿Te imaginas a tus [edad + 15] años sabiendo que tu dinero trabajó por ti todos estos años, aseguraste a tu familia, y tienes un respaldo real para tus finanzas?",
+                      "¿Cómo te sentirías sabiendo que tienes un programa que te cubre, te protege a ti y a tu familia, y a la vez te construye un patrimonio?",
+                      "Si tuvieras esto resuelto hoy, ¿qué cambiaría en cómo te sientes con respecto a tu futuro?"
+                    ]
+                  },
+                  {
+                    "tag": "AHORRO",
+                    "questions": [
+                      "¿Te imaginas saber con certeza que tu retiro está construyéndose mientras vives tu vida normal?",
+                      "¿Sería valioso para ti ver tu dinero crecer protegido contra las caídas del mercado?",
+                      "¿Cómo te sentirías sabiendo que cada dólar que destinas está trabajando con interés compuesto a tu favor?"
+                    ]
+                  },
+                  {
+                    "tag": "SEGURO",
+                    "questions": [
+                      "¿Sería un alivio saber que tu familia está protegida pase lo que pase?",
+                      "¿Te imaginas la tranquilidad de saber que dejaste a los tuyos blindados ante cualquier escenario?",
+                      "¿Cómo cambiaría tu paz mental sabiendo que tu legado ya está construido?"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_4",
+            "order": 4,
+            "title": "Parafraseo y resumen del descubrimiento",
+            "objective": "Demostrar que se escuchó al cliente, validar su dolor, y generar alivio emocional (endorfinas) antes de presentar la solución.",
+            "execution_notes": [
+              "Resumir literalmente lo que el cliente dijo, sin interpretar",
+              "Confirmar con un cierre tipo '¿correcto?'",
+              "Preguntar si hay algo más a considerar antes de avanzar"
+            ],
+            "script_literal": [
+              {
+                "step": "agradecimiento",
+                "text": "[Nombre], te agradezco que me hayas compartido toda esa información, porque me permite entender tu situación actual y hacia dónde estaría enfocada tu estrategia."
+              },
+              {
+                "step": "resumen",
+                "text": "Entonces, a modo de resumen: tu interés principal es [X], y te gustaría dejar resuelto [Y y Z]. ¿Correcto?"
+              },
+              {
+                "step": "validacion_extra",
+                "text": "¿Hay algo más que debamos considerar dentro de lo que tú quieres lograr?"
+              }
+            ]
+          },
+          {
+            "id": "fase_5",
+            "order": 5,
+            "title": "Inserción de credenciales",
+            "objective": "Generar confianza y autoridad antes de presentar el producto. Posicionar al agente como un profesional verificable.",
+            "execution_notes": [
+              "Es importante que el cliente sepa con quién está hablando antes de entrar en números",
+              "Pedir permiso para enviar las credenciales por SMS — eso confirma su número y abre canal directo"
+            ],
+            "script_literal": [
+              {
+                "step": "transicion",
+                "text": "[Nombre], antes de continuar, es bien importante para mí que sepas con quién estás conversando."
+              },
+              {
+                "step": "envio_credenciales",
+                "text": "Me tomará un minuto enviarte mis credenciales. ¿Sería mala idea que te las comparta por SMS?"
+              },
+              {
+                "step": "confirmacion",
+                "text": "Listo. Ya las tienes. Avanzamos."
+              }
+            ]
+          },
+          {
+            "id": "fase_6",
+            "order": 6,
+            "title": "Precalificación",
+            "objective": "Recabar información necesaria para colocar al cliente en la compañía correcta. Salud, récord legal y de manejo, e ingresos demostrables.",
+            "execution_notes": [
+              "Se posiciona como un proceso normal que hacen las compañías, no como un interrogatorio",
+              "Ir tomando los datos en el sistema mientras el cliente responde"
+            ],
+            "script_literal": [
+              {
+                "step": "introduccion",
+                "text": "[Nombre], anteriormente vimos lo que tú quieres lograr. Esas son las cartas que pones sobre la mesa para yo trabajar con la compañía que pueda cumplir tus expectativas."
+              },
+              {
+                "step": "explicacion_proceso",
+                "text": "Las compañías verifican tres cosas: tu salud, tu récord legal y de manejo, e ingresos demostrables aquí en el país."
+              },
+              {
+                "step": "inicio_salud",
+                "text": "Comenzando con la salud — cuéntame cómo estás."
+              }
+            ],
+            "data_collection": {
+              "salud": [
+                "Estado general de salud",
+                "Condiciones preexistentes",
+                "Medicamentos actuales",
+                "Hospitalizaciones recientes",
+                "Tabaquismo / alcohol",
+                "Peso y altura"
+              ],
+              "legal_manejo": [
+                "Récord de manejo (DUIs, accidentes)",
+                "Récord criminal",
+                "Bancarrotas"
+              ],
+              "ingresos": [
+                "Ingreso mensual demostrable",
+                "Tipo de empleo / negocio",
+                "Tiempo en empleo actual",
+                "Forma de declaración de ingresos"
+              ]
+            }
+          },
+          {
+            "id": "fase_7",
+            "order": 7,
+            "title": "Selección de compañía",
+            "objective": "Comunicar al cliente que hubo un proceso real de selección entre múltiples compañías y se eligió la idónea para él.",
+            "execution_notes": [
+              "Reforzar que el agente trabajó por él analizando opciones",
+              "Aterrizar en la compañía recomendada (ejemplo: National Life)"
+            ],
+            "script_literal": [
+              {
+                "step": "presentacion_seleccion",
+                "text": "Súper. Con todo lo que me comentaste, me ayudaste a colocarte en la compañía exacta. Mientras me ibas hablando, fui colocando los datos en mi sistema y tenemos 3 compañías que te pueden ofrecer una solución alineada con lo que quieres lograr."
+              },
+              {
+                "step": "anuncio_companhia",
+                "text": "Vamos a verlo por [National Life / compañía elegida] y vemos cuál es el tipo de IUL que ellos manejan."
+              }
+            ]
+          },
+          {
+            "id": "fase_8",
+            "order": 8,
+            "title": "Ilustración y presentación del producto",
+            "objective": "Presentar el producto en función de los objetivos del cliente, no de características técnicas. Conectar números con beneficios concretos.",
+            "execution_notes": [
+              "Presentar enfocado en lo que el cliente tendrá, no en detalles técnicos",
+              "Usar la cifra del 7% al 15% del salario mensual como referencia",
+              "Insertar el concepto de costo de vacío antes del cierre"
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_8_1",
+                "order": "8.1",
+                "title": "Presentación enfoque AHORRO",
+                "objective": "Cliente que canalizó interés en ahorro y crecimiento. El bloque de ahorro va al frente, la protección entra como bonus.",
+                "questions_bank": [
+                  {
+                    "tag": "TRANSICION",
+                    "questions": [
+                      "[Nombre], déjame explicarte cómo funciona esto a ti en concreto."
+                    ]
+                  },
+                  {
+                    "tag": "CRECIMIENTO DEL DINERO",
+                    "questions": [
+                      "Lo que vas a destinar cada mes entra a una cuenta que es tuya. Esa cuenta está conectada a un índice del mercado. Cuando el mercado sube, tu dinero gana. Cuando el mercado baja, tu dinero no pierde — tienes un piso, nunca baja de cero. Eso es lo que la mayoría de la gente busca y no encuentra: ganar cuando sube, no perder cuando baja."
+                    ]
+                  },
+                  {
+                    "tag": "DIFERENCIA VS 401K / IRA",
+                    "questions": [
+                      "La diferencia con un 401k o un IRA es que cuando saques este dinero en tu retiro, no pagas impuestos. En el 401k te tocaría pagar impuestos cuando lo sacas, y nadie sabe cuánto van a estar los impuestos en 20 años. Aquí lo que ves es lo que te llevas."
+                    ]
+                  },
+                  {
+                    "tag": "ACCESO EN VIDA — EMERGENCIA",
+                    "questions": [
+                      "Y este dinero no está encerrado hasta los 65. Si en algún momento lo necesitas — una emergencia, un negocio, algo de salud — puedes sacarlo. Es tuyo, sin las penalidades que tiene un 401k."
+                    ]
+                  },
+                  {
+                    "tag": "ACCESO EN VIDA — ENFERMEDAD",
+                    "questions": [
+                      "Además, si en algún momento te diagnostican algo serio en vida — un cáncer, un infarto, un derrame — tú mismo puedes acceder a una parte del dinero para tu tratamiento, para no dejar de pagar la casa, para que tu familia no cargue con los gastos."
+                    ]
+                  },
+                  {
+                    "tag": "BONUS — PROTECCIÓN FAMILIAR",
+                    "questions": [
+                      "Y como bonus, si a ti te pasara algo, tu familia recibe una cantidad libre de impuestos. Eso viene incluido sin que tengas que pagar otro seguro aparte."
+                    ]
+                  },
+                  {
+                    "tag": "ANCLAJE PALABRAS DEL CLIENTE",
+                    "questions": [
+                      "Tú me dijiste al inicio que querías [repetir literal lo que dijo en Fase 3 — ej: 'poner mi dinero a trabajar', 'no depender del Social Security', 'tener algo seguro para mi retiro']. Esto es exactamente eso."
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_8_2",
+                "order": "8.2",
+                "title": "Presentación enfoque SEGURO Y HERENCIA",
+                "objective": "Cliente que canalizó interés en seguro y construcción de legado. El bloque de protección va al frente, el ahorro entra como bonus.",
+                "questions_bank": [
+                  {
+                    "tag": "TRANSICION",
+                    "questions": [
+                      "[Nombre], déjame explicarte cómo funciona esto a ti en concreto."
+                    ]
+                  },
+                  {
+                    "tag": "PROTECCIÓN FAMILIAR",
+                    "questions": [
+                      "Si a ti te pasara algo mañana, tu familia recibe una cantidad libre de impuestos. Ese dinero llega rápido, directo a quien tú elijas. Le sirve para cubrir la casa, los gastos, los estudios de los muchachos, lo que necesite. No tiene que pedir prestado, no tiene que vender nada, no tiene que cambiar su forma de vivir."
+                    ]
+                  },
+                  {
+                    "tag": "DIFERENCIA VS SEGURO DE TÉRMINO",
+                    "questions": [
+                      "La diferencia con un seguro de término normal es que este no se vence. Mientras lo mantengas activo, te cubre de por vida. El de término te cubre 20 o 30 años y después se acaba — y justo cuando más lo vas a necesitar, a tus 70 u 80, ya no lo tienes."
+                    ]
+                  },
+                  {
+                    "tag": "ACCESO EN VIDA — ENFERMEDAD",
+                    "questions": [
+                      "Y no tienes que morirte para que sirva. Si en algún momento te diagnostican algo serio en vida — un cáncer, un infarto, un derrame — tú mismo puedes acceder a una parte de ese dinero. Lo usas para tu tratamiento, para no dejar de pagar la casa, para que tu familia no cargue con los gastos."
+                    ]
+                  },
+                  {
+                    "tag": "ACCESO EN VIDA — EMERGENCIA",
+                    "questions": [
+                      "Y si en algún momento de tu vida tienes una emergencia o necesitas dinero para algo importante, también puedes acceder a la parte que se ha ido acumulando dentro de la póliza. Es tuyo, lo usas cuando lo necesites."
+                    ]
+                  },
+                  {
+                    "tag": "BONUS — CRECIMIENTO DEL DINERO",
+                    "questions": [
+                      "Y como bonus, mientras pagas tu cobertura, una parte de ese dinero está creciendo dentro de la póliza. Está conectada al mercado: cuando sube, gana, cuando baja, no pierde. Con los años se acumula y también puedes usarlo para tu retiro si quieres."
+                    ]
+                  },
+                  {
+                    "tag": "ANCLAJE PALABRAS DEL CLIENTE",
+                    "questions": [
+                      "Tú me dijiste al inicio que querías [repetir literal lo que dijo en Fase 3 — ej: 'que mi familia esté protegida', 'dejar algo para mis hijos', 'que mi esposa no pase trabajos si yo no estoy']. Esto es exactamente eso."
+                    ]
+                  }
+                ]
+              }
+            ],
+            "transition_to_application": "Si el cliente acepta, pasar al proceso de aplicación. Si presenta resistencia, pasar a Fase 9 — Manejo de objeciones."
+          },
+          {
+            "id": "fase_9",
+            "order": 9,
+            "title": "Ilustración y presentación del producto",
+            "objective": "Presentar el producto en función de los objetivos del cliente, no de características técnicas. Conectar números con beneficios concretos.",
+            "execution_notes": [
+              "Presentar enfocado en lo que el cliente tendrá, no en detalles técnicos",
+              "Usar la cifra del 7% al 15% del salario mensual como referencia",
+              "Insertar el concepto de costo de vacío antes del cierre",
+              "Elegir el bloque de subfase según el interés canalizado en Fase 2"
+            ],
+            "script_literal": [
+              {
+                "step": "anclaje_aportacion",
+                "text": "La mayoría de mis clientes destinan entre el 7% y el 15% de su salario mensual a este tipo de programa. En tu caso, eso sería entre [$X] y [$Y]. ¿Qué cifra tiene más sentido para ti?"
+              },
+              {
+                "step": "ilustracion",
+                "text": "Vamos a hacer un ejercicio de ilustración con esa cifra. [Mostrar números del sistema y traducir cada bloque a beneficio concreto: protección familiar, dinero en vida, acumulación]."
+              },
+              {
+                "step": "costo_de_vacio",
+                "text": "Algo importante que muchas personas no consideran: esperar también tiene un costo. Cada año que pasa sin esto resuelto, la prima sube porque eres un año mayor, el tiempo de acumulación con interés compuesto se reduce, y el riesgo sigue ahí sin cobertura. La decisión de no decidir también tiene un precio."
+              },
+              {
+                "step": "cierre_aportacion",
+                "text": "¿Quieres que lo veamos con una aportación mayor o menor? Te sugiero que probemos primero con la mayor para ver el impacto completo. Si te parece bien, el primer paso sería aplicar con la compañía."
+              }
+            ],
+            "transition_to_application": "Si el cliente acepta, pasar al proceso de aplicación. Si presenta resistencia, pasar a Fase 9 — Manejo de objeciones."
+          },
+          {
+            "id": "fase_10",
+            "order": 10,
+            "title": "Cierre y aplicación",
+            "objective": "Llevar al cliente al proceso de aplicación una vez resueltas las objeciones.",
+            "execution_notes": [
+              "Tono asumiendo el cierre, no preguntando si quiere",
+              "Conducir paso a paso el llenado de la aplicación"
+            ],
+            "script_literal": [
+              {
+                "step": "transicion_aplicacion",
+                "text": "Perfecto, [nombre]. Vamos a empezar entonces con la aplicación. Te voy guiando paso a paso."
+              },
+              {
+                "step": "documento_aplicacion",
+                "text": "¿Con qué documento vamos a aplicar? Puede ser Social Security, ITIN, ID number, o pasaporte."
+              }
+            ]
+          },
+
+        ],
+        "global_principles": [
+          {
+            "id": "principio_frame",
+            "title": "Frame alto desde el primer segundo",
+            "description": "El primero que intenta caer bien pierde. Tono profesional, serio, cálido pero firme."
+          },
+          {
+            "id": "principio_socratico",
+            "title": "El cliente se convence solo",
+            "description": "Cuando él dice 'necesito esto' ya está vendido. Cuando tú dices 'necesitas esto' hay resistencia."
+          },
+          {
+            "id": "principio_objecion_real",
+            "title": "La primera objeción casi nunca es la real",
+            "description": "El precio es el disfraz más común. La objeción real suele ser incertidumbre, miedo o desconfianza."
+          },
+          {
+            "id": "principio_modo_escape",
+            "title": "El cerebro entra en modo escape bajo presión",
+            "description": "No se resuelve con descuentos ni urgencia — se resuelve con preguntas que generen seguridad."
+          },
+          {
+            "id": "principio_costo_vacio",
+            "title": "Esperar también tiene un costo",
+            "description": "Cada año sin decisión cuesta tiempo de acumulación, sube la prima por edad, y deja a la familia sin cobertura."
+          }
+        ]
+      }
+    };
+
+    // ==========================================
+    // LÓGICA DE MOTOR DE VISTA
+    // ==========================================
+    let current = 0;
+    let totalNodes = 0;
+
+    function buildMap() {
+      const data = scriptData.script;
+      const canvas = document.getElementById('map-canvas');
+      canvas.innerHTML = '';
+
+      data.phases.forEach((phase, index) => {
+        const node = document.createElement('div');
+        node.id = `node-${index}`;
+        node.className = 'node';
+
+        // Posicionamiento dinámico
+        const posX = 3000 + (index * 1300);
+        const posY = 3000 + (index % 2 * 60);
+        node.style.left = `${posX}px`;
+        node.style.top = `${posY}px`;
+        node.style.width = phase.sub_phases ? "1100px" : "500px";
+
+        let html = `<div class="card-tag">FASE ${phase.order} — ${phase.title}</div>`;
+
+        if (phase.script_literal) {
+          html += `<div class="script-box">`;
+          phase.script_literal.forEach(line => {
+            html += `<span class="instruction">${line.step}</span>`;
+            html += `<span class="literal">${line.text}</span>`;
+          });
+          html += `</div>`;
+        }
+
+        if (phase.sub_phases) {
+          html += `<div class="subphase-container">`;
+          phase.sub_phases.forEach(sp => {
+            html += `
+          <div class="sub-card">
+            <div class="card-tag">${sp.id}</div>
+            <div style="font-weight:600; font-size:13px; margin-bottom:10px;">${sp.title}</div>
+            ${sp.questions_bank ? sp.questions_bank.map(bank => `
+              <div style="margin-top:8px">
+                <span class="instruction">${bank.tag}</span>
+                ${bank.questions.map(q => `<div class="q-item">• ${q}</div>`).join('')}
+              </div>
+            `).join('') : ''}
+          </div>`;
+          });
+          html += `</div>`;
+        }
+
+        if (phase.objection_paths) {
+          html += `
+        <div class="script-box" style="border-left-color: #e07b6a; background: rgba(224, 123, 106, 0.05);">
+          <span class="instruction" style="color:#e07b6a;">Si hay objeción:</span>
+          <span class="literal" style="font-size:0.95rem;">${phase.objection_paths[0].response_text}</span>
+        </div>`;
+        }
+
+        node.innerHTML = html;
+        canvas.appendChild(node);
+      });
+
+      totalNodes = data.phases.length;
+      update();
+    }
+
+    function update() {
+      const node = document.getElementById(`node-${current}`);
+      if (!node) return;
+      const canvas = document.getElementById('map-canvas');
+
+      const offsetX = (window.innerWidth / 2) - (parseInt(node.style.left) + (node.offsetWidth / 2));
+      const offsetY = (window.innerHeight / 2) - (parseInt(node.style.top) + (node.offsetHeight / 2));
+
+      canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+      document.querySelectorAll('.node').forEach((n, i) => {
+        n.classList.toggle('active', i === current);
+      });
+    }
+
+    function move(dir) {
+      current = Math.max(0, Math.min(totalNodes - 1, current + dir));
+      update();
+    }
+
+    window.onload = buildMap;
+    window.onresize = update;
+  </script>
+</body>
+
+</html>
