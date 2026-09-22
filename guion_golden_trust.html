@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Script IUL — Golden Trust</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=DM+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --node-bg: #13161d;
+      --card-bg: #1a1e26;
+      --accent: #c8a96e;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --line: rgba(200, 169, 110, 0.15);
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--bg);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    #viewport {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      display: block;
+    }
+
+    #map-canvas {
+      position: absolute;
+      width: 12000px;
+      height: 8000px;
+      transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    .node {
+      position: absolute;
+      background: var(--node-bg);
+      border: 1px solid var(--line);
+      padding: 25px;
+      border-radius: 16px;
+      transition: all 0.5s ease;
+      opacity: 0.1;
+      transform: scale(0.9);
+    }
+
+    .node.active {
+      opacity: 1;
+      transform: scale(1);
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-tag {
+      font-family: 'DM Mono';
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .objective {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .exec-note {
+      font-family: 'DM Mono';
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .exec-note::before {
+      content: "▸ ";
+      color: var(--accent);
+    }
+
+    .script-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 10px;
+      margin-top: 12px;
+    }
+
+    .literal {
+      font-size: 1.05rem;
+      color: #fff;
+      line-height: 1.5;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      font-family: 'DM Mono';
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      display: block;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .subphase-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      align-items: flex-start;
+    }
+
+    .sub-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      padding: 15px;
+      border-radius: 10px;
+      flex: 1;
+    }
+
+    .nav-ui {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      background: #1a1e26;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'DM Mono';
+      font-size: 12px;
+      transition: 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .q-item {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 3px;
+      line-height: 1.45;
+    }
+
+    .brand {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono';
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="viewport">
+    <div class="brand">Golden Trust Financial Group · Academia De Cero a Top Producer</div>
+    <div id="map-canvas"></div>
+    <div class="nav-ui">
+      <button class="nav-btn" onclick="move(-1)">← ANTERIOR</button>
+      <button class="nav-btn" onclick="move(1)">SIGUIENTE →</button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // GUIÓN COMPLETO IUL — TOP PRODUCER
+    // Golden Trust Financial Group
+    // ==========================================
+    const scriptData = {
+      "script": {
+        "name": "Guión Completo IUL — Top Producer",
+        "version": "1.0",
+        "type": "iul",
+        "description": "Guión profesional de venta consultiva IUL — Golden Trust Financial Group · Academia De Cero a Top Producer.",
+        "phases": [
+          {
+            "id": "fase_1",
+            "order": 1,
+            "title": "Saluda",
+            "objective": "Abrir la llamada de forma natural y escuchar antes de continuar.",
+            "execution_notes": [
+              "Normalmente te dirán quién habla, o ellos preguntarán quién eres. Escucha bien antes de continuar."
+            ],
+            "script_literal": [
+              {
+                "step": "saludo",
+                "text": "Hola [NOMBRE], ¿cómo estás?"
+              }
+            ]
+          },
+          {
+            "id": "fase_2",
+            "order": 2,
+            "title": "Preséntate",
+            "objective": "Posicionarte como el profesional financiero que va a ayudarle con lo que él mismo solicitó.",
+            "execution_notes": [
+              "Termina siempre con una pregunta",
+              "Haz validación emocional"
+            ],
+            "script_literal": [
+              {
+                "step": "presentacion",
+                "text": "Mi nombre es [NOMBRE DEL AGENTE], soy el profesional financiero que te va a ayudar con la información que solicitaste sobre el IUL. ¿Lo recuerdas? ¿Cómo te encuentras el día de hoy?"
+              },
+              {
+                "step": "si_responde_si_o_bien",
+                "text": "Perfecto, cuéntame [NOMBRE], ¿qué fue lo que más te gustó de la información que viste sobre el IUL?"
+              }
+            ],
+            "objection_paths": [
+              {
+                "trigger": "cliente_no_recuerda",
+                "label": "Si responde NO / no recuerda",
+                "client_says_examples": [
+                  "No recuerdo haber solicitado nada",
+                  "No sé de qué me hablas"
+                ],
+                "response_strategy": "Normalizar sin perder frame y re-canalizar el interés con las tres razones más comunes.",
+                "response_text": "No te preocupes, [NOMBRE], para eso estoy yo aquí. La mayoría de personas se registran por alguna de estas tres razones: 1) Si tú faltas, tu familia recibe dinero para mantenerse y seguir con su vida tranquila. 2) Si te enfermas de algo serio como cáncer o un infarto, puedes usar parte del dinero en vida. 3) Es un ahorro inteligente donde tu dinero crece de forma segura, sin riesgo de perder y libre de impuestos. ¿Cuál de estas tres partes fue la que más te llamó la atención?"
+              }
+            ]
+          },
+          {
+            "id": "fase_3",
+            "order": 3,
+            "title": "Saca el dolor",
+            "objective": "Descubrir la motivación real del cliente con preguntas según el interés que eligió. Escucha, toma nota y usa sus respuestas en el cierre.",
+            "execution_notes": [
+              "Si elige las tres cosas: haz una pregunta de cada bloque",
+              "Escucha, toma nota y usa sus respuestas en el cierre"
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_3_1",
+                "order": "3.1",
+                "title": "Proteger a la familia",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿Quiénes son las personas que, si faltaras, te preocuparía que tengan que batallar?",
+                      "¿Qué es lo que más te inquieta cuando piensas en [PERSONA] sin ti?",
+                      "Si tú no estuvieras, con lo que hoy tienen, ¿cuánto tiempo podrían sostenerse?",
+                      "¿Tienes seguro de vida actualmente?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_3_2",
+                "order": "3.2",
+                "title": "Protegerse a sí mismo",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿Alguna vez has pensado qué pasaría si no pudieras trabajar por unos meses?",
+                      "¿Quién asumiría tus gastos si una enfermedad fuerte te obliga a parar?",
+                      "¿Conoces a alguien que haya pasado por algo así?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_3_3",
+                "order": "3.3",
+                "title": "Asegurar un buen retiro",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "Si hoy pudieras mejorar una sola cosa de tu futuro, ¿cuál sería?",
+                      "¿Qué te gustaría lograr con ese retiro?",
+                      "¿Cómo te gustaría vivir cuando ya no quieras trabajar al mismo ritmo?",
+                      "¿Qué sería más valioso: tranquilidad, ingresos, libertad o independencia?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_3_4",
+                "order": "3.4",
+                "title": "Si elige ahorro",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "Normalmente cuando pensamos en ahorro, es porque tenemos un plan... ¿cuál es el tuyo?",
+                      "¿Para qué te gustaría usar ese dinero más adelante?",
+                      "Si ese ahorro ya estuviera listo hoy, ¿en qué te ayudaría en este momento?"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_4",
+            "order": 4,
+            "title": "Cierre de descubrimiento",
+            "objective": "Validar el dolor del cliente, parafrasear lo que dijo y confirmar que no queda nada fuera.",
+            "execution_notes": [
+              "Parafrasea el dolor con las palabras del cliente, no las tuyas"
+            ],
+            "script_literal": [
+              {
+                "step": "cierre_descubrimiento",
+                "text": "Quiero asegurarme de que este plan realmente esté hecho a tu medida, [NOMBRE], porque lo que me acabas de decir es muy importante. Entonces, vamos a construir algo para que [PARAFRASEAS SU DOLOR] puedas tener cubierto eso que hoy te preocupa, tanto en el presente como en el futuro. ¿Hay algo más que te preocupe o que quieras que yo considere?"
+              }
+            ]
+          },
+          {
+            "id": "fase_5",
+            "order": 5,
+            "title": "Lo que va a pasar en la llamada",
+            "objective": "Dar claridad del proceso, enviar credenciales y posicionar el producto como algo que requiere calificación.",
+            "execution_notes": [
+              "Confirma tu NPN al enviar las credenciales"
+            ],
+            "script_literal": [
+              {
+                "step": "encuadre",
+                "text": "Perfecto, [NOMBRE]. Te explico cómo vamos a trabajar en esta llamada para que tengamos claridad desde el inicio."
+              },
+              {
+                "step": "primero_credenciales",
+                "text": "Primero: te estoy enviando por mensaje mis credenciales para que tengas total tranquilidad de quién te está acompañando."
+              },
+              {
+                "step": "segundo_calificacion",
+                "text": "Segundo: este producto no es de acceso masivo. Hay que calificar primero — eso es lo que vamos a hacer ahora."
+              },
+              {
+                "step": "tercero_perfil",
+                "text": "Lo siguiente es entender bien tu perfil y estructurarlo de la mejor manera para ti."
+              }
+            ]
+          },
+          {
+            "id": "fase_6",
+            "order": 6,
+            "title": "Califica",
+            "objective": "Levantar salud, estatus legal e ingresos para colocar al cliente correctamente, y anclar el monto del aporte con prueba social.",
+            "execution_notes": [
+              "Si la diferencia entre ingresos y gastos es menos del 10%, haz la recomendación directamente. Si no, deja que el cliente proponga el monto"
+            ],
+            "script_literal": [
+              {
+                "step": "introduccion",
+                "text": "Perfecto, [NOMBRE]. Ahora te voy a hacer unas preguntas muy sencillas sobre tu salud. Es muy importante que seas totalmente sincero conmigo, porque de esto depende directamente tu aplicación."
+              }
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_6_1",
+                "order": "6.1",
+                "title": "Salud",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS DE SALUD",
+                    "questions": [
+                      "¿Cómo te encuentras de salud? ¿Alguna condición médica que esté en tu récord?",
+                      "¿Tienes o has tenido diabetes, presión alta o colesterol alto?",
+                      "¿Has tenido algún problema del corazón: infarto, derrame, mini stroke, stent o marcapasos?",
+                      "¿Has tenido cáncer, VIH o alguna amputación?",
+                      "¿Tienes lupus, asma o alguna enfermedad pulmonar crónica (inhalador, oxígeno o esteroides)?",
+                      "¿Problemas de tiroides, riñón, hígado o has estado en diálisis?",
+                      "¿Algún tema neurológico o mental: ansiedad, depresión, bipolaridad, Parkinson, demencia o Alzheimer?",
+                      "¿Actualmente cuánto pesas y cuánto mides?",
+                      "¿Fumas? (Si sí: ¿con qué frecuencia? ¿qué fumas? ¿hace cuánto? ¿cuándo fue tu último cigarrillo?)",
+                      "¿Estás tomando algún medicamento o te han recetado algo que no estés tomando?",
+                      "¿Has tenido cirugías o trasplantes en los últimos dos años?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_6_2",
+                "order": "6.2",
+                "title": "Estatus legal e ingresos",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿Eres ciudadano, residente o estás en proceso de documentación? ¿Tienes ITIN o Social?",
+                      "¿Tienes licencia de conducir? ¿Has tenido un DUI o alguna felonía? ¿Algún tema pendiente en corte?",
+                      "¿A qué te dedicas? ¿Cuánto son tus ingresos al mes aproximadamente? ¿Cuánto son tus gastos?",
+                      "¿Eres autónomo o independiente para tomar decisiones?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_6_3",
+                "order": "6.3",
+                "title": "Prueba social — Monto del aporte",
+                "questions_bank": [
+                  {
+                    "tag": "GUION LITERAL",
+                    "questions": [
+                      "La mayoría de personas suelen aportar un 10% o más de lo que ganan mensualmente. En tu caso sería de unos $___. ¿Cuánto crees tú que es un buen monto que puedas aportar sin afectar tu estilo de vida, y que si tienes una emergencia no tengas que dejar de aportar al IUL como primera opción?"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_7",
+            "order": 7,
+            "title": "Explica el IUL",
+            "objective": "Presentar los tres beneficios del programa con la ilustración adaptada al perfil del cliente.",
+            "execution_notes": [
+              "Confirma fecha de nacimiento y monto de aporte",
+              "Haz la ilustración adaptada al perfil del cliente"
+            ],
+            "script_literal": [
+              {
+                "step": "compartir_pantalla",
+                "text": "Perfecto, [NOMBRE], te estoy enviando un enlace para compartir mi pantalla y mostrarte cómo funciona el IUL y qué puede hacer por ti con esos $___. Si en algún momento dejas de ver lo que te estoy mostrando, por favor avísame."
+              }
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_7_1",
+                "order": "7.1",
+                "title": "1. Beneficio por fallecimiento",
+                "questions_bank": [
+                  {
+                    "tag": "GUION LITERAL",
+                    "questions": [
+                      "[NOMBRE], si llegaras a faltar de forma inesperada, tu familia no quedaría desamparada. Ellos recibirían una cobertura de $___, para enfrentar el momento sin cargas económicas adicionales."
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_7_2",
+                "order": "7.2",
+                "title": "2. Beneficios en vida (enf. crítica, crónica o terminal)",
+                "questions_bank": [
+                  {
+                    "tag": "GUION LITERAL",
+                    "questions": [
+                      "Si algún día enfrentaras una enfermedad crítica como cáncer, derrame cerebral o un accidente que te deje incapacitado, este plan puede adelantarte hasta el 80% de tu cobertura. Ese dinero se deposita directamente en tu cuenta."
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_7_3",
+                "order": "7.3",
+                "title": "3. Beneficio para tu jubilación",
+                "questions_bank": [
+                  {
+                    "tag": "GUION LITERAL",
+                    "questions": [
+                      "Este programa te permite acumular dinero con interés compuesto. Tu dinero crece año tras año sin pérdidas (piso de cero), y lo puedes usar como ingreso libre de impuestos. En tu caso, a los [X] años, tendrías aproximadamente $___."
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_7_4",
+                "order": "7.4",
+                "title": "Cierre del bloque",
+                "questions_bank": [
+                  {
+                    "tag": "CHECKPOINT",
+                    "questions": [
+                      "Hasta aquí, [NOMBRE], ¿tienes alguna pregunta? — Escucha y responde antes de continuar."
+                    ]
+                  },
+                  {
+                    "tag": "VALIDACION FINAL",
+                    "questions": [
+                      "Explica las 3 áreas de verificación: Salud (SSN), Identificación (licencia/pasaporte) e Ingresos (cuenta bancaria).",
+                      "Pregunta si hay algo que deba saber en alguna de estas áreas antes de continuar."
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_8",
+            "order": 8,
+            "title": "Presenta las dos opciones de póliza",
+            "objective": "Dar al cliente una elección entre dos estructuras — el cierre deja de ser sí/no y pasa a ser cuál.",
+            "script_literal": [
+              {
+                "step": "pregunta_eleccion",
+                "text": "[NOMBRE], ¿cuál de estas dos opciones te parece mejor? ¿Cuál se ajusta mejor a lo que necesitas?"
+              }
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_8_1",
+                "order": "8.1",
+                "title": "Opción 1",
+                "questions_bank": [
+                  {
+                    "tag": "ESTRUCTURA",
+                    "questions": [
+                      "50% acumula / 50% cobertura por fallecimiento y enfermedad"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_8_2",
+                "order": "8.2",
+                "title": "Opción 2",
+                "questions_bank": [
+                  {
+                    "tag": "ESTRUCTURA",
+                    "questions": [
+                      "70% acumula / 30% cobertura por fallecimiento y enfermedad"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_9",
+            "order": 9,
+            "title": "Cierra — Recolección de datos",
+            "objective": "Enviar la solicitud a la compañía recolectando todos los datos de la aplicación.",
+            "execution_notes": [
+              "Tono asumiendo el cierre — la solicitud es para ver si la compañía lo califica"
+            ],
+            "script_literal": [
+              {
+                "step": "transicion_solicitud",
+                "text": "Perfecto [NOMBRE], lo que vamos a hacer es enviar una solicitud a la compañía para ver si nos califica esta propuesta."
+              }
+            ],
+            "sub_phases": [
+              {
+                "id": "fase_9_1",
+                "order": "9.1",
+                "title": "Datos personales",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "Confírmame tu nombre como aparece en tu documento.",
+                      "Si te aprueban, ¿cuál sería la dirección a la que llegaría tu póliza?",
+                      "Tu lugar de nacimiento es... ¿correcto?",
+                      "¿Cuál es el número de tu licencia de conducir?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_9_2",
+                "order": "9.2",
+                "title": "Historia familiar",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿Tus padres viven? ¿Qué edad tienen?",
+                      "Si fallecieron, ¿de qué fallecieron y a qué edad?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_9_3",
+                "order": "9.3",
+                "title": "Info médica",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿Cuál es el nombre de tu médico de cabecera o la clínica a la que vas?",
+                      "¿Cuándo fue tu última visita al médico?"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "fase_9_4",
+                "order": "9.4",
+                "title": "Beneficiario y banco",
+                "questions_bank": [
+                  {
+                    "tag": "PREGUNTAS",
+                    "questions": [
+                      "¿A quién vamos a poner de beneficiario?",
+                      "¿Cuál es tu número de seguro social?",
+                      "¿Cuál es el banco que usas?",
+                      "Busca el número de ruta y confírmalo. ¿Cuál es el número de tu cuenta?"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "fase_10",
+            "order": 10,
+            "title": "Seguimiento post-solicitud",
+            "objective": "Cerrar la llamada con claridad sobre los escenarios posibles y blindar el proceso frente a otros agentes.",
+            "script_literal": [
+              {
+                "step": "si_aprobado",
+                "text": "Una vez tengamos respuesta me comunico contigo para el siguiente paso. Tienes entre 24 y 48 horas para el primer aporte y así activar tu plan — a partir de ese momento tú y tu familia quedan protegidos."
+              },
+              {
+                "step": "si_no_aprobado",
+                "text": "Si por alguna razón no fueras aprobado, también te aviso y buscamos juntos otra opción para ti."
+              },
+              {
+                "step": "seguridad_del_proceso",
+                "text": "Recuerda que pusiste tus datos en internet. Si alguien más te llama para hacerte una aplicación, dale mi nombre y dile que ya estás en proceso. Dos solicitudes simultáneas pueden caerse las dos."
+              },
+              {
+                "step": "despedida",
+                "text": "Tienes mi número personal. Cualquier duda o pregunta adicional que surja, me dejas saber. ¡Que tengas buen día!"
+              }
+            ]
+          },
+          {
+            "id": "fase_11",
+            "order": 11,
+            "title": "Recuerda siempre",
+            "objective": "Principios permanentes del guión — Golden Trust · De Cero a Top Producer.",
+            "script_literal": [
+              {
+                "step": "escucha",
+                "text": "Escucha la objeción o respuesta completa antes de hablar."
+              },
+              {
+                "step": "valida",
+                "text": "Siempre valida emocionalmente: 'Te entiendo, [NOMBRE]...'"
+              },
+              {
+                "step": "personaliza",
+                "text": "Usa las respuestas del cliente para personalizar el cierre."
+              },
+              {
+                "step": "claridad",
+                "text": "La clave no es convencer — es ayudar a decidir con claridad."
+              },
+              {
+                "step": "ilustracion",
+                "text": "Haz la ilustración siempre adaptada al perfil del cliente."
+              }
+            ]
+          }
+        ],
+        "global_principles": [
+          {
+            "id": "principio_escucha",
+            "title": "Escucha completa",
+            "description": "Escucha la objeción o respuesta completa antes de hablar."
+          },
+          {
+            "id": "principio_validacion",
+            "title": "Validación emocional",
+            "description": "Siempre valida emocionalmente: 'Te entiendo, [Nombre]...'"
+          },
+          {
+            "id": "principio_personalizacion",
+            "title": "Personaliza con sus palabras",
+            "description": "Usa las respuestas del cliente para personalizar el cierre."
+          },
+          {
+            "id": "principio_claridad",
+            "title": "Ayudar a decidir",
+            "description": "La clave no es convencer — es ayudar a decidir con claridad."
+          },
+          {
+            "id": "principio_ilustracion",
+            "title": "Ilustración a la medida",
+            "description": "Haz la ilustración siempre adaptada al perfil del cliente."
+          }
+        ]
+      }
+    };
+
+    // ==========================================
+    // LÓGICA DE MOTOR DE VISTA
+    // ==========================================
+    let current = 0;
+    let totalNodes = 0;
+
+    function buildMap() {
+      const data = scriptData.script;
+      const canvas = document.getElementById('map-canvas');
+      canvas.innerHTML = '';
+
+      data.phases.forEach((phase, index) => {
+        const node = document.createElement('div');
+        node.id = `node-${index}`;
+        node.className = 'node';
+
+        // Posicionamiento dinámico
+        const posX = 3000 + (index * 1300);
+        const posY = 3000 + (index % 2 * 60);
+        node.style.left = `${posX}px`;
+        node.style.top = `${posY}px`;
+        node.style.width = phase.sub_phases ? "1100px" : "500px";
+
+        let html = `<div class="card-tag">FASE ${phase.order} — ${phase.title}</div>`;
+
+        if (phase.objective) {
+          html += `<div class="objective">${phase.objective}</div>`;
+        }
+
+        if (phase.execution_notes) {
+          phase.execution_notes.forEach(n => {
+            html += `<div class="exec-note">${n}</div>`;
+          });
+        }
+
+        if (phase.script_literal) {
+          html += `<div class="script-box">`;
+          phase.script_literal.forEach(line => {
+            html += `<span class="instruction">${line.step.replaceAll('_', ' ')}</span>`;
+            html += `<span class="literal">${line.text}</span>`;
+          });
+          html += `</div>`;
+        }
+
+        if (phase.sub_phases) {
+          html += `<div class="subphase-container">`;
+          phase.sub_phases.forEach(sp => {
+            html += `
+          <div class="sub-card">
+            <div class="card-tag">${sp.order}</div>
+            <div style="font-weight:600; font-size:13px; margin-bottom:10px;">${sp.title}</div>
+            ${sp.questions_bank ? sp.questions_bank.map(bank => `
+              <div style="margin-top:8px">
+                <span class="instruction">${bank.tag}</span>
+                ${bank.questions.map(q => `<div class="q-item">• ${q}</div>`).join('')}
+              </div>
+            `).join('') : ''}
+          </div>`;
+          });
+          html += `</div>`;
+        }
+
+        if (phase.objection_paths) {
+          html += `
+        <div class="script-box" style="border-left-color: #e07b6a; background: rgba(224, 123, 106, 0.05);">
+          <span class="instruction" style="color:#e07b6a;">${phase.objection_paths[0].label || 'Si hay objeción:'}</span>
+          <span class="literal" style="font-size:0.95rem;">${phase.objection_paths[0].response_text}</span>
+        </div>`;
+        }
+
+        node.innerHTML = html;
+        canvas.appendChild(node);
+      });
+
+      totalNodes = data.phases.length;
+      update();
+    }
+
+    function update() {
+      const node = document.getElementById(`node-${current}`);
+      if (!node) return;
+      const canvas = document.getElementById('map-canvas');
+
+      const offsetX = (window.innerWidth / 2) - (parseInt(node.style.left) + (node.offsetWidth / 2));
+      const offsetY = (window.innerHeight / 2) - (parseInt(node.style.top) + (node.offsetHeight / 2));
+
+      canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+      document.querySelectorAll('.node').forEach((n, i) => {
+        n.classList.toggle('active', i === current);
+      });
+    }
+
+    function move(dir) {
+      current = Math.max(0, Math.min(totalNodes - 1, current + dir));
+      update();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') move(1);
+      if (e.key === 'ArrowLeft') move(-1);
+    });
+
+    window.onload = buildMap;
+    window.onresize = update;
+  </script>
+</body>
+
+</html>
