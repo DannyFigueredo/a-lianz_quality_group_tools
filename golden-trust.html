@@ -314,9 +314,12 @@ code{font-family:'DM Mono',monospace;font-size:12px}
 }
 .counter-card.orange-t{border-top-color:var(--orange)}
 .counter-card.green-t{border-top-color:var(--green)}
+.counter-card.purple-t{border-top-color:var(--purple)}
+.counter-card.yellow-t{border-top-color:var(--yellow)}
 .cc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:10px}
 .cc-num{font-size:64px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;color:var(--blue);transition:transform .1s}
 .cc-num.orange{color:var(--orange)}.cc-num.green{color:var(--green)}
+.cc-num.purple{color:var(--purple)}.cc-num.yellow{color:var(--yellow)}
 .cc-num.bump{transform:scale(1.15)}
 .cc-btns{display:flex;justify-content:center;gap:10px;margin-top:14px}
 .cc-btn{
@@ -806,6 +809,24 @@ code{font-family:'DM Mono',monospace;font-size:12px}
         <button class="cc-btn reset" onclick="resetUno('citas')">↺</button>
       </div>
     </div>
+    <div class="counter-card purple-t">
+      <div class="cc-label">🖥️ Presentaciones</div>
+      <div class="cc-num purple" id="cc-presentaciones">0</div>
+      <div class="cc-btns">
+        <button class="cc-btn plus" style="background:var(--purple)" onclick="incrementar('presentaciones')">+</button>
+        <button class="cc-btn minus" onclick="decrementar('presentaciones')">−</button>
+        <button class="cc-btn reset" onclick="resetUno('presentaciones')">↺</button>
+      </div>
+    </div>
+    <div class="counter-card yellow-t">
+      <div class="cc-label">🏆 Cierres</div>
+      <div class="cc-num yellow" id="cc-cierres">0</div>
+      <div class="cc-btns">
+        <button class="cc-btn plus" style="background:var(--yellow)" onclick="incrementar('cierres')">+</button>
+        <button class="cc-btn minus" onclick="decrementar('cierres')">−</button>
+        <button class="cc-btn reset" onclick="resetUno('cierres')">↺</button>
+      </div>
+    </div>
   </div>
   <div class="counter-meta">
     <div class="meta-row">
@@ -1097,7 +1118,8 @@ let agenteSeleccionado = null;
 let aseguradoraSeleccionada = null;
 let agenteAseguradora = null; // agente de trabajo en vista aseguradoras
 
-let contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+const CONTADORES_CERO = { llamadas: 0, contactabilidad: 0, citas: 0, presentaciones: 0, cierres: 0 };
+let contadores = { ...CONTADORES_CERO };
 
 // ═══════════════════════════════════════════════════════════════
 // PERSISTENCIA — IndexedDB
@@ -1230,9 +1252,10 @@ async function cargarTodo() {
   const metaGuardada = await cargar('v6_meta_llamadas', null);
   document.getElementById('meta-llamadas').value = metaGuardada ?? 25;
   if (cntData && cntFecha === hoyFL()) {
-    contadores = cntData;
+    // ...CONTADORES_CERO primero: datos guardados sin los contadores nuevos arrancan en 0
+    contadores = { ...CONTADORES_CERO, ...cntData };
   } else {
-    contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+    contadores = { ...CONTADORES_CERO };
     await guardar('v6_contadores',    contadores);
     await guardar('v6_cnt_fecha',     hoyFL());
     await guardar('v6_meta_llamadas', 25);
@@ -1904,8 +1927,8 @@ function resetChecklist() {
 // CONTADOR
 // ═══════════════════════════════════════════════════════════════
 function renderContadores() {
-  ['llamadas','contactabilidad','citas'].forEach(k => {
-    document.getElementById(`cc-${k}`).textContent = contadores[k];
+  ['llamadas','contactabilidad','citas','presentaciones','cierres'].forEach(k => {
+    document.getElementById(`cc-${k}`).textContent = contadores[k] || 0;
   });
   actualizarProgreso();
 }
@@ -1919,6 +1942,10 @@ function incrementar(tipo) {
     // Contactabilidad suma 1 llamada también
     contadores.contactabilidad++;
     contadores.llamadas++;
+  } else if (tipo === 'cierres') {
+    // Un cierre implica una presentación realizada
+    contadores.cierres++;
+    contadores.presentaciones++;
   } else {
     contadores[tipo]++;
   }
@@ -1927,7 +1954,7 @@ function incrementar(tipo) {
   guardarContadores();
 }
 function decrementar(tipo) {
-  contadores[tipo] = Math.max(0, contadores[tipo] - 1);
+  contadores[tipo] = Math.max(0, (contadores[tipo] || 0) - 1);
   renderContadores(); guardarContadores();
 }
 function resetUno(tipo) {
@@ -1937,7 +1964,7 @@ function resetUno(tipo) {
 }
 function resetContadores() {
   confirmar('¿Resetear <b>todos</b> los contadores del día?', () => {
-    contadores = { llamadas: 0, contactabilidad: 0, citas: 0 };
+    contadores = { ...CONTADORES_CERO };
     renderContadores(); guardarContadores(); toast('Contadores reseteados');
   });
 }
